@@ -1,12 +1,9 @@
-# projets-etudiants-2026
 # DMC Tracking System - PFE 2026
 
 ## 📌 Project Overview
 This project is a Final Year Project developed at ISET Tataouine in collaboration with D-BRAUN Tunisia.
 
 The system automates the verification, monitoring, and traceability of electrical cables using Data Matrix (DMC) codes. It ensures reliable tracking of production and improves industrial quality control.
-
-
 
 ## ⚙️ Main Features
 
@@ -21,8 +18,6 @@ The system automates the verification, monitoring, and traceability of electrica
 - Modal interfaces for system actions
 - Guide/help interface for users
 
-
-
 ## 🛠️ Technologies Used
 
 - ASP.NET Core
@@ -31,8 +26,6 @@ The system automates the verification, monitoring, and traceability of electrica
 - SQL Server
 - SignalR
 - HTML, CSS, JavaScript
-
-
 
 ## 📸 Screenshots
 
@@ -58,7 +51,5 @@ The `screenshots/` folder contains the main interfaces of the system:
 ### 📷 Monitoring
 - Camera interface
 - TV dashboard display
-s
 
 ## 📁 Project Structure
->>>>>>> 4442ee5 (Initial project commit)

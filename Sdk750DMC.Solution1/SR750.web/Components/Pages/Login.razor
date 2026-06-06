@@ -1,0 +1,377 @@
+﻿@page "/login"
+@using SR750.Listener
+@using Microsoft.AspNetCore.Components.Web
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<div class="login-page">
+
+    <!-- Background Video -->
+    <video class="login-bg-video" autoplay muted loop playsinline>
+        <source src="/vvi.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Dark Overlay -->
+    <div class="login-overlay"></div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+
+        <!-- Logo -->
+        <div class="login-logo">
+            <div class="logo-icon"></div>
+            <h2>DMC System</h2>
+            <p>Industrial Camera Validation</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="login-tabs">
+            <button @onclick='() => _activeTab = "password"'
+                    class="@(_activeTab == "password" ? "tab-btn active" : "tab-btn")">
+                Password
+            </button>
+
+            <button @onclick='() => _activeTab = "badge"'
+                    class="@(_activeTab == "badge" ? "tab-btn active" : "tab-btn")">
+                Badge RFID
+            </button>
+        </div>
+
+        <!-- Error Message -->
+        @if (_error)
+        {
+            <div class="error-box">
+                @_errorMessage
+            </div>
+        }
+
+        <!-- Password Login -->
+        @if (_activeTab == "password")
+        {
+            <div class="form-group">
+                <label>Username</label>
+                <input @bind="_username"
+                       placeholder="Enter username" />
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input @bind="_password"
+                       type="password"
+                       placeholder="Enter password"
+                       @onkeypress="OnKeyPress" />
+            </div>
+
+            <button @onclick="DoLogin" class="login-btn">
+                Login
+            </button>
+        }
+
+        <!-- Badge RFID Login -->
+        @if (_activeTab == "badge")
+        {
+            <div class="badge-info">
+                <div class="badge-icon">💳</div>
+                <p>Scan your badge or type the badge code</p>
+            </div>
+
+            <div class="form-group">
+                <label>Badge Code</label>
+                <input @bind="_badgeCode"
+                       @ref="_badgeInput"
+                       class="badge-input"
+                       placeholder="Scan badge..."
+                       @onkeypress="OnBadgeKeyPress" />
+            </div>
+
+            <button @onclick="DoLoginBadge" class="login-btn">
+                Login with Badge
+            </button>
+
+            <div class="rfid-note">
+                 RFID reader will auto-fill the code
+            </div>
+        }
+
+        <div class="login-footer">
+            DMC Validation System v1.0
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .login-page {
+        position: relative;
+        min-height: 100vh;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0077B6;
+    }
+
+    .login-bg-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    .login-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 30, 55, 0.68);
+        z-index: 1;
+    }
+
+    .login-card {
+        position: relative;
+        z-index: 2;
+        width: 400px;
+        padding: 40px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.93);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .login-logo {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .logo-icon {
+        font-size: 42px;
+        margin-bottom: 8px;
+    }
+
+    .login-logo h2 {
+        color: #0077B6;
+        margin: 10px 0 5px 0;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .login-logo p {
+        color: #777;
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .login-tabs {
+        display: flex;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #eeeeee;
+    }
+
+    .tab-btn {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        color: #aaaaaa;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: 0.2s ease;
+    }
+
+    .tab-btn:hover {
+        color: #0077B6;
+    }
+
+    .tab-btn.active {
+        color: #0077B6;
+        border-bottom: 2px solid #0077B6;
+    }
+
+    .error-box {
+        background: #fde8e8;
+        color: #e74c3c;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #555555;
+        font-size: 14px;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 11px 15px;
+        border: 1px solid #dddddd;
+        border-radius: 8px;
+        font-size: 15px;
+        box-sizing: border-box;
+        outline: none;
+        background: white;
+        color: #333333;
+    }
+
+    .form-group input:focus {
+        border-color: #0077B6;
+        box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.15);
+    }
+
+    .badge-input {
+        border: 2px solid #0077B6 !important;
+        letter-spacing: 3px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 12px;
+        background: #0077B6;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s ease;
+    }
+
+    .login-btn:hover {
+        background: #005f91;
+        transform: translateY(-1px);
+    }
+
+    .badge-info {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .badge-icon {
+        font-size: 60px;
+        margin-bottom: 15px;
+    }
+
+    .badge-info p {
+        color: #555555;
+        font-size: 15px;
+        margin: 0;
+    }
+
+    .rfid-note {
+        margin-top: 15px;
+        padding: 10px;
+        background: #f0f2f5;
+        border-radius: 8px;
+        font-size: 12px;
+        color: #888888;
+        text-align: center;
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 20px;
+        color: #999999;
+        font-size: 12px;
+    }
+
+    @@media (max-width: 500px) {
+        .login-card {
+            width: calc(100% - 40px);
+            padding: 30px 25px;
+        }
+
+        .login-logo h2 {
+            font-size: 24px;
+        }
+    }
+</style>
+
+@code {
+    private string _activeTab = "password";
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private string _badgeCode = string.Empty;
+    private bool _error = false;
+    private string _errorMessage = string.Empty;
+    private ElementReference _badgeInput;
+
+    protected override void OnInitialized()
+    {
+        if (AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private void DoLogin()
+    {
+        _error = false;
+
+        if (AuthService.Login(_username, _password))
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            _error = true;
+            _errorMessage = "Invalid username or password";
+            _password = string.Empty;
+        }
+    }
+
+    private void DoLoginBadge()
+    {
+        _error = false;
+
+        if (string.IsNullOrWhiteSpace(_badgeCode))
+        {
+            _error = true;
+            _errorMessage = "Please scan your badge";
+            return;
+        }
+
+        if (AuthService.LoginWithBadge(_badgeCode.Trim()))
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            _error = true;
+            _errorMessage = "Badge not recognized";
+            _badgeCode = string.Empty;
+        }
+    }
+
+    private void OnKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            DoLogin();
+        }
+    }
+
+    private void OnBadgeKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            DoLoginBadge();
+        }
+    }
+}

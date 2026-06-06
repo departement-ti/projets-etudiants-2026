@@ -1,0 +1,32 @@
+﻿@using SR750.Listener
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@if (_authorized)
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool RequireAdmin { get; set; } = false;
+
+    private bool _authorized = false;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+
+        if (RequireAdmin && !AuthService.IsAdmin)
+        {
+            Navigation.NavigateTo("/", forceLoad: true);
+            return;
+        }
+
+        _authorized = true;
+    }
+}

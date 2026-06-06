@@ -1,0 +1,693 @@
+﻿@page "/users"
+@using SR750.Listener
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Users — DMC System</PageTitle>
+
+@if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+{
+    <div>Redirecting...</div>
+}
+else
+{
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-left">
+            <h1>Users Management</h1>
+        </div>
+        <button class="btn btn-primary" @onclick="OpenAddModal">
+            Add User
+        </button>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="stat-box">
+            <div class="stat-number">@_users.Count</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-box admin">
+            <div class="stat-number">@_users.Count(u => u.Role == UserRole.Admin)</div>
+            <div class="stat-label">Admins</div>
+        </div>
+        <div class="stat-box supervisor">
+            <div class="stat-number">@_users.Count(u => u.Role == UserRole.Supervisor)</div>
+            <div class="stat-label">Supervisors</div>
+        </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="table-section">
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Badge Code</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in _users)
+                    {
+                        <tr class="@(user.IsActive ? "active" : "inactive")">
+                            <td class="id">@user.Id</td>
+                            <td class="bold">
+                                @user.Username
+                                @if (user.Id == AuthService.CurrentUser?.Id)
+                                {
+                                    <span class="badge-you">You</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="role-badge @(user.Role == UserRole.Admin ? "admin" : "supervisor")">
+                                    @user.Role
+                                </span>
+                            </td>
+                            <td class="mono">
+                                @(string.IsNullOrEmpty(user.BadgeCode) ? "—" : user.BadgeCode)
+                            </td>
+                            <td>
+                                <span class="status-badge @(user.IsActive ? "active" : "inactive")">
+                                    @(user.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <button class="btn-sm btn-edit" @onclick="() => OpenEditModal(user)">Edit</button>
+                                @if (user.Id != AuthService.CurrentUser?.Id)
+                                {
+                                    <button class="btn-sm @(user.IsActive ? "btn-warn" : "btn-success")" @onclick="() => ToggleActive(user)">
+                                        @(user.IsActive ? "Disable" : "Enable")
+                                    </button>
+                                    <button class="btn-sm btn-danger" @onclick="() => DeleteUser(user)">Delete</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (_users.Count == 0)
+            {
+                <div class="empty-state">
+                    <div class="empty-icon">👥</div>
+                    No users found
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    @if (_showModal)
+    {
+        <div class="modal-overlay" @onclick="CloseModal">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h3>@(_editUser == null ? "Add User" : "Edit User")</h3>
+                    <button class="modal-close" @onclick="CloseModal">✕</button>
+                </div>
+
+                @if (_modalError)
+                {
+                    <div class="modal-error">@_modalErrorMsg</div>
+                }
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Username *</label>
+                        <input @bind="_formUsername" placeholder="Enter username" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password @(_editUser != null ? "(leave empty to keep current)" : "*")</label>
+                        <input @bind="_formPassword" type="password" 
+                               placeholder="@(_editUser != null ? "Leave empty to keep current" : "Enter password")" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Role *</label>
+                        <select @bind="_formRole">
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Admin">Admin</option>
+                             <option value="Viewer">Viewer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Badge RFID Code</label>
+                        <input @bind="_formBadge" placeholder="Scan badge or enter code..." />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Cancel</button>
+                    <button class="btn btn-primary" @onclick="SaveUser">
+                        @(_editUser == null ? "Add User" : "Save Changes")
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- CONFIRM DELETE -->
+    @if (_confirmDelete != null)
+    {
+        <div class="modal-overlay" @onclick="() => _confirmDelete = null">
+            <div class="confirm-dialog" @onclick:stopPropagation>
+                <div class="confirm-icon">⚠️</div>
+                <h3>Delete User?</h3>
+                <p>Delete <strong>@_confirmDelete.Username</strong>?</p>
+                <div class="confirm-actions">
+                    <button class="btn btn-secondary" @onclick="() => _confirmDelete = null">Cancel</button>
+                    <button class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    :root {
+        --primary: #0077B6;
+        --primary-dark: #00597A;
+        --success: #27ae60;
+        --danger: #e74c3c;
+        --warning: #e67e22;
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --text-primary: #1a202c;
+        --text-secondary: #718096;
+        --border: #e2e8f0;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+    body { background: var(--bg); }
+
+    .admin-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 28px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .admin-header h1 {
+        margin: 0;
+        color: white;
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 32px;
+        background: var(--bg);
+    }
+
+    .stat-box {
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 24px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .stat-box:hover { box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .stat-box.admin { border-color: var(--danger); }
+    .stat-box.supervisor { border-color: var(--success); }
+
+    .stat-number {
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .stat-box.admin .stat-number { color: var(--danger); }
+    .stat-box.supervisor .stat-number { color: var(--success); }
+
+    .stat-label {
+        font-size: 13px;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+
+    .table-section {
+        padding: 0 32px 32px 32px;
+    }
+
+    .table-wrapper {
+        background: var(--surface);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+    }
+
+    .admin-table thead {
+        background: #f1f5f9;
+        border-bottom: 2px solid var(--border);
+    }
+
+    .admin-table th {
+        padding: 14px 16px;
+        text-align: left;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.4px;
+    }
+
+    .admin-table tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s ease;
+    }
+
+    .admin-table tr:hover { background: #f9fafb; }
+    .admin-table tr.inactive { background: #f5f5f5; }
+
+    .admin-table td {
+        padding: 12px 16px;
+        color: var(--text-primary);
+    }
+
+    .admin-table td.id { color: var(--text-secondary); font-size: 12px; }
+    .admin-table td.bold { font-weight: 600; }
+    .admin-table td.mono { font-family: monospace; font-size: 13px; color: var(--text-secondary); }
+
+    .badge-you {
+        background: #3498db;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        margin-left: 8px;
+    }
+
+    .role-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .role-badge.admin {
+        background: rgba(231, 76, 60, 0.1);
+        color: var(--danger);
+    }
+
+    .role-badge.supervisor {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .status-badge.active {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--success);
+    }
+
+    .status-badge.inactive {
+        background: #f5f5f5;
+        color: #aaa;
+    }
+
+    .actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .btn {
+        padding: 9px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .btn-secondary {
+        background: #f0f0f0;
+        color: var(--text-secondary);
+    }
+
+    .btn-secondary:hover { background: #e0e0e0; }
+
+    .btn-sm {
+        padding: 5px 12px;
+        font-size: 11px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .btn-edit {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-warn {
+        background: var(--warning);
+        color: white;
+    }
+
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--danger);
+        color: white;
+    }
+
+    .empty-state {
+        padding: 60px 32px;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .empty-icon {
+        font-size: 48px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-content {
+        background: var(--surface);
+        border-radius: 12px;
+        width: 100%;
+        max-width: 440px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        font-size: 18px;
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--text-secondary);
+    }
+
+    .modal-error {
+        margin: 20px 28px;
+        padding: 12px 16px;
+        background: #fdf2f2;
+        color: var(--danger);
+        border-radius: 6px;
+        font-size: 13px;
+        border-left: 3px solid var(--danger);
+    }
+
+    .modal-body {
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 13px;
+        color: var(--text-primary);
+        font-family: inherit;
+        transition: all 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+    }
+
+    .modal-footer {
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .confirm-dialog {
+        background: var(--surface);
+        border-radius: 12px;
+        padding: 40px 32px;
+        width: 100%;
+        max-width: 360px;
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .confirm-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+    }
+
+    .confirm-dialog h3 {
+        margin: 0 0 8px 0;
+        font-size: 18px;
+        color: var(--primary);
+    }
+
+    .confirm-dialog p {
+        margin: 0 0 28px 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+    }
+
+    .confirm-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    @@media (max-width: 768px) {
+        .admin-header {
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+            padding: 16px;
+        }
+
+        .stats-section {
+            grid-template-columns: 1fr;
+            padding: 20px 16px;
+        }
+
+        .table-section {
+            padding: 0 16px 20px 16px;
+        }
+
+        .admin-table { font-size: 12px; }
+        .admin-table th, .admin-table td { padding: 10px 8px; }
+
+        .actions { flex-direction: column; }
+        .modal-content { max-width: 95%; }
+    }
+</style>
+
+@code {
+    private List<AppUser> _users = new();
+    private bool _showModal = false;
+    private AppUser? _editUser = null;
+    private AppUser? _confirmDelete = null;
+    private bool _modalError = false;
+    private string _modalErrorMsg = string.Empty;
+
+    private string _formUsername = string.Empty;
+    private string _formPassword = string.Empty;
+    private string _formRole = "Supervisor";
+    private string _formBadge = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+        LoadUsers();
+    }
+
+    private void LoadUsers() => _users = AuthService.GetAllUsers();
+
+    private void OpenAddModal()
+    {
+        _editUser = null;
+        _formUsername = string.Empty;
+        _formPassword = string.Empty;
+        _formRole = "Supervisor";
+        _formBadge = string.Empty;
+        _modalError = false;
+        _showModal = true;
+    }
+
+    private void OpenEditModal(AppUser user)
+    {
+        _editUser = user;
+        _formUsername = user.Username;
+        _formPassword = string.Empty;
+        _formRole = user.Role.ToString();
+        _formBadge = user.BadgeCode ?? string.Empty;
+        _modalError = false;
+        _showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        _showModal = false;
+        _editUser = null;
+        _modalError = false;
+    }
+
+    private void SaveUser()
+    {
+        _modalError = false;
+
+        if (string.IsNullOrWhiteSpace(_formUsername))
+        {
+            _modalError = true;
+            _modalErrorMsg = "Username is required";
+            return;
+        }
+
+        if (_editUser == null && string.IsNullOrWhiteSpace(_formPassword))
+        {
+            _modalError = true;
+            _modalErrorMsg = "Password is required for new users";
+            return;
+        }
+
+        UserRole role = _formRole switch
+{
+    "Admin" => UserRole.Admin,
+    "Supervisor" => UserRole.Supervisor,
+    "Viewer" => UserRole.Viewer,
+    _ => UserRole.Supervisor
+};
+
+        if (_editUser == null)
+        {
+            AuthService.AddUser(_formUsername, _formPassword, role, _formBadge);
+        }
+        else
+        {
+            AuthService.UpdateUser(_editUser.Id, _formUsername, _formPassword, role, _formBadge);
+        }
+
+        LoadUsers();
+        CloseModal();
+    }
+
+    private void ToggleActive(AppUser user)
+    {
+        AuthService.ToggleUserActive(user.Id);
+        LoadUsers();
+    }
+
+    private void DeleteUser(AppUser user) => _confirmDelete = user;
+
+    private void ConfirmDelete()
+    {
+        if (_confirmDelete != null)
+        {
+            AuthService.DeleteUser(_confirmDelete.Id);
+            _confirmDelete = null;
+            LoadUsers();
+        }
+    }
+}

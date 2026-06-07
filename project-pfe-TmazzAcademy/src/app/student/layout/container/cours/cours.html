@@ -1,0 +1,78 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <h2>Courses</h2>
+    <p>Discover the latest courses available on Tmazz Academy</p>
+  </div>
+
+  <p *ngIf="isLoading" class="loading">
+    Loading courses...
+  </p>
+
+  <p *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </p>
+
+  <div class="courses-grid" *ngIf="!isLoading && courses.length > 0">
+
+    <div
+      class="course-card"
+      *ngFor="let course of courses"
+      [routerLink]="['/student/Courses', course.id]"
+    >
+
+      <div class="video-thumb">
+        <video
+          *ngIf="course.videoPath"
+          [src]="getFileUrl(course.videoPath)"
+          muted
+          preload="metadata"
+          controlsList="nodownload"
+          disablePictureInPicture
+          oncontextmenu="return false"
+        ></video>
+
+        <div class="play-icon">
+          ▶
+        </div>
+      </div>
+
+      <div class="course-content">
+
+        <div class="course-avatar">
+          {{ course.instructor?.name?.charAt(0) || 'T' }}
+        </div>
+
+        <div class="course-info">
+          <h3>{{ course.titre }}</h3>
+
+          <p class="instructor">
+            {{ course.instructor?.name || 'Tmazz' }}
+            {{ course.instructor?.lastname || 'Academy' }}
+          </p>
+
+          <p class="rating">
+            ⭐ {{ course.rating || 0 | number:'1.1-1' }}
+            • {{ course.ratingCount || 0 }} reviews
+          </p>
+
+          <p class="description">
+            {{ course.description }}
+          </p>
+
+          <button class="view-btn" type="button">
+            View Course
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <p *ngIf="!isLoading && courses.length === 0" class="empty">
+    No courses found
+  </p>
+
+</div>

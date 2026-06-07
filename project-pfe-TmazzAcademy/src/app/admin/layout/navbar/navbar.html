@@ -1,0 +1,94 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="navbar__container">
+
+    <a class="navbar__brand" routerLink="/admin/">
+      <span class="navbar__brand-icon">M</span>
+      <span class="navbar__brand-name">Tmazz Academy</span>
+    </a>
+
+    <ul class="navbar__links" [class.open]="isMenuOpen">
+      <li>
+        <a routerLink="/admin/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Accept" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Accept</a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Members" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Members</a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Chat" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Chat</a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Payments" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Payments </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Courses" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Courses</a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Dashboard</a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/Profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Profile</a>
+      </li>
+
+      <li class="navbar__cta-mobile">
+        <button class="btn-cta" (click)="logout(); closeMenu()">Logout</button>
+      </li>
+    </ul>
+
+    <div class="navbar__right">
+
+      <div class="notif-wrapper">
+        <button class="notif-btn" type="button" (click)="toggleNotifications()">
+          🔔
+          <span class="notif-badge" *ngIf="notifications.length > 0">
+            {{ notifications.length }}
+          </span>
+        </button>
+
+        <div class="notif-dropdown" *ngIf="showNotifications">
+          <h4>Notifications</h4>
+
+          <div class="notif-empty" *ngIf="notifications.length === 0">
+            No notifications
+          </div>
+
+          <div class="notif-item" *ngFor="let n of notifications">
+            <strong>{{ n.title }}</strong>
+            <p>{{ n.message }}</p>
+            <small>{{ n.createdAt | date:'short' }}</small>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-cta navbar__cta-desktop" (click)="logout(); closeMenu()">Logout</button>
+
+      <button
+        class="navbar__hamburger"
+        [class.active]="isMenuOpen"
+        (click)="toggleMenu()"
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+  </div>
+</nav>
+
+<div
+  class="navbar__overlay"
+  [class.visible]="isMenuOpen"
+  (click)="closeMenu()"
+></div>

@@ -1,0 +1,109 @@
+<div class="payment-page">
+
+  <section class="payment-hero">
+    <div>
+      <p class="eyebrow">Monthly Subscription</p>
+
+      <h1>Monthly Payment</h1>
+
+      <p class="subtitle">
+        Upload your payment receipt photo for this month and follow your payment status.
+      </p>
+    </div>
+
+    <div class="payment-icon">
+      💳
+    </div>
+  </section>
+
+  <div class="payment-layout">
+
+    <div class="payment-card">
+      <div class="card-header">
+        <h2>Upload Receipt</h2>
+        <span>Image required</span>
+      </div>
+
+      <p class="card-desc">
+        Please upload a clear photo of your payment receipt.
+      </p>
+
+      <div class="upload-box">
+        <label for="paymentFile" class="upload-area">
+          <div class="upload-icon">📤</div>
+
+          <h3>
+            {{ selectedFile ? selectedFile.name : 'Choose payment receipt photo' }}
+          </h3>
+
+          <p>
+            PNG, JPG or JPEG accepted
+          </p>
+
+          <input
+            id="paymentFile"
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+          />
+        </label>
+
+        <img
+          *ngIf="preview"
+          [src]="preview"
+          class="preview"
+          alt="Preview"
+        />
+      </div>
+
+      <button
+        class="upload-btn"
+        (click)="uploadPayment()"
+        [disabled]="!selectedFile || isLoading"
+      >
+        {{ isLoading ? 'Uploading...' : 'Upload Payment' }}
+      </button>
+
+      <p class="message" *ngIf="message">
+        {{ message }}
+      </p>
+    </div>
+
+    <div class="history-card">
+      <div class="card-header">
+        <h2>Payment History</h2>
+        <span>{{ payments.length }} records</span>
+      </div>
+
+      <div class="empty" *ngIf="payments.length === 0">
+        <div class="empty-icon">🧾</div>
+        <h3>No payments uploaded yet</h3>
+        <p>Your monthly receipts will appear here.</p>
+      </div>
+
+      <div class="payment-list" *ngIf="payments.length > 0">
+        <div class="payment-item" *ngFor="let p of payments">
+          <img
+            [src]="getImageUrl(p.imagePath)"
+            alt="Payment"
+          />
+
+          <div class="payment-info">
+            <h3>{{ p.month }}/{{ p.year }}</h3>
+
+            <p>
+              Status:
+              <strong [class]="p.status">
+                {{ p.status }}
+              </strong>
+            </p>
+
+            <small>{{ p.uploadedAt | date:'short' }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

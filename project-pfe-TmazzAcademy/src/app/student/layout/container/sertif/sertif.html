@@ -1,0 +1,57 @@
+<div class="certificates-page">
+
+  <section class="certificates-hero">
+    <div>
+      <p class="eyebrow">Student Achievements</p>
+      <h1>My Certificates 🎓</h1>
+      <p class="subtitle">
+        View and download your certificates after successfully passing course tests.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      🎓
+    </div>
+  </section>
+
+  <div *ngIf="loading" class="loading">
+    Loading certificates...
+  </div>
+
+  <div *ngIf="!loading && certificates.length === 0" class="empty-state">
+    <div>📜</div>
+    <h2>No certificates yet</h2>
+    <p>Pass a course test to earn your first certificate.</p>
+  </div>
+
+  <div class="certificates-grid" *ngIf="!loading && certificates.length > 0">
+
+    <div class="certificate-card" *ngFor="let cert of certificates">
+
+      <div class="certificate-icon">
+        🎓
+      </div>
+
+      <div class="certificate-content">
+        <h3>{{ cert.courseTitle }}</h3>
+
+        <p>
+          <strong>Student:</strong>
+          {{ cert.studentName }}
+        </p>
+
+        <p>
+          <strong>Score:</strong>
+          <span class="score">{{ cert.score }}/20</span>
+        </p>
+
+        <button (click)="downloadCertificate(cert.id)">
+          Download PDF
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

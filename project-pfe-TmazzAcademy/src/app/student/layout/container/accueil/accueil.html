@@ -1,0 +1,50 @@
+<section class="student-hero" *ngIf="!isLoading && student">
+  <div class="student-hero__container">
+
+    <div class="student-hero__content">
+      <p class="eyebrow">Student Home</p>
+
+      <h1>
+        Welcome <br />
+        <span>{{ student.name }}</span><br />
+        <span class="highlight">{{ student.lastname }}</span>
+      </h1>
+
+      <p class="subtitle">
+        Continue learning, track your progress, and manage your favorite courses.
+      </p>
+
+      <div class="hero-stats">
+        <div>
+          <strong>{{ favorites.length }}</strong>
+          <span>Favorites</span>
+        </div>
+
+        <div>
+          <strong>{{ certificates.length }}</strong>
+          <span>Certificates</span>
+        </div>
+
+        <div>
+          <strong>{{ passedTests }}</strong>
+          <span>Passed Tests</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="student-hero__card">
+      <div class="avatar">
+        {{ student.name?.charAt(0) }}{{ student.lastname?.charAt(0) }}
+      </div>
+
+      <h2>{{ fullName }}</h2>
+      <p>{{ student.email }}</p>
+      <p>{{ student.tel }}</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="loading" *ngIf="isLoading">
+  Loading profile...
+</div>

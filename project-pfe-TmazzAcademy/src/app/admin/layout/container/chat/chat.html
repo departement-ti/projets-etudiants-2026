@@ -1,0 +1,139 @@
+<div class="chat-page">
+
+  <div class="chat-container">
+
+    <div class="chat-header">
+      <div class="chat-avatar">💬</div>
+
+      <div>
+        <h2>Community Chat</h2>
+        <p>Admin • Instructor • Student</p>
+      </div>
+    </div>
+
+    <div class="chat-body">
+
+      <div
+        class="message-row"
+        *ngFor="let m of messages"
+        [class.mine]="m.senderId === userId"
+      >
+
+        <div class="message-bubble">
+
+          <div class="message-meta">
+            <strong>{{ m.senderName }}</strong>
+            <span>{{ m.senderRole }}</span>
+          </div>
+
+          <p *ngIf="m.type === 'TEXT'">
+            {{ m.content }}
+          </p>
+
+          <img
+            *ngIf="m.type === 'IMAGE'"
+            [src]="getImageUrl(m.imagePath)"
+            class="chat-image"
+            alt="Chat image"
+          />
+
+          <div *ngIf="m.type === 'POLL'" class="poll-box">
+            <h4>{{ m.content }}</h4>
+
+            <button
+              *ngFor="let option of m.options"
+              type="button"
+              (click)="vote(m.id, option.id)"
+            >
+              <span>{{ option.optionText }}</span>
+              <strong>{{ option.votes }}</strong>
+            </button>
+          </div>
+
+          <small>{{ m.createdAt | date:'shortTime' }}</small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="poll-create" *ngIf="showPoll">
+
+      <input
+        [(ngModel)]="pollQuestion"
+        placeholder="Poll question"
+      />
+
+      <div *ngFor="let option of pollOptions; let i = index">
+        <input
+          [(ngModel)]="pollOptions[i]"
+          placeholder="Option {{ i + 1 }}"
+        />
+      </div>
+
+      <div class="poll-actions">
+        <button type="button" (click)="addOption()">
+          + Option
+        </button>
+
+        <button type="button" (click)="createPoll()">
+          Create Poll
+        </button>
+      </div>
+
+    </div>
+
+    <div class="emoji-picker" *ngIf="showEmojiPicker">
+      <span (click)="addEmoji('😀')">😀</span>
+      <span (click)="addEmoji('😂')">😂</span>
+      <span (click)="addEmoji('😍')">😍</span>
+      <span (click)="addEmoji('🔥')">🔥</span>
+      <span (click)="addEmoji('👍')">👍</span>
+      <span (click)="addEmoji('❤️')">❤️</span>
+      <span (click)="addEmoji('🎉')">🎉</span>
+      <span (click)="addEmoji('😎')">😎</span>
+      <span (click)="addEmoji('👏')">👏</span>
+      <span (click)="addEmoji('⭐')">⭐</span>
+      <span (click)="addEmoji('✅')">✅</span>
+      <span (click)="addEmoji('💯')">💯</span>
+    </div>
+
+    <div class="chat-footer">
+
+      <button class="icon-btn" type="button" (click)="fileInput.click()">
+        +
+      </button>
+
+      <button class="icon-btn" type="button" (click)="toggleEmojiPicker()">
+        😀
+      </button>
+
+      <button class="icon-btn" type="button" (click)="togglePoll()">
+        📊
+      </button>
+
+      <input
+        #fileInput
+        type="file"
+        accept="image/*"
+        hidden
+        (change)="onImageSelected($event)"
+      />
+
+      <input
+        class="message-input"
+        [(ngModel)]="message"
+        placeholder="Entrez un message"
+        (keyup.enter)="sendMessage()"
+      />
+
+      <button class="send-btn" type="button" (click)="sendMessage()">
+        ➤
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,51 @@
+<section class="instructor-hero" *ngIf="!isLoading && instructor">
+  <div class="instructor-hero__container">
+
+    <div class="instructor-hero__content">
+      <p class="eyebrow">Instructor Home</p>
+
+      <h1>
+        Welcome <br />
+        <span>{{ instructor.name }}</span><br />
+        <span class="highlight">{{ instructor.lastname }}</span>
+      </h1>
+
+      <p class="subtitle">
+        Manage your courses, create tests, and follow your teaching activity.
+      </p>
+
+      <div class="hero-stats">
+        <div>
+          <strong>{{ totalCourses }}</strong>
+          <span>Total Courses</span>
+        </div>
+
+        <div>
+          <strong>{{ activeCourses }}</strong>
+          <span>Active Courses</span>
+        </div>
+
+        <div>
+          <strong>{{ inactiveCourses }}</strong>
+          <span>Inactive Courses</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="instructor-hero__card">
+      <div class="avatar">
+        {{ instructor.name?.charAt(0) }}{{ instructor.lastname?.charAt(0) }}
+      </div>
+
+      <h2>{{ fullName }}</h2>
+      <p>{{ instructor.email }}</p>
+      <p>{{ instructor.tel }}</p>
+      <p class="speciality">{{ instructor.speciality }}</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="loading" *ngIf="isLoading">
+  Loading instructor profile...
+</div>

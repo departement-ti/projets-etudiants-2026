@@ -1,0 +1,166 @@
+<div class="profile-page" *ngIf="!isLoading && student">
+
+  <section class="profile-hero">
+    <div class="hero-left">
+      <p class="eyebrow">Student Profile</p>
+
+      <h1>
+        Welcome, <span>{{ fullName }}</span>
+      </h1>
+
+      <p class="subtitle">
+        Track your learning progress, certificates, favorite courses and test results.
+      </p>
+    </div>
+
+    <div class="hero-avatar">
+      {{ student.name?.charAt(0) }}{{ student.lastname?.charAt(0) }}
+    </div>
+  </section>
+
+  <section class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-icon heart">❤️</div>
+      <h3>{{ favorites.length }}</h3>
+      <p>Favorite Courses</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon certif">🎓</div>
+      <h3>{{ certificates.length }}</h3>
+      <p>Certificates</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon pass">✅</div>
+      <h3>{{ passedTests }}</h3>
+      <p>Passed Tests</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon fail">❌</div>
+      <h3>{{ failedTests }}</h3>
+      <p>Failed Tests</p>
+    </div>
+
+  </section>
+
+  <section class="content-grid">
+
+    <div class="profile-card">
+      <div class="card-header">
+        <h2>My Profile</h2>
+        <span>Personal info</span>
+      </div>
+
+      <div class="info-row">
+        <label>Name</label>
+        <p>{{ student.name }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Lastname</label>
+        <p>{{ student.lastname }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Email</label>
+        <p>{{ student.email }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Phone</label>
+        <p>{{ student.tel }}</p>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <div class="card-header">
+        <h2>Recent Test Results</h2>
+        <span>Last 5</span>
+      </div>
+
+      <div class="empty" *ngIf="results.length === 0">
+        No test results yet.
+      </div>
+
+      <div class="result-item" *ngFor="let r of results.slice(0, 5)">
+        <div>
+          <strong>{{ r.cours?.titre || 'Course' }}</strong>
+          <p>Score: {{ r.score }}/20</p>
+        </div>
+
+        <span [class.pass]="r.score >= 10" [class.fail]="r.score < 10">
+          {{ r.score >= 10 ? 'Passed' : 'Failed' }}
+        </span>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="profile-card full favorite-section">
+
+    <div class="favorite-header">
+      <div>
+        <h2>Favorite Courses</h2>
+        <p>All the courses you saved and love to learn again.</p>
+      </div>
+
+      <span class="saved-badge">
+        ❤️ {{ favorites.length }} saved
+      </span>
+    </div>
+
+    <div class="empty" *ngIf="favorites.length === 0">
+      No favorite courses yet.
+    </div>
+
+    <div class="favorite-list">
+      <div
+        class="favorite-item"
+        *ngFor="let f of favorites"
+      >
+
+        <div class="favorite-video" *ngIf="f.cours?.videoPath">
+          <video
+            [src]="getFileUrl(f.cours.videoPath)"
+            muted
+            preload="metadata"
+            controlsList="nodownload"
+            disablePictureInPicture
+            oncontextmenu="return false"
+          ></video>
+
+          <div class="play-icon">▶</div>
+        </div>
+
+        <div class="favorite-content">
+          <div class="course-avatar">
+            {{ f.cours?.instructor?.name?.charAt(0) || 'T' }}
+          </div>
+
+          <div class="course-info">
+            <h3>{{ f.cours?.titre }}</h3>
+
+            <p class="rating">
+              ⭐ {{ f.cours?.rating || 0 | number:'1.1-1' }}
+              • {{ f.cours?.ratingCount || 0 }} reviews
+            </p>
+
+            <p class="course-desc">
+              {{ f.cours?.description }}
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  Loading profile...
+</div>

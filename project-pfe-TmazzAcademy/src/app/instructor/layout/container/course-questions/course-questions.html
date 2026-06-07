@@ -1,0 +1,106 @@
+<div class="questions-page">
+
+  <section class="page-hero">
+    <div>
+      <p class="eyebrow">Instructor Panel</p>
+      <h1>Course Questions</h1>
+      <p class="subtitle">
+        Create and manage test questions for this course.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      ❓
+    </div>
+  </section>
+
+  <div class="questions-layout">
+
+    <form (ngSubmit)="addQuestion()" class="question-form">
+
+      <div class="form-header">
+        <h2>Add Question</h2>
+        <span>Quiz test</span>
+      </div>
+
+      <label>Question</label>
+      <textarea
+        [(ngModel)]="newQuestion.question"
+        name="question"
+        placeholder="Write the question"
+      ></textarea>
+
+      <div class="options-grid">
+        <div>
+          <label>Option A</label>
+          <input type="text" [(ngModel)]="newQuestion.optionA" name="optionA" />
+        </div>
+
+        <div>
+          <label>Option B</label>
+          <input type="text" [(ngModel)]="newQuestion.optionB" name="optionB" />
+        </div>
+
+        <div>
+          <label>Option C</label>
+          <input type="text" [(ngModel)]="newQuestion.optionC" name="optionC" />
+        </div>
+
+        <div>
+          <label>Option D</label>
+          <input type="text" [(ngModel)]="newQuestion.optionD" name="optionD" />
+        </div>
+      </div>
+
+      <label>Correct answer</label>
+      <select [(ngModel)]="newQuestion.correctAnswer" name="correctAnswer">
+        <option value="A">Option A</option>
+        <option value="B">Option B</option>
+        <option value="C">Option C</option>
+        <option value="D">Option D</option>
+      </select>
+
+      <button type="submit">
+        Add Question
+      </button>
+
+      <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    </form>
+
+    <div class="questions-list">
+
+      <div class="list-header">
+        <h3>Questions list</h3>
+        <span>{{ questions.length }} questions</span>
+      </div>
+
+      <div class="question-card" *ngFor="let q of questions; let i = index">
+
+        <h4>{{ i + 1 }}. {{ q.question }}</h4>
+
+        <div class="answers">
+          <p>A. {{ q.optionA }}</p>
+          <p>B. {{ q.optionB }}</p>
+          <p>C. {{ q.optionC }}</p>
+          <p>D. {{ q.optionD }}</p>
+        </div>
+
+        <strong>Correct answer: {{ q.correctAnswer }}</strong>
+
+        <button class="delete-btn" (click)="deleteQuestion(q.id)">
+          Delete
+        </button>
+
+      </div>
+
+      <div class="empty-state" *ngIf="questions.length === 0">
+        No questions yet.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

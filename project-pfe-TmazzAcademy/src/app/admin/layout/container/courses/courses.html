@@ -1,0 +1,160 @@
+<div class="courses-page">
+
+  <section class="page-hero">
+    <div>
+      <p class="eyebrow">Admin Panel</p>
+      <h1>Manage Courses</h1>
+      <p class="subtitle">
+        View, edit, delete courses and check course test questions.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      📚
+    </div>
+  </section>
+
+  <p class="success" *ngIf="successMessage">
+    {{ successMessage }}
+  </p>
+
+  <p class="error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+
+  <div class="courses-grid" *ngIf="courses.length > 0">
+
+    <div class="course-card" *ngFor="let course of courses">
+
+      <div *ngIf="editingCourseId !== course.id">
+
+        <div class="video-box" *ngIf="course.videoPath">
+          <video
+            controls
+            controlsList="nodownload"
+            disablePictureInPicture
+            oncontextmenu="return false"
+          >
+            <source
+              [src]="'http://localhost:8082/' + course.videoPath"
+              type="video/mp4"
+            />
+          </video>
+        </div>
+
+        <div class="course-content">
+          <h3>{{ course.titre }}</h3>
+
+          <p class="description">
+            {{ course.description }}
+          </p>
+
+          <div class="meta">
+            <span>
+              👨‍🏫 {{ course.instructor?.name }} {{ course.instructor?.lastname }}
+            </span>
+
+            <span>
+              ⭐ {{ course.rating | number:'1.1-1' }}
+              • {{ course.ratingCount }} reviews
+            </span>
+          </div>
+
+          <a
+            *ngIf="course.pdfPath"
+            [href]="'http://localhost:8082/' + course.pdfPath"
+            target="_blank"
+            class="pdf-btn"
+          >
+            View PDF
+          </a>
+
+          <div class="actions">
+            <button class="view-btn" (click)="viewQuestions(course.id)">
+              View Test
+            </button>
+
+            <button class="edit-btn" (click)="startEdit(course)">
+              Edit
+            </button>
+
+            <button class="delete-btn" (click)="deleteCourse(course.id)">
+              Delete
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="editingCourseId === course.id" class="edit-box">
+
+        <h3>Edit Course</h3>
+
+        <label>Titre</label>
+        <input
+          type="text"
+          [(ngModel)]="editCourse.titre"
+          name="titre{{ course.id }}"
+        />
+
+        <label>Description</label>
+        <textarea
+          [(ngModel)]="editCourse.description"
+          name="description{{ course.id }}"
+        ></textarea>
+
+        <div class="actions">
+          <button class="save-btn" (click)="saveEdit(course.id)">
+            Save
+          </button>
+
+          <button class="cancel-btn" (click)="cancelEdit()">
+            Cancel
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="empty-state" *ngIf="courses.length === 0">
+    <div>📚</div>
+    <h2>No courses found</h2>
+    <p>There are no active courses yet.</p>
+  </div>
+
+  <div class="questions-box" *ngIf="selectedCourseId">
+
+    <div class="questions-header">
+      <div>
+        <p class="eyebrow">Course Test</p>
+        <h2>Course Test Questions</h2>
+      </div>
+
+      <button class="cancel-btn" (click)="closeQuestions()">
+        Close
+      </button>
+    </div>
+
+    <div class="question-card" *ngFor="let q of questions; let i = index">
+
+      <h4>{{ i + 1 }}. {{ q.question }}</h4>
+
+      <p>A. {{ q.optionA }}</p>
+      <p>B. {{ q.optionB }}</p>
+      <p>C. {{ q.optionC }}</p>
+      <p>D. {{ q.optionD }}</p>
+
+      <strong>Correct answer: {{ q.correctAnswer }}</strong>
+
+    </div>
+
+    <p class="empty" *ngIf="questions.length === 0">
+      No questions for this course.
+    </p>
+
+  </div>
+
+</div>

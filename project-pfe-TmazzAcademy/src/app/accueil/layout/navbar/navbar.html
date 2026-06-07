@@ -1,0 +1,43 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="navbar__container">
+
+    <a class="navbar__brand" href="#">
+      <span class="navbar__brand-icon">M</span>
+      <span class="navbar__brand-name">Tmazz Academy</span>
+    </a>
+
+    <ul class="navbar__links" [class.open]="isMenuOpen">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Home</a>
+      </li>
+      <li>
+        <a routerLink="/About" routerLinkActive="active" (click)="closeMenu()">About</a>
+      </li>
+      <li class="navbar__cta-mobile">
+        <a routerLink="/Login" class="btn-cta" (click)="closeMenu()">Login</a>
+      </li>
+    </ul>
+
+    <div class="navbar__right">
+      <a routerLink="/Login" class="btn-cta navbar__cta-desktop">Login</a>
+
+      <button
+        class="navbar__hamburger"
+        [class.active]="isMenuOpen"
+        (click)="toggleMenu()"
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+  </div>
+</nav>
+
+<div
+  class="navbar__overlay"
+  [class.visible]="isMenuOpen"
+  (click)="closeMenu()"
+></div>

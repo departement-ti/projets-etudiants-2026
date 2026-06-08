@@ -1,0 +1,45 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Angular cache
+/.angular
+
+# Dependencies
+/node_modules
+/node_modules_broken_*
+/.npm-cache
+
+# Logs and temporary files
+*.log
+frontend-run.err.log
+frontend-run.out.log
+ngserve.err
+ngserve.out
+structure_front.txt
+
+# IDEs and editors
+.idea/
+.vscode/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# Miscellaneous
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+.env
+
+# System files
+.DS_Store
+Thumbs.db

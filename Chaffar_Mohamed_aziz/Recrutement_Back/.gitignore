@@ -1,0 +1,13 @@
+target/
+.idea/
+uploads/
+*.log
+backend-run.err.log
+backend-run.out.log
+spring-boot*.log
+structure_back.txt
+assistant-secrets.properties
+assistant-secrets.local.properties
+.env
+.vscode/
+logs/

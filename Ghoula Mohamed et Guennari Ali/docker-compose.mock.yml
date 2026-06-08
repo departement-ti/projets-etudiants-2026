@@ -1,0 +1,26 @@
+version: '3.8'
+
+# ==========================================
+# Docker Compose — Rayhan ERP (Mock Mode)
+#
+# Standalone frontend with mock data.
+# No backend or database required.
+# ==========================================
+
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        USE_MOCK: "true"
+    container_name: rayhan-frontend-mock
+    restart: unless-stopped
+    ports:
+      - "3013:80"
+    networks:
+      - rayhan-net
+
+networks:
+  rayhan-net:
+    driver: bridge

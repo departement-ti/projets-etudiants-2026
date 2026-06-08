@@ -1,0 +1,14 @@
+package com.rayhan.erp.repository;
+
+import com.rayhan.erp.model.Notification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
+    List<Notification> findByUserIdAndLuFalseOrderByCreatedAtDesc(Long userId);
+    long countByUserIdAndLuFalse(Long userId);
+    List<Notification> findByUserIdOrderByCreatedAtDesc(Long userId);
+}

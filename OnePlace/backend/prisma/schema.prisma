@@ -1,0 +1,482 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ================= User Model =================
+model User {
+  id                         String      @id @default(uuid())
+  firstname                  String
+  lastname                   String
+  email                      String      @unique
+  password                   String
+  role                       UserRole    @default(user)
+  isSuspended                Boolean     @default(false)
+  lastLogin                  DateTime?
+  isVerified                 Boolean     @default(false)
+  avatarUrl                  String?
+  resetPasswordToken         String?
+  resetPasswordExpiresAt     DateTime?
+  verificationToken          String?
+  verificationTokenExpiresAt DateTime?
+  createdAt                  DateTime    @default(now())
+  updatedAt                  DateTime    @updatedAt
+
+  // Relations
+  communities                Community[] @relation("CommunityCreator")
+  memberships                Membership[]
+  posts                      Post[]
+  comments                   Comment[]
+  postLikes                  PostLike[]
+  lessonProgress             LessonProgress[]
+  coursePurchases            CoursePurchase[]
+  notifications              Notification[]
+  events                     Event[]
+  points                     UserPoints[]
+}
+
+// ================= Community Model =================
+model Community {
+  id           String           @id @default(uuid())
+  name         String
+  description  String?
+  coverUrl     String?
+  iconUrl      String?
+  creatorId    String
+  isPrivate    Boolean          @default(false)
+  platformPlan PlatformPlan
+  pricingModel PricingModel     @default(FREE)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  // Relations
+  creator      User             @relation("CommunityCreator", fields: [creatorId], references: [id])
+  memberships  Membership[]
+  pricing      CommunityPricing?
+  posts        Post[]
+  courses        Course[]
+  events         Event[]
+  userPoints     UserPoints[]
+  media          CommunityMedia[]
+  knowledgeDocs  KnowledgeDoc[]
+
+  @@index([creatorId])
+}
+
+// ================= CommunityPricing Model =================
+// Nullable at community creation — configured later from the dashboard.
+// Fields are model-specific:
+//   SUBSCRIPTION  → monthlyPrice, yearlyPrice
+//   ONE_TIME      → oneTimePrice
+//   FREEMIUM      → upgradePrice (free tier is always free)
+model CommunityPricing {
+  id           String    @id @default(uuid())
+  communityId  String    @unique
+  currency     String    @default("USD")
+  monthlyPrice Decimal?
+  yearlyPrice  Decimal?
+  oneTimePrice Decimal?
+  upgradePrice Decimal?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  community    Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+}
+
+// ================= Membership Model =================
+model Membership {
+  id                 String           @id @default(uuid())
+  userId             String
+  communityId        String
+  role               CommunityRole    @default(member)
+  status             MembershipStatus @default(ACTIVE)
+  pricingModelAtJoin PricingModel     @default(FREE)
+  membershipTier     MembershipTier   @default(FREE)
+  joinedAt           DateTime         @default(now())
+
+  // Relations
+  user               User             @relation(fields: [userId], references: [id])
+  community          Community        @relation(fields: [communityId], references: [id])
+  subscriptions      Subscription[]
+
+  @@unique([userId, communityId])
+  @@index([communityId])
+  @@index([userId])
+}
+
+// ================= Subscription Model =================
+// Covers both recurring (SUBSCRIPTION model) and one-time (ONE_TIME model).
+// subscriptionEnd is null for ONE_TIME — no expiry check needed.
+model Subscription {
+  id                String           @id @default(uuid())
+  membershipId      String
+  externalId        String?
+  billingInterval   BillingInterval?
+  subscriptionStart DateTime         @default(now())
+  subscriptionEnd   DateTime?
+  pricePaid         Decimal
+  paymentStatus     PaymentStatus    @default(PENDING)
+  createdAt         DateTime         @default(now())
+
+  // Relations
+  membership        Membership       @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([membershipId])
+}
+
+// ================= Post Model =================
+model Post {
+  id          String    @id @default(uuid())
+  communityId String
+  authorId    String
+  title       String
+  content     String
+  type        PostType  @default(TEXT)
+  category    String?
+  isPinned    Boolean   @default(false)
+  embedding   Float[]   @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  author      User      @relation(fields: [authorId], references: [id])
+  comments    Comment[]
+  likes       PostLike[]
+
+  @@index([communityId])
+  @@index([authorId])
+}
+
+// ================= PostLike Model =================
+model PostLike {
+  id        String   @id @default(uuid())
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId])
+  @@index([postId])
+}
+
+// ================= Comment Model =================
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String
+  authorId  String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
+
+  @@index([postId])
+  @@index([authorId])
+}
+
+// ================= Course Model =================
+model Course {
+  id               String           @id @default(uuid())
+  communityId      String
+  title            String
+  description      String?
+  thumbnail        String?
+  accessType       CourseAccessType @default(OPEN)
+  unlockAfterDays  Int?
+  price            Decimal?
+  order            Int              @default(0)
+  isPublished      Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  // Relations
+  community        Community        @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  sections         Section[]
+  purchases        CoursePurchase[]
+
+  @@index([communityId])
+}
+
+// ================= CoursePurchase Model =================
+// Tracks individual course purchases for BUY_NOW access type.
+model CoursePurchase {
+  id         String   @id @default(uuid())
+  userId     String
+  courseId   String
+  pricePaid  Decimal
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+}
+
+// ================= Section Model =================
+model Section {
+  id        String   @id @default(uuid())
+  courseId  String
+  title     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  @@index([courseId])
+}
+
+// ================= Lesson Model =================
+model Lesson {
+  id          String       @id @default(uuid())
+  sectionId   String
+  title       String
+  description String?
+  videoUrl    String?
+  content     String?
+  transcript  String?
+  embedding   Float[]      @default([])
+  order       Int          @default(0)
+  duration    Int?
+  isPublished Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  section     Section            @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  attachments LessonAttachment[]
+  progress    LessonProgress[]
+
+  @@index([sectionId])
+}
+
+// ================= LessonAttachment Model =================
+model LessonAttachment {
+  id        String         @id @default(uuid())
+  lessonId  String
+  name      String
+  url       String
+  type      AttachmentType
+  createdAt DateTime       @default(now())
+
+  // Relations
+  lesson    Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+}
+
+// ================= LessonProgress Model =================
+model LessonProgress {
+  id            String    @id @default(uuid())
+  userId        String
+  lessonId      String
+  completedAt   DateTime?
+  videoPosition Int?
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
+}
+
+// ================= KnowledgeDoc Model =================
+model KnowledgeDoc {
+  id          String    @id @default(uuid())
+  communityId String
+  name        String
+  content     String
+  embedding   Float[]   @default([])
+  createdAt   DateTime  @default(now())
+
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@index([communityId])
+}
+
+// ================= Enums =================
+
+enum UserRole {
+  user
+  moderator
+}
+
+enum CommunityRole {
+  creator
+  admin
+  member
+}
+
+enum MembershipStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  BANNED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PlatformPlan {
+  BASIC
+  PRO
+}
+
+enum PricingModel {
+  FREE
+  SUBSCRIPTION
+  FREEMIUM
+  ONE_TIME
+}
+
+enum BillingInterval {
+  MONTHLY
+  YEARLY
+}
+
+enum MembershipTier {
+  FREE
+  PAID
+}
+
+enum PostType {
+  TEXT
+  IMAGE
+  VIDEO
+}
+
+enum AttachmentType {
+  IMAGE
+  PDF
+  FILE
+  LINK
+}
+
+// ================= CommunityMedia Model =================
+model CommunityMedia {
+  id           String    @id @default(uuid())
+  communityId  String
+  url          String
+  thumbnailUrl String?
+  type         MediaType @default(IMAGE)
+  order        Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  community    Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@index([communityId])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum CourseAccessType {
+  OPEN
+  BUY_NOW
+  TIME_UNLOCK
+  PRIVATE
+  LEVEL_UNLOCK
+}
+
+// ================= UserPoints Model =================
+model UserPoints {
+  id          String      @id @default(uuid())
+  userId      String
+  communityId String
+  action      PointAction
+  points      Int
+  createdAt   DateTime    @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  community   Community   @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  @@index([userId, communityId])
+  @@index([communityId, createdAt])
+}
+
+enum PointAction {
+  MEMBERSHIP_JOINED
+  POST_CREATED
+  COMMENT_CREATED
+  LESSON_COMPLETED
+}
+
+// ================= Event Model =================
+model Event {
+  id            String      @id @default(uuid())
+  communityId   String
+  creatorId     String
+  title         String
+  description   String?
+  coverUrl      String?
+  location      String?
+  callRoomUrl   String?
+  startAt       DateTime
+  duration      Int?
+  timezone      String      @default("UTC")
+  isRecurring   Boolean     @default(false)
+  accessType    EventAccess @default(ALL_MEMBERS)
+  emailReminder Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  community     Community   @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  creator       User        @relation(fields: [creatorId], references: [id])
+
+  @@index([communityId])
+  @@index([startAt])
+}
+
+enum EventAccess {
+  ALL_MEMBERS
+  PAID_MEMBERS
+}
+
+// ================= Notification Model =================
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String?
+  link      String?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isRead])
+}
+
+enum NotificationType {
+  NEW_COMMENT
+  NEW_POST
+  MEMBER_JOINED
+  SUBSCRIPTION_EXPIRING
+  SUBSCRIPTION_EXPIRED
+}

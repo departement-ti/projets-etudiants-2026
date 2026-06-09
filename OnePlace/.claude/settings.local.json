@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npm run *)",
+      "Bash(echo \"Server PID: $!\")",
+      "Bash(curl -s http://localhost:5000/)",
+      "Bash(curl -s -X POST http://localhost:5000/api/v1/auth/sign-up -H 'Content-Type: application/json' -d '{\"firstname\":\"Alice\",\"lastname\":\"Creator\",\"email\":\"alice@test.com\",\"password\":\"password123\"}')",
+      "Bash(curl -s -X POST http://localhost:5000/api/v1/auth/sign-up -H 'Content-Type: application/json' -d '{\"firstname\":\"Bob\",\"lastname\":\"Member\",\"email\":\"bob@test.com\",\"password\":\"password123\"}')",
+      "Bash(psql 'postgresql://neondb_owner:npg_7Uj8YsWnCyOH@ep-nameless-voice-aisz90n7-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require' -c 'SELECT email, \"verificationToken\" FROM \"User\" WHERE email IN \\('\\\\''alice@test.com'\\\\'','\\\\''bob@test.com'\\\\''\\);')",
+      "Bash(npx tsx -e ' *)"
+    ]
+  }
+}

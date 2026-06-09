@@ -1,0 +1,85 @@
+<div class="favorites-page">
+
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">My Library</p>
+      <h1>Favorite Courses <span>❤️</span></h1>
+      <p class="subtitle">
+        All your saved courses in one place. Continue learning anytime.
+      </p>
+    </div>
+  </div>
+
+  <p *ngIf="isLoading" class="loading">
+    Loading favorite courses...
+  </p>
+
+  <div class="favorites-grid" *ngIf="!isLoading && favorites.length > 0">
+
+    <div
+      class="favorite-card"
+      *ngFor="let fav of favorites"
+      [routerLink]="['/student/Courses', fav.cours.id]"
+    >
+
+      <div class="video-thumb">
+        <video
+          *ngIf="fav.cours.videoPath"
+          [src]="getFileUrl(fav.cours.videoPath)"
+          muted
+          preload="metadata"
+          controlsList="nodownload"
+          disablePictureInPicture
+          oncontextmenu="return false"
+        ></video>
+
+        <div class="play-icon">
+          ▶
+        </div>
+
+        <div class="heart-badge">
+          ❤️
+        </div>
+      </div>
+
+      <div class="course-content">
+
+        <div class="course-avatar">
+          {{ fav.cours.instructor?.name?.charAt(0) || 'T' }}
+        </div>
+
+        <div class="course-info">
+          <h3>{{ fav.cours.titre }}</h3>
+
+          <p class="instructor">
+            {{ fav.cours.instructor?.name || 'Tmazz' }}
+            {{ fav.cours.instructor?.lastname || 'Academy' }}
+          </p>
+
+          <p class="rating">
+            ⭐ {{ fav.cours.rating || 0 | number:'1.1-1' }}
+            • {{ fav.cours.ratingCount || 0 }} reviews
+          </p>
+
+          <p class="description">
+            {{ fav.cours.description }}
+          </p>
+
+          <button class="view-btn" type="button">
+            View Course
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="empty-state" *ngIf="!isLoading && favorites.length === 0">
+    <div class="empty-icon">🤍</div>
+    <h2>No favorite courses yet</h2>
+    <p>Start exploring courses and add your favorites here.</p>
+  </div>
+
+</div>

@@ -1,0 +1,74 @@
+<div class="payments-page">
+
+  <section class="payments-hero">
+    <div>
+      <p class="eyebrow">Admin Panel</p>
+      <h1>Monthly Payments</h1>
+      <p class="subtitle">
+        Review student monthly payment receipts and approve or reject submissions.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      💳
+    </div>
+  </section>
+
+  <div class="empty-state" *ngIf="payments.length === 0">
+    <div>🧾</div>
+    <h2>No payments found</h2>
+    <p>No monthly payment receipts have been uploaded yet.</p>
+  </div>
+
+  <div class="payments-grid" *ngIf="payments.length > 0">
+
+    <div class="payment-card" *ngFor="let p of payments">
+
+      <div class="image-box">
+        <img
+          [src]="getImageUrl(p.imagePath)"
+          alt="Payment receipt"
+        />
+      </div>
+
+      <div class="payment-info">
+        <h2>
+          {{ p.student?.name }} {{ p.student?.lastname }}
+        </h2>
+
+        <p>Email: {{ p.student?.email }}</p>
+        <p>Month: {{ p.month }}/{{ p.year }}</p>
+
+        <p>
+          Status:
+          <strong [class]="p.status">
+            {{ p.status }}
+          </strong>
+        </p>
+
+        <small>{{ p.uploadedAt | date:'short' }}</small>
+      </div>
+
+      <div class="actions" *ngIf="p.status === 'PENDING'">
+        <button
+          class="accept"
+          (click)="acceptPayment(p.id)"
+          [disabled]="isLoading"
+        >
+          Accept
+        </button>
+
+        <button
+          class="reject"
+          (click)="rejectPayment(p.id)"
+          [disabled]="isLoading"
+        >
+          Reject
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

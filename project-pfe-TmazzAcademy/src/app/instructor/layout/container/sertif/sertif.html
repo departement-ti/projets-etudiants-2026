@@ -1,0 +1,118 @@
+<div class="certificates-page">
+
+  <div class="header">
+    <h1>Students Results</h1>
+    <p>Track students who passed or failed your courses.</p>
+  </div>
+
+  <p *ngIf="isLoading" class="loading">
+    Loading results...
+  </p>
+
+  <p *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </p>
+
+  <div class="stats">
+
+    <div class="stat-card success">
+      <h2>{{ passedStudents.length }}</h2>
+      <p>Certified Students</p>
+    </div>
+
+    <div class="stat-card danger">
+      <h2>{{ failedStudents.length }}</h2>
+      <p>Failed Students</p>
+    </div>
+
+  </div>
+
+  <!-- CERTIFIED STUDENTS -->
+  <div class="section">
+
+    <h2>🏆 Certified Students</h2>
+
+    <table *ngIf="passedStudents.length > 0">
+
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let student of passedStudents">
+
+          <td>{{ student.studentName }}</td>
+
+          <td>{{ student.courseTitle }}</td>
+
+          <td>{{ student.score }}/20</td>
+
+          <td>
+            <span class="badge success">
+              Certified
+            </span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div *ngIf="passedStudents.length === 0" class="empty-state">
+      No certified students yet.
+    </div>
+
+  </div>
+
+  <!-- FAILED STUDENTS -->
+  <div class="section">
+
+    <h2>❌ Failed Students</h2>
+
+    <table *ngIf="failedStudents.length > 0">
+
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Score</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let student of failedStudents">
+
+          <td>{{ student.studentName }}</td>
+
+          <td>{{ student.courseTitle }}</td>
+
+          <td>{{ student.score }}/20</td>
+
+          <td>
+            <span class="badge danger">
+              Failed
+            </span>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <div *ngIf="failedStudents.length === 0" class="empty-state">
+      No failed students.
+    </div>
+
+  </div>
+
+</div>

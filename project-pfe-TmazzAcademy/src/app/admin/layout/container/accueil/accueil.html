@@ -1,0 +1,81 @@
+<div class="admin-home">
+
+  <div class="hero-card">
+    <div>
+      <p class="eyebrow">Admin Home</p>
+      <h1>Welcome to <span>Tmazz Academy</span></h1>
+      <p class="subtitle">
+        Manage students, instructors, courses, payments and platform activity.
+      </p>
+    </div>
+
+    <div class="admin-avatar">
+      A
+    </div>
+  </div>
+
+  <p *ngIf="isLoading" class="loading">
+    Loading dashboard...
+  </p>
+
+  <div class="stats-grid" *ngIf="!isLoading">
+
+    <div class="stat-card">
+      <span>👨‍🎓</span>
+      <h3>{{ students.length }}</h3>
+      <p>Students</p>
+    </div>
+
+    <div class="stat-card">
+      <span>👨‍🏫</span>
+      <h3>{{ instructors.length }}</h3>
+      <p>Instructors</p>
+    </div>
+
+    <div class="stat-card">
+      <span>📚</span>
+      <h3>{{ courses.length }}</h3>
+      <p>Active Courses</p>
+    </div>
+
+    <div class="stat-card">
+      <span>💳</span>
+      <h3>{{ pendingPayments }}</h3>
+      <p>Pending Payments</p>
+    </div>
+
+  </div>
+
+  <div class="content-grid" *ngIf="!isLoading">
+
+    <div class="info-card">
+      <h2>Quick Summary</h2>
+
+      <div class="summary-row">
+        <span>Total Payments</span>
+        <strong>{{ payments.length }}</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Accepted Payments</span>
+        <strong>{{ payments.filter(p => p.status === 'ACCEPTED').length }}</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Rejected Payments</span>
+        <strong>{{ payments.filter(p => p.status === 'REJECTED').length }}</strong>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h2>Admin Actions</h2>
+
+      <p>
+        From this dashboard you can accept new members, manage courses,
+        check monthly payments and follow academy activity.
+      </p>
+    </div>
+
+  </div>
+
+</div>

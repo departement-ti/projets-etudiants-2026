@@ -1,0 +1,173 @@
+$primary: #2563eb;
+$primary-dark: #7c3aed;
+$text-dark: #111827;
+$text-light: #64748b;
+$white: #fff;
+
+.instructor-hero {
+  padding: 5rem 1rem 6rem;
+
+  &__container {
+    max-width: 1180px;
+    min-height: 560px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap: 2rem;
+    background: linear-gradient(135deg, #f8faff 0%, #eef3ff 100%);
+    border-radius: 2rem;
+    overflow: hidden;
+    padding: 3rem 2rem;
+    box-shadow: 0 20px 50px rgba(62, 106, 253, 0.12);
+  }
+
+  &__content {
+    z-index: 2;
+    text-align: center;
+
+    .eyebrow {
+      color: $primary;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: $text-dark;
+
+      span {
+        color: $primary;
+      }
+
+      .highlight {
+        display: inline-block;
+        background: linear-gradient(135deg, $primary, $primary-dark);
+        color: $white;
+        padding: 0.05em 0.18em;
+        border-radius: 12px;
+        box-shadow: 0 10px 22px rgba(62, 106, 253, 0.25);
+      }
+    }
+
+    .subtitle {
+      margin: 1.6rem 0 0;
+      font-size: 1.05rem;
+      color: $text-light;
+      max-width: 520px;
+    }
+  }
+
+  &__card {
+    background: $white;
+    border-radius: 28px;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.12);
+
+    h2 {
+      color: $text-dark;
+      margin: 1rem 0 0.5rem;
+    }
+
+    p {
+      color: $text-light;
+      margin: 0.4rem 0;
+    }
+
+    .speciality {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #eef3ff;
+      color: $primary;
+      font-weight: 800;
+    }
+  }
+}
+
+.avatar {
+  width: 110px;
+  height: 110px;
+  margin: auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 2rem;
+
+  div {
+    background: white;
+    border-radius: 18px;
+    padding: 1rem;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+
+    strong {
+      display: block;
+      color: $primary;
+      font-size: 1.6rem;
+    }
+
+    span {
+      color: $text-light;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+  }
+}
+
+.loading {
+  padding: 40px;
+  color: $text-light;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .instructor-hero {
+    padding-top: 4.5rem;
+
+    &__container {
+      grid-template-columns: 1.05fr 0.95fr;
+      padding: 4rem;
+    }
+
+    &__content {
+      text-align: left;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .instructor-hero {
+    padding: 4rem 1rem;
+
+    &__container {
+      padding: 2.5rem 1.5rem;
+      min-height: auto;
+    }
+
+    &__content h1 {
+      font-size: clamp(2.6rem, 12vw, 4rem);
+    }
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+}

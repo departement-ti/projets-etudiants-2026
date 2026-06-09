@@ -1,0 +1,51 @@
+<button class="chat-toggle" (click)="toggleChat()">
+  💬
+</button>
+
+<div class="chat-box" *ngIf="isOpen">
+
+  <!-- HEADER -->
+  <div class="chat-header">
+
+    <div>
+      <strong>TMazz AI Assistant</strong>
+      <p>Online AI support</p>
+    </div>
+
+    <button (click)="toggleChat()">
+      ×
+    </button>
+
+  </div>
+
+  <!-- BODY -->
+  <div class="chat-body">
+
+    <div
+      class="message"
+      *ngFor="let msg of messages"
+      [class.user]="msg.from === 'user'"
+      [class.bot]="msg.from === 'bot'"
+    >
+      {{ msg.text }}
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="chat-footer">
+
+    <input
+      type="text"
+      [(ngModel)]="message"
+      placeholder="Write a message..."
+      (keyup.enter)="sendMessage()"
+    />
+
+    <button (click)="sendMessage()">
+      Send
+    </button>
+
+  </div>
+
+</div>

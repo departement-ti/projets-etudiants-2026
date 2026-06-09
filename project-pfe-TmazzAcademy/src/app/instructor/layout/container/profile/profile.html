@@ -1,0 +1,107 @@
+<div class="profile-page" *ngIf="!isLoading && instructor">
+
+  <div class="welcome-card">
+    <div class="avatar">
+      {{ instructor.name?.charAt(0) }}{{ instructor.lastname?.charAt(0) }}
+    </div>
+
+    <div>
+      <h1>Welcome, {{ fullName }}</h1>
+      <p>Instructor dashboard</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <span>📚</span>
+      <h3>{{ totalCourses }}</h3>
+      <p>Total Courses</p>
+    </div>
+
+    <div class="stat-card">
+      <span>✅</span>
+      <h3>{{ activeCourses }}</h3>
+      <p>Active Courses</p>
+    </div>
+
+    <div class="stat-card">
+      <span>🗑️</span>
+      <h3>{{ inactiveCourses }}</h3>
+      <p>Inactive Courses</p>
+    </div>
+
+    <div class="stat-card">
+      <span>🎯</span>
+      <h3>{{ instructor.speciality || 'N/A' }}</h3>
+      <p>Speciality</p>
+    </div>
+
+  </div>
+
+  <div class="content-grid">
+
+    <div class="profile-card">
+      <h2>My Profile</h2>
+
+      <div class="info-row">
+        <label>Name</label>
+        <p>{{ instructor.name }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Lastname</label>
+        <p>{{ instructor.lastname }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Email</label>
+        <p>{{ instructor.email }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Phone</label>
+        <p>{{ instructor.tel }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Speciality</label>
+        <p>{{ instructor.speciality }}</p>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <h2>Teaching Summary</h2>
+
+      <div class="summary-box">
+        <span>📚</span>
+        <div>
+          <strong>{{ totalCourses }}</strong>
+          <p>Courses published by you</p>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <span>✅</span>
+        <div>
+          <strong>{{ activeCourses }}</strong>
+          <p>Available active courses</p>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <span>🗑️</span>
+        <div>
+          <strong>{{ inactiveCourses }}</strong>
+          <p>Deleted or inactive courses</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="loading" *ngIf="isLoading">
+  Loading instructor profile...
+</div>

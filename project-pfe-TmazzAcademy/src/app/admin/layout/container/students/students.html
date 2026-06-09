@@ -1,0 +1,113 @@
+<div class="page-container">
+  <div class="page-hero">
+    <div>
+      <p>Admin Panel</p>
+      <h1>New Students</h1>
+      <span>Pending student inscriptions</span>
+    </div>
+    <strong>{{ students.length }}</strong>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Lastname</th>
+          <th>Email</th>
+          <th>Tel</th>
+          <th>Payment Receipt</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let student of students">
+          <td>{{ student.name }}</td>
+          <td>{{ student.lastname }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.tel }}</td>
+
+          <td>
+            <img
+              *ngIf="student.recuPaiement"
+              [src]="getReceiptUrl(student.recuPaiement)"
+              class="receipt-img"
+              alt="Receipt"
+            />
+          </td>
+
+          <td>
+            <button class="add-btn" (click)="openPopup(student)">
+              ADD
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty" *ngIf="students.length === 0">
+      No students found
+    </div>
+  </div>
+</div>
+
+<div class="popup-backdrop" *ngIf="showPopup">
+  <div class="popup">
+    <button type="button" class="close-btn" (click)="closePopup()">×</button>
+
+    <h2>Accept Student</h2>
+
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" [value]="selectedStudent?.name" disabled />
+    </div>
+
+    <div class="form-group">
+      <label>Lastname</label>
+      <input type="text" [value]="selectedStudent?.lastname" disabled />
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="text" [value]="selectedStudent?.email" disabled />
+    </div>
+
+    <div class="form-group">
+      <label>Tel</label>
+      <input type="text" [value]="selectedStudent?.tel" disabled />
+    </div>
+
+    <div class="form-group">
+      <label>Payment Receipt</label>
+
+      <img
+        *ngIf="selectedStudent?.recuPaiement"
+        [src]="getReceiptUrl(selectedStudent.recuPaiement)"
+        class="receipt-preview"
+        alt="Payment Receipt"
+      />
+
+      <a
+        *ngIf="selectedStudent?.recuPaiement"
+        [href]="getReceiptUrl(selectedStudent.recuPaiement)"
+        target="_blank"
+      >
+        Open full image
+      </a>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" [(ngModel)]="password" placeholder="Enter password" />
+    </div>
+
+    <button
+      class="accept-btn"
+      (click)="acceptStudent()"
+      [disabled]="!password || isLoading"
+    >
+      {{ isLoading ? 'Accepting...' : 'Accept' }}
+    </button>
+  </div>
+</div>

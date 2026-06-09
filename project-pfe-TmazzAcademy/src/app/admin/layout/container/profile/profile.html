@@ -1,0 +1,52 @@
+<div class="profile-page">
+
+  <div class="welcome-card">
+    <div class="avatar">
+      A
+    </div>
+
+    <div>
+      <h1>Welcome, {{ fullName }}</h1>
+      <p>Admin profile</p>
+    </div>
+  </div>
+
+  <div class="content-grid">
+
+    <div class="profile-card">
+      <h2>My Profile</h2>
+
+      <div class="info-row">
+        <label>Name</label>
+        <p>{{ admin.name }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Lastname</label>
+        <p>{{ admin.lastname }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Email</label>
+        <p>{{ admin.email }}</p>
+      </div>
+
+      <div class="info-row">
+        <label>Role</label>
+        <p>{{ admin.role }}</p>
+      </div>
+    </div>
+
+    <div class="profile-card">
+      <h2>Admin Permissions</h2>
+
+      <div class="permission">✅ Accept students and instructors</div>
+      <div class="permission">✅ Manage members</div>
+      <div class="permission">✅ Manage courses</div>
+      <div class="permission">✅ Review monthly payments</div>
+      <div class="permission">✅ View dashboard statistics</div>
+    </div>
+
+  </div>
+
+</div>

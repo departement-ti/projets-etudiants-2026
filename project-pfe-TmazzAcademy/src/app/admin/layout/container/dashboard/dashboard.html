@@ -1,0 +1,112 @@
+<div class="dashboard-page">
+
+  <section class="dashboard-hero">
+    <div>
+      <p class="eyebrow">Admin Analytics</p>
+      <h1>Admin Dashboard 📊</h1>
+      <p class="subtitle">
+        Follow student success, certificates and instructor activity.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      📈
+    </div>
+  </section>
+
+  <div class="stats-grid">
+
+    <div class="stat-card blue">
+      <span>✅</span>
+      <h2>{{ totalPassed }}</h2>
+      <p>Students Passed Tests</p>
+    </div>
+
+    <div class="stat-card purple">
+      <span>🎓</span>
+      <h2>{{ totalCertificates }}</h2>
+      <p>Certificates Generated</p>
+    </div>
+
+  </div>
+
+  <div class="charts-grid">
+
+    <div class="chart-card">
+      <h2>Certificates Per Month</h2>
+
+      <canvas
+        baseChart
+        [data]="certificatesChartData"
+        [options]="chartOptions"
+        [type]="'bar'"
+      >
+      </canvas>
+    </div>
+
+    <div class="chart-card">
+      <h2>Active Instructors</h2>
+
+      <canvas
+        baseChart
+        [data]="activeInstructorsChartData"
+        [options]="chartOptions"
+        [type]="'line'"
+      >
+      </canvas>
+    </div>
+
+  </div>
+
+  <div class="table-card">
+
+    <div class="table-header">
+      <div>
+        <p class="eyebrow">Results</p>
+        <h2>Students Who Passed</h2>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Course</th>
+            <th>Score</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let r of passedStudents">
+            <td>
+              {{ r.student?.name }}
+              {{ r.student?.lastname }}
+            </td>
+
+            <td>
+              {{ r.cours?.titre }}
+            </td>
+
+            <td>
+              <span class="score-badge">{{ r.score }}/20</span>
+            </td>
+
+            <td>
+              {{ r.passedAt | date:'mediumDate' }}
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+    <div class="empty" *ngIf="passedStudents.length === 0">
+      No passed students yet.
+    </div>
+
+  </div>
+
+</div>

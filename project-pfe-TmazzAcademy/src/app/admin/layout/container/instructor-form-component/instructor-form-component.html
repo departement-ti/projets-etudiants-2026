@@ -1,0 +1,15 @@
+<form [formGroup]="form" class="form">
+
+  <h3>Add Instructor</h3>
+
+  <input formControlName="name" placeholder="Name">
+  <input formControlName="lastname" placeholder="Lastname">
+  <input formControlName="email" placeholder="Email">
+  <input formControlName="password" placeholder="Password" type="password">
+  <input formControlName="tel" placeholder="Phone">
+  <input formControlName="speciality" placeholder="Speciality">
+
+  <button type="button" (click)="submit()">Save</button>
+  <button type="button" (click)="cancel()">Cancel</button>
+
+</form>

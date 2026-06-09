@@ -1,0 +1,241 @@
+<div class="page-container">
+
+  <section class="page-hero">
+    <div>
+      <p class="eyebrow">Instructor Panel</p>
+      <h1>Add Course</h1>
+      <p class="subtitle">
+        Upload a new course with video, PDF and manage your published courses.
+      </p>
+    </div>
+
+    <div class="hero-icon">
+      📚
+    </div>
+  </section>
+
+  <div class="layout-grid">
+
+    <form class="course-form" (ngSubmit)="submitCourse()" #courseForm="ngForm">
+
+      <div class="form-header">
+        <h2>Create Course</h2>
+        <span>New upload</span>
+      </div>
+
+      <div class="form-group">
+        <label>Titre</label>
+        <input
+          type="text"
+          name="titre"
+          [(ngModel)]="titre"
+          placeholder="Course title"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          name="description"
+          [(ngModel)]="description"
+          placeholder="Course description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="file-grid">
+        <div class="form-group">
+          <label>Video</label>
+          <input
+            #videoInput
+            type="file"
+            accept="video/*"
+            (change)="onVideoSelected($event)"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>PDF</label>
+          <input
+            #pdfInput
+            type="file"
+            accept="application/pdf"
+            (change)="onPdfSelected($event)"
+          />
+        </div>
+      </div>
+
+      <button class="submit-btn" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Uploading...' : 'Add Course' }}
+      </button>
+
+      <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+      <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+    </form>
+
+    <div class="side-card">
+      <div class="side-icon">🎯</div>
+      <h2>Course Tips</h2>
+      <p>Use a clear title, short description, high-quality video and useful PDF support.</p>
+    </div>
+
+  </div>
+
+  <section class="instructor-courses">
+
+    <div class="section-header">
+      <div>
+        <p class="eyebrow dark">My Content</p>
+        <h2>My Courses</h2>
+      </div>
+
+      <span>{{ courses.length }} courses</span>
+    </div>
+
+    <div class="courses-grid" *ngIf="courses.length > 0">
+
+      <div class="course-card" *ngFor="let course of courses">
+
+        <div *ngIf="editingCourseId !== course.id">
+
+          <div class="course-top">
+            <div class="course-icon">
+              {{ course.titre?.charAt(0) || 'C' }}
+            </div>
+
+            <div>
+              <h3>{{ course.titre }}</h3>
+
+              <p class="rating">
+                ⭐ {{ course.rating | number:'1.1-1' }}
+                • {{ course.ratingCount }} reviews
+              </p>
+            </div>
+          </div>
+
+          <p class="description">
+            {{ course.description }}
+          </p>
+
+          <div class="actions">
+
+            <button
+              type="button"
+              class="question-btn"
+              [routerLink]="['/instructor/Questions', course.id]"
+            >
+              Manage Questions
+            </button>
+
+            <button
+              type="button"
+              class="comments-btn"
+              (click)="toggleComments(course.id)"
+            >
+              {{ openedCommentsCourseId === course.id ? 'Hide Comments' : 'View Comments' }}
+            </button>
+
+            <button
+              type="button"
+              class="edit-btn"
+              (click)="startEdit(course)"
+            >
+              Edit
+            </button>
+
+            <button
+              type="button"
+              class="delete-btn"
+              (click)="deleteCourse(course.id)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+          <div
+            class="comments-box"
+            *ngIf="openedCommentsCourseId === course.id"
+          >
+            <h4>Course Comments</h4>
+
+            <div
+              class="comment-item"
+              *ngFor="let comment of commentsByCourse[course.id]"
+            >
+              <div class="comment-header">
+                <strong>{{ comment.studentName || comment.student?.name || 'Student' }}</strong>
+                <span>⭐ {{ comment.stars || comment.rating }}/5</span>
+              </div>
+
+              <p>{{ comment.comment }}</p>
+
+              <small *ngIf="comment.emoji">
+                {{ comment.emoji }}
+              </small>
+            </div>
+
+            <div
+              class="no-comments"
+              *ngIf="commentsByCourse[course.id]?.length === 0"
+            >
+              No comments yet.
+            </div>
+          </div>
+
+        </div>
+
+        <div *ngIf="editingCourseId === course.id" class="edit-box">
+
+          <h3>Edit Course</h3>
+
+          <label>Titre</label>
+          <input
+            type="text"
+            [(ngModel)]="editCourse.titre"
+            name="editTitre{{ course.id }}"
+          />
+
+          <label>Description</label>
+          <textarea
+            [(ngModel)]="editCourse.description"
+            name="editDescription{{ course.id }}"
+          ></textarea>
+
+          <div class="actions">
+
+            <button
+              type="button"
+              class="save-btn"
+              (click)="saveEdit(course.id)"
+            >
+              Save
+            </button>
+
+            <button
+              type="button"
+              class="cancel-btn"
+              (click)="cancelEdit()"
+            >
+              Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="courses.length === 0" class="empty-state">
+      <div>📚</div>
+      <h3>No courses yet</h3>
+      <p>Create your first course from the form above.</p>
+    </div>
+
+  </section>
+
+</div>

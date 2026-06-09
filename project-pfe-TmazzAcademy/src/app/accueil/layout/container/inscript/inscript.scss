@@ -1,0 +1,184 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f6f6;
+
+  form {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.login-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 1.4rem;
+  color: #2563eb;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #1e293b;
+  margin: 0 0 0.25rem;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0 0 1.75rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+  }
+}
+
+button {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-bottom: 0.8rem;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+
+  &:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+  }
+}
+
+.secondary-btn {
+  background: #eff6ff;
+  color: #2563eb;
+
+  &:hover {
+    background: #dbeafe;
+  }
+}
+
+.success {
+  color: #16a34a;
+  font-size: 0.82rem;
+  text-align: center;
+  margin-top: 0.75rem;
+  font-weight: 600;
+}
+
+.field-error {
+  display: block;
+  color: #dc2626;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.field-info {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  width: 390px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  position: relative;
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: auto;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 1.6rem;
+  line-height: 1;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: transparent;
+    color: #1e293b;
+  }
+}
+
+.receipt-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-top: 10px;
+  background: #f8fafc;
+}

@@ -1,0 +1,190 @@
+<div class="details-page" *ngIf="course">
+
+  
+
+  <section class="video-section">
+    <video
+      *ngIf="course.videoPath"
+      controls
+      controlsList="nodownload"
+      disablePictureInPicture
+      oncontextmenu="return false"
+    >
+      <source [src]="getFileUrl(course.videoPath)" type="video/mp4" />
+    </video>
+  </section>
+
+  <section class="course-hero">
+    <div>
+      <p class="eyebrow">Course Details</p>
+
+      <h1>{{ course.titre }}</h1>
+
+      <p class="description">
+        {{ course.description }}
+      </p>
+
+      <div class="actions">
+        <button class="favorite-btn" (click)="toggleFavorite()">
+          {{ isFavorite ? '❤️ Remove Favorite' : '🤍 Add Favorite' }}
+        </button>
+
+        <a
+          *ngIf="course.pdfPath"
+          [href]="getFileUrl(course.pdfPath)"
+          target="_blank"
+          class="pdf-btn"
+        >
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-card">
+    <h2>Course Test</h2>
+
+    <button
+      *ngIf="questions.length > 0 && !showTest && !testBlocked"
+      class="test-btn"
+      (click)="startTest()"
+    >
+      Start Test
+    </button>
+
+    <p class="empty" *ngIf="questions.length === 0">
+      No test available for this course.
+    </p>
+
+    <div class="test-blocked" *ngIf="testBlocked">
+      <h3>⏳ Test locked</h3>
+      <p>{{ testBlockMessage }}</p>
+
+      <p *ngIf="attemptsLeft > 0">
+        Attempts left: {{ attemptsLeft }}
+      </p>
+
+      <strong *ngIf="countdownText">
+        {{ countdownText }}
+      </strong>
+    </div>
+
+    <form
+      *ngIf="showTest && !testResult && !testBlocked"
+      class="test-form"
+      (ngSubmit)="submitTest()"
+    >
+      <div class="question-box" *ngFor="let q of questions; let i = index">
+        <h3>{{ i + 1 }}. {{ q.question }}</h3>
+
+        <label>
+          <input type="radio" [name]="'question_' + q.id" value="A" [(ngModel)]="answers[q.id]" required />
+          A. {{ q.optionA }}
+        </label>
+
+        <label>
+          <input type="radio" [name]="'question_' + q.id" value="B" [(ngModel)]="answers[q.id]" />
+          B. {{ q.optionB }}
+        </label>
+
+        <label>
+          <input type="radio" [name]="'question_' + q.id" value="C" [(ngModel)]="answers[q.id]" />
+          C. {{ q.optionC }}
+        </label>
+
+        <label>
+          <input type="radio" [name]="'question_' + q.id" value="D" [(ngModel)]="answers[q.id]" />
+          D. {{ q.optionD }}
+        </label>
+      </div>
+
+      <button type="submit" class="submit-test-btn">
+        Submit Test
+      </button>
+    </form>
+
+    <div
+      class="test-result"
+      *ngIf="testResult"
+      [class.success]="testResult.score >= 10"
+      [class.failed]="testResult.score < 10"
+    >
+      <h3>Your score: {{ testResult.score }}/20</h3>
+
+      <p>
+        {{ testResult.score >= 10 ? '✅ Passed' : '❌ Failed' }}
+      </p>
+
+      <button
+        *ngIf="testResult.score < 10"
+        class="test-btn"
+        (click)="startTest(); testResult = null; answers = {}"
+      >
+        Retry Test
+      </button>
+    </div>
+  </section>
+
+  <section class="section-card">
+    <h2>Comments & Rating</h2>
+
+    <form (ngSubmit)="addComment()" class="comment-form">
+      <label>Stars</label>
+
+      <select [(ngModel)]="newComment.stars" name="stars">
+        <option [value]="5">⭐⭐⭐⭐⭐</option>
+        <option [value]="4">⭐⭐⭐⭐</option>
+        <option [value]="3">⭐⭐⭐</option>
+        <option [value]="2">⭐⭐</option>
+        <option [value]="1">⭐</option>
+      </select>
+
+      <label>Comment</label>
+
+      <div class="emoji-box">
+        <button type="button" (click)="addEmoji('😊')">😊</button>
+        <button type="button" (click)="addEmoji('❤️')">❤️</button>
+        <button type="button" (click)="addEmoji('🔥')">🔥</button>
+        <button type="button" (click)="addEmoji('👏')">👏</button>
+        <button type="button" (click)="addEmoji('⭐')">⭐</button>
+        <button type="button" (click)="addEmoji('👍')">👍</button>
+        <button type="button" (click)="addEmoji('😍')">😍</button>
+        <button type="button" (click)="addEmoji('😂')">😂</button>
+      </div>
+
+      <textarea
+        [(ngModel)]="newComment.comment"
+        name="comment"
+        placeholder="Write your comment..."
+        required
+      ></textarea>
+
+      <button type="submit" class="add-comment-btn">
+        Add Comment
+      </button>
+    </form>
+
+    <div class="comments-list">
+      <div class="comment-card" *ngFor="let c of comments">
+        <div class="comment-avatar">
+          {{ c.student?.name?.charAt(0) }}{{ c.student?.lastname?.charAt(0) }}
+        </div>
+
+        <div>
+          <strong>
+            {{ c.student?.name }} {{ c.student?.lastname }}
+          </strong>
+
+          <p class="stars">
+            {{ '⭐'.repeat(c.stars) }}
+          </p>
+
+          <p class="comment-text">
+            {{ c.comment }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

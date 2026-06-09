@@ -1,0 +1,47 @@
+<div class="page-container">
+  <div class="page-hero">
+    <div>
+      <p>Members</p>
+      <h1>Our Students</h1>
+      <span>Manage accepted students</span>
+    </div>
+    <strong>{{ students.length }}</strong>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Lastname</th>
+          <th>Email</th>
+          <th>Tel</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let student of students">
+          <td>{{ student.name }}</td>
+          <td>{{ student.lastname }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ student.tel }}</td>
+
+          <td class="actions">
+            <button class="detail-btn" (click)="viewStudent(student.id)">
+              Detail
+            </button>
+
+            <button class="delete-btn" (click)="deleteStudent(student.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="empty" *ngIf="students.length === 0">
+      No students found
+    </div>
+  </div>
+</div>

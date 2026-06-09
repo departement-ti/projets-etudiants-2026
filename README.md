@@ -1,2 +1,4 @@
-# projets-etudiants-2026
-Dépôt des projets étudiants
+Projet de fin d'études : OnePalce
+Frontend : React
+Backend : Express
+Réalisé par : Bilel Jabrane & Rayen Mekni

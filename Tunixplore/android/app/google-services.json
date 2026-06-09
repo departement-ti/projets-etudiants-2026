@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "848757067501",
+    "project_id": "tunixplore-41763",
+    "storage_bucket": "tunixplore-41763.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848757067501:android:38e8d0cd0c2d20e75c86e4",
+        "android_client_info": {
+          "package_name": "com.example.tunixplore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "848757067501-vqqrrta33k1gfe1jvovvgbok19dms659.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvqCQd0XBYyTHYQrCzKqzVhRqQqdcBvJI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848757067501-vqqrrta33k1gfe1jvovvgbok19dms659.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "848757067501-5v3mn7ee2gvjkqla8sdf70pva6g8m29t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tunixplore"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848757067501:android:8524ce489db0192e5c86e4",
+        "android_client_info": {
+          "package_name": "com.telahigprod.tunixplore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "848757067501-vqqrrta33k1gfe1jvovvgbok19dms659.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvqCQd0XBYyTHYQrCzKqzVhRqQqdcBvJI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848757067501-vqqrrta33k1gfe1jvovvgbok19dms659.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "848757067501-5v3mn7ee2gvjkqla8sdf70pva6g8m29t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tunixplore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "467464423636",
+    "project_id": "valortash",
+    "storage_bucket": "valortash.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:467464423636:android:5536e830a00310daf59341",
+        "android_client_info": {
+          "package_name": "com.example.valortrash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvxplamgBOPZcdWUT867wJy5Dd6Y7FtIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

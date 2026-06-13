@@ -1,0 +1,39 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "Reminders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "caregiverEmail", "order": "ASCENDING"},
+        {"fieldPath": "read", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "Notifications",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "targetEmail", "order": "ASCENDING"},
+        {"fieldPath": "read", "order": "ASCENDING"},
+        {"fieldPath": "sentAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "Incidents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "elderlyEmail", "order": "ASCENDING"},
+        {"fieldPath": "resolved", "order": "ASCENDING"},
+        {"fieldPath": "date", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "AutonomyScores",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "userEmail", "order": "ASCENDING"},
+        {"fieldPath": "date", "order": "DESCENDING"}
+      ]
+    }
+  ]
+}

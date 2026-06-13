@@ -1,0 +1,4531 @@
+{
+  "model_info": {
+    "n_recipes": 500,
+    "n_features": 9,
+    "trained_on": "food.com dataset (real)",
+    "scaler_mean": [
+      284.1048,
+      12.74,
+      4.0412,
+      45.5956,
+      439.0522,
+      28.988799999999998,
+      3.0846,
+      9.111600000000001,
+      13.3712
+    ],
+    "scaler_std": [
+      169.63190377095933,
+      10.571465366731331,
+      3.2777038548349666,
+      54.98137557973609,
+      457.1376970401369,
+      21.692960023012073,
+      3.6466728452110977,
+      8.946457703471246,
+      14.486058489458062
+    ]
+  },
+  "recipes": [
+    {
+      "idx": 0,
+      "name": "Mango Salsa",
+      "type": "snack",
+      "calories": 50.1,
+      "fat": 1.4,
+      "protein": 0.7,
+      "carbs": 11.9
+    },
+    {
+      "idx": 1,
+      "name": "Zesty Seasoning Mix",
+      "type": "snack",
+      "calories": 51.3,
+      "fat": 0.8,
+      "protein": 2.6,
+      "carbs": 10.3
+    },
+    {
+      "idx": 2,
+      "name": "Potato Scones",
+      "type": "snack",
+      "calories": 52.4,
+      "fat": 3.5,
+      "protein": 0.6,
+      "carbs": 4.7
+    },
+    {
+      "idx": 3,
+      "name": "Light N' Fresh Tomato Onion and Garlic Soup",
+      "type": "snack",
+      "calories": 53.5,
+      "fat": 0.5,
+      "protein": 1.9,
+      "carbs": 12.0
+    },
+    {
+      "idx": 4,
+      "name": "Lemon Dill Butter",
+      "type": "snack",
+      "calories": 54.6,
+      "fat": 6.1,
+      "protein": 0.1,
+      "carbs": 0.1
+    },
+    {
+      "idx": 5,
+      "name": "Razmanian Devil Smoothie",
+      "type": "snack",
+      "calories": 55.8,
+      "fat": 0.2,
+      "protein": 0.9,
+      "carbs": 12.9
+    },
+    {
+      "idx": 6,
+      "name": "Mini Brioche Lobster Rolls",
+      "type": "snack",
+      "calories": 56.9,
+      "fat": 2.6,
+      "protein": 5.9,
+      "carbs": 2.2
+    },
+    {
+      "idx": 7,
+      "name": "Fruit Facial Mask (summer)",
+      "type": "snack",
+      "calories": 58.1,
+      "fat": 0.3,
+      "protein": 4.9,
+      "carbs": 10.2
+    },
+    {
+      "idx": 8,
+      "name": "Aam Ras",
+      "type": "snack",
+      "calories": 59.2,
+      "fat": 0.3,
+      "protein": 0.5,
+      "carbs": 15.3
+    },
+    {
+      "idx": 9,
+      "name": "Crab Pea Pods",
+      "type": "snack",
+      "calories": 60.1,
+      "fat": 2.8,
+      "protein": 4.4,
+      "carbs": 4.4
+    },
+    {
+      "idx": 10,
+      "name": "Homemade Ketchup",
+      "type": "snack",
+      "calories": 61.1,
+      "fat": 2.4,
+      "protein": 0.7,
+      "carbs": 10.0
+    },
+    {
+      "idx": 11,
+      "name": "Full of Spice Cheddar Noodles",
+      "type": "snack",
+      "calories": 62.2,
+      "fat": 4.9,
+      "protein": 3.7,
+      "carbs": 1.2
+    },
+    {
+      "idx": 12,
+      "name": "Ploye",
+      "type": "snack",
+      "calories": 63.3,
+      "fat": 0.4,
+      "protein": 2.2,
+      "carbs": 13.4
+    },
+    {
+      "idx": 13,
+      "name": "Cucumber Salmon Salad &quot;Sushi&quot;",
+      "type": "snack",
+      "calories": 64.2,
+      "fat": 2.0,
+      "protein": 9.1,
+      "carbs": 2.2
+    },
+    {
+      "idx": 14,
+      "name": "Fudge Filled Bars",
+      "type": "snack",
+      "calories": 65.2,
+      "fat": 3.3,
+      "protein": 1.0,
+      "carbs": 9.0
+    },
+    {
+      "idx": 15,
+      "name": "Ginger Cream Triangles",
+      "type": "snack",
+      "calories": 66.1,
+      "fat": 3.6,
+      "protein": 2.2,
+      "carbs": 6.5
+    },
+    {
+      "idx": 16,
+      "name": "Bertha's Luscious Cabbage",
+      "type": "snack",
+      "calories": 67.2,
+      "fat": 2.0,
+      "protein": 2.6,
+      "carbs": 11.4
+    },
+    {
+      "idx": 17,
+      "name": "Buttercream Mints",
+      "type": "snack",
+      "calories": 68.2,
+      "fat": 2.9,
+      "protein": 0.0,
+      "carbs": 10.8
+    },
+    {
+      "idx": 18,
+      "name": "Theresa's Double Tomato Soup",
+      "type": "snack",
+      "calories": 69.2,
+      "fat": 2.5,
+      "protein": 2.0,
+      "carbs": 11.3
+    },
+    {
+      "idx": 19,
+      "name": "Simple Marble Brownies",
+      "type": "snack",
+      "calories": 70.0,
+      "fat": 6.3,
+      "protein": 1.1,
+      "carbs": 2.3
+    },
+    {
+      "idx": 20,
+      "name": "Roasted Red Peppers With Olives",
+      "type": "snack",
+      "calories": 71.0,
+      "fat": 6.8,
+      "protein": 0.5,
+      "carbs": 2.9
+    },
+    {
+      "idx": 21,
+      "name": "Challah Bread Pudding",
+      "type": "snack",
+      "calories": 71.9,
+      "fat": 1.8,
+      "protein": 3.6,
+      "carbs": 10.6
+    },
+    {
+      "idx": 22,
+      "name": "Watermelon Slush",
+      "type": "snack",
+      "calories": 72.9,
+      "fat": 0.2,
+      "protein": 1.0,
+      "carbs": 18.6
+    },
+    {
+      "idx": 23,
+      "name": "Dog Biscuit Cocktail",
+      "type": "snack",
+      "calories": 73.8,
+      "fat": 2.5,
+      "protein": 0.5,
+      "carbs": 7.9
+    },
+    {
+      "idx": 24,
+      "name": "Pepsi Salad",
+      "type": "snack",
+      "calories": 74.8,
+      "fat": 0.0,
+      "protein": 11.9,
+      "carbs": 7.3
+    },
+    {
+      "idx": 25,
+      "name": "Super Simple Grilled Zucchini (Courgette)",
+      "type": "snack",
+      "calories": 75.7,
+      "fat": 6.9,
+      "protein": 1.2,
+      "carbs": 3.4
+    },
+    {
+      "idx": 26,
+      "name": "Tuna Pot Pie",
+      "type": "snack",
+      "calories": 76.7,
+      "fat": 3.0,
+      "protein": 2.9,
+      "carbs": 11.0
+    },
+    {
+      "idx": 27,
+      "name": "Healthy Fruit Kebabs",
+      "type": "snack",
+      "calories": 77.6,
+      "fat": 1.8,
+      "protein": 1.0,
+      "carbs": 16.1
+    },
+    {
+      "idx": 28,
+      "name": "Fragrant Rosemary Zucchini",
+      "type": "snack",
+      "calories": 78.6,
+      "fat": 7.1,
+      "protein": 1.3,
+      "carbs": 3.5
+    },
+    {
+      "idx": 29,
+      "name": "Bacon Ranch Green Beans",
+      "type": "snack",
+      "calories": 79.5,
+      "fat": 6.4,
+      "protein": 1.8,
+      "carbs": 4.9
+    },
+    {
+      "idx": 30,
+      "name": "Raggedy Ann Salad--Just for Kids",
+      "type": "snack",
+      "calories": 80.5,
+      "fat": 2.9,
+      "protein": 4.2,
+      "carbs": 10.4
+    },
+    {
+      "idx": 31,
+      "name": "Passion Martini",
+      "type": "snack",
+      "calories": 81.4,
+      "fat": 0.1,
+      "protein": 0.0,
+      "carbs": 12.2
+    },
+    {
+      "idx": 32,
+      "name": "Mango Lime Relish (Cuba -- Caribbean Islands)",
+      "type": "snack",
+      "calories": 82.3,
+      "fat": 0.4,
+      "protein": 1.0,
+      "carbs": 21.3
+    },
+    {
+      "idx": 33,
+      "name": "Raspberry Malibu Zinger (Cocktail)",
+      "type": "snack",
+      "calories": 83.2,
+      "fat": 0.0,
+      "protein": 0.0,
+      "carbs": 5.0
+    },
+    {
+      "idx": 34,
+      "name": "Cheesy Mashed Cauliflower - Rachael Ray",
+      "type": "snack",
+      "calories": 84.1,
+      "fat": 2.4,
+      "protein": 7.2,
+      "carbs": 11.0
+    },
+    {
+      "idx": 35,
+      "name": "Cheese Roll",
+      "type": "snack",
+      "calories": 85.0,
+      "fat": 6.4,
+      "protein": 4.1,
+      "carbs": 2.9
+    },
+    {
+      "idx": 36,
+      "name": "Perfect Peanut Butter Pancakes",
+      "type": "snack",
+      "calories": 85.8,
+      "fat": 1.8,
+      "protein": 3.5,
+      "carbs": 14.3
+    },
+    {
+      "idx": 37,
+      "name": "Portuguese Cinnamon Wreaths",
+      "type": "snack",
+      "calories": 86.7,
+      "fat": 4.9,
+      "protein": 0.8,
+      "carbs": 8.8
+    },
+    {
+      "idx": 38,
+      "name": "Mango Mascarpone Ice Cream",
+      "type": "snack",
+      "calories": 87.5,
+      "fat": 0.3,
+      "protein": 0.8,
+      "carbs": 22.1
+    },
+    {
+      "idx": 39,
+      "name": "Anise Hyssop &amp; Almond Butter Cookies",
+      "type": "snack",
+      "calories": 88.4,
+      "fat": 4.8,
+      "protein": 1.4,
+      "carbs": 10.2
+    },
+    {
+      "idx": 40,
+      "name": "Spinach Dip",
+      "type": "snack",
+      "calories": 89.3,
+      "fat": 5.5,
+      "protein": 2.0,
+      "carbs": 8.2
+    },
+    {
+      "idx": 41,
+      "name": "Spiceless Chili",
+      "type": "snack",
+      "calories": 90.1,
+      "fat": 2.5,
+      "protein": 10.8,
+      "carbs": 6.3
+    },
+    {
+      "idx": 42,
+      "name": "Almond Macaroons",
+      "type": "snack",
+      "calories": 91.0,
+      "fat": 3.0,
+      "protein": 1.5,
+      "carbs": 15.2
+    },
+    {
+      "idx": 43,
+      "name": "Jan's Peanut Butter Cookies",
+      "type": "snack",
+      "calories": 91.8,
+      "fat": 5.0,
+      "protein": 1.7,
+      "carbs": 10.7
+    },
+    {
+      "idx": 44,
+      "name": "Refreshing Spring Veggy Fruit Salad",
+      "type": "snack",
+      "calories": 92.8,
+      "fat": 0.5,
+      "protein": 2.0,
+      "carbs": 23.3
+    },
+    {
+      "idx": 45,
+      "name": "Vegan Chocolate Nut-Butter Muffins",
+      "type": "snack",
+      "calories": 93.6,
+      "fat": 2.7,
+      "protein": 2.0,
+      "carbs": 16.1
+    },
+    {
+      "idx": 46,
+      "name": "Mystery Popsicle",
+      "type": "snack",
+      "calories": 94.4,
+      "fat": 0.3,
+      "protein": 0.7,
+      "carbs": 22.8
+    },
+    {
+      "idx": 47,
+      "name": "Christmas Cherry Chocolate Mini-Muffins",
+      "type": "snack",
+      "calories": 95.2,
+      "fat": 4.6,
+      "protein": 1.3,
+      "carbs": 13.3
+    },
+    {
+      "idx": 48,
+      "name": "Okra and Tomatoes (A.k.a.  Okra Gumbo)",
+      "type": "snack",
+      "calories": 96.1,
+      "fat": 4.1,
+      "protein": 3.9,
+      "carbs": 13.2
+    },
+    {
+      "idx": 49,
+      "name": "Tomato Salsa Dip",
+      "type": "snack",
+      "calories": 96.9,
+      "fat": 0.7,
+      "protein": 2.7,
+      "carbs": 22.9
+    },
+    {
+      "idx": 50,
+      "name": "Marinade for Grilled Fish",
+      "type": "snack",
+      "calories": 97.8,
+      "fat": 6.8,
+      "protein": 3.9,
+      "carbs": 6.0
+    },
+    {
+      "idx": 51,
+      "name": "Mini Sweet Bell Peppers",
+      "type": "snack",
+      "calories": 98.6,
+      "fat": 8.2,
+      "protein": 3.9,
+      "carbs": 2.7
+    },
+    {
+      "idx": 52,
+      "name": "Turkey Barley Chunky Soup",
+      "type": "snack",
+      "calories": 99.4,
+      "fat": 0.4,
+      "protein": 2.8,
+      "carbs": 22.1
+    },
+    {
+      "idx": 53,
+      "name": "Healthy Pesarattu Dosa",
+      "type": "snack",
+      "calories": 100.2,
+      "fat": 0.8,
+      "protein": 3.4,
+      "carbs": 20.6
+    },
+    {
+      "idx": 54,
+      "name": "Vermont Vinaigrette",
+      "type": "snack",
+      "calories": 101.0,
+      "fat": 9.2,
+      "protein": 0.2,
+      "carbs": 5.0
+    },
+    {
+      "idx": 55,
+      "name": "Super Yummy Cranberry Sauce",
+      "type": "snack",
+      "calories": 101.8,
+      "fat": 0.1,
+      "protein": 0.1,
+      "carbs": 26.3
+    },
+    {
+      "idx": 56,
+      "name": "Rivka's Dulce De Leche Heavenly Ice Cream",
+      "type": "snack",
+      "calories": 102.6,
+      "fat": 11.0,
+      "protein": 0.6,
+      "carbs": 0.8
+    },
+    {
+      "idx": 57,
+      "name": "Snowflake Cookies",
+      "type": "snack",
+      "calories": 103.5,
+      "fat": 6.8,
+      "protein": 2.2,
+      "carbs": 9.3
+    },
+    {
+      "idx": 58,
+      "name": "Homemade Creme Fraiche",
+      "type": "snack",
+      "calories": 104.2,
+      "fat": 11.0,
+      "protein": 0.7,
+      "carbs": 1.0
+    },
+    {
+      "idx": 59,
+      "name": "Tuscan Five-Pepper Salsa",
+      "type": "snack",
+      "calories": 105.0,
+      "fat": 7.2,
+      "protein": 1.8,
+      "carbs": 10.4
+    },
+    {
+      "idx": 60,
+      "name": "Fritatta",
+      "type": "snack",
+      "calories": 105.7,
+      "fat": 7.4,
+      "protein": 7.2,
+      "carbs": 2.2
+    },
+    {
+      "idx": 61,
+      "name": "Asiago Cheese Sauce",
+      "type": "snack",
+      "calories": 106.5,
+      "fat": 4.5,
+      "protein": 4.8,
+      "carbs": 11.6
+    },
+    {
+      "idx": 62,
+      "name": "Sorbet Caribe",
+      "type": "snack",
+      "calories": 107.3,
+      "fat": 0.9,
+      "protein": 1.2,
+      "carbs": 25.9
+    },
+    {
+      "idx": 63,
+      "name": "Low Fat Orange Smoothie",
+      "type": "snack",
+      "calories": 108.1,
+      "fat": 0.3,
+      "protein": 5.9,
+      "carbs": 22.0
+    },
+    {
+      "idx": 64,
+      "name": "Creamsicle Dream",
+      "type": "snack",
+      "calories": 108.9,
+      "fat": 0.3,
+      "protein": 1.7,
+      "carbs": 26.5
+    },
+    {
+      "idx": 65,
+      "name": "Isaiah's Tasty Reduced-Fat Tuna Salad",
+      "type": "snack",
+      "calories": 109.8,
+      "fat": 4.3,
+      "protein": 14.3,
+      "carbs": 2.9
+    },
+    {
+      "idx": 66,
+      "name": "Oriental Chicken Salad",
+      "type": "snack",
+      "calories": 110.6,
+      "fat": 5.2,
+      "protein": 3.5,
+      "carbs": 13.8
+    },
+    {
+      "idx": 67,
+      "name": "Low Calorie and Low Fat Cheesecake",
+      "type": "snack",
+      "calories": 111.4,
+      "fat": 4.7,
+      "protein": 9.9,
+      "carbs": 6.6
+    },
+    {
+      "idx": 68,
+      "name": "Clear Tomato Soup",
+      "type": "snack",
+      "calories": 112.1,
+      "fat": 3.1,
+      "protein": 3.9,
+      "carbs": 21.5
+    },
+    {
+      "idx": 69,
+      "name": "Pineapple Orange Creme Dessert",
+      "type": "snack",
+      "calories": 113.0,
+      "fat": 2.3,
+      "protein": 3.7,
+      "carbs": 19.9
+    },
+    {
+      "idx": 70,
+      "name": "White Chocolate Cookie Dough Martini",
+      "type": "snack",
+      "calories": 113.7,
+      "fat": 0.8,
+      "protein": 0.2,
+      "carbs": 0.5
+    },
+    {
+      "idx": 71,
+      "name": "Crisp Ch&egrave;vre Sandwiches",
+      "type": "snack",
+      "calories": 114.5,
+      "fat": 8.5,
+      "protein": 6.6,
+      "carbs": 3.5
+    },
+    {
+      "idx": 72,
+      "name": "Yummy Veggie Casserole",
+      "type": "snack",
+      "calories": 115.3,
+      "fat": 6.2,
+      "protein": 4.3,
+      "carbs": 11.3
+    },
+    {
+      "idx": 73,
+      "name": "Creamy Corned Beef Dip",
+      "type": "snack",
+      "calories": 116.1,
+      "fat": 11.8,
+      "protein": 1.3,
+      "carbs": 1.9
+    },
+    {
+      "idx": 74,
+      "name": "Chocolate-Peanut Butter Thumbprint Cookie",
+      "type": "snack",
+      "calories": 116.8,
+      "fat": 6.5,
+      "protein": 3.0,
+      "carbs": 12.9
+    },
+    {
+      "idx": 75,
+      "name": "Chocolate Muffins",
+      "type": "snack",
+      "calories": 117.7,
+      "fat": 3.0,
+      "protein": 1.6,
+      "carbs": 22.0
+    },
+    {
+      "idx": 76,
+      "name": "Sun Dried Tomato Tempenade",
+      "type": "snack",
+      "calories": 118.4,
+      "fat": 9.8,
+      "protein": 3.0,
+      "carbs": 7.5
+    },
+    {
+      "idx": 77,
+      "name": "Butterscotch Cookies",
+      "type": "snack",
+      "calories": 119.2,
+      "fat": 6.4,
+      "protein": 1.1,
+      "carbs": 14.6
+    },
+    {
+      "idx": 78,
+      "name": "Really Low Fat, Low Cholesterol and Low Sugar Banana Bread",
+      "type": "snack",
+      "calories": 119.9,
+      "fat": 4.4,
+      "protein": 2.5,
+      "carbs": 18.7
+    },
+    {
+      "idx": 79,
+      "name": "Incredibly Easy Lemon Curd, Ecuadorean Style.",
+      "type": "snack",
+      "calories": 120.7,
+      "fat": 3.0,
+      "protein": 1.0,
+      "carbs": 23.1
+    },
+    {
+      "idx": 80,
+      "name": "Pesto Roasties",
+      "type": "snack",
+      "calories": 121.5,
+      "fat": 4.7,
+      "protein": 2.1,
+      "carbs": 18.1
+    },
+    {
+      "idx": 81,
+      "name": "Blonde Brownies",
+      "type": "snack",
+      "calories": 122.3,
+      "fat": 5.3,
+      "protein": 1.5,
+      "carbs": 17.8
+    },
+    {
+      "idx": 82,
+      "name": "Marvelous Molasses Cornbread",
+      "type": "snack",
+      "calories": 123.1,
+      "fat": 1.3,
+      "protein": 3.9,
+      "carbs": 25.0
+    },
+    {
+      "idx": 83,
+      "name": "Chocolate Covered Cherries Protein Shake",
+      "type": "snack",
+      "calories": 123.9,
+      "fat": 1.4,
+      "protein": 10.1,
+      "carbs": 18.1
+    },
+    {
+      "idx": 84,
+      "name": "Simple Seafood Dip/Spread",
+      "type": "snack",
+      "calories": 124.6,
+      "fat": 11.6,
+      "protein": 1.1,
+      "carbs": 5.2
+    },
+    {
+      "idx": 85,
+      "name": "Slimmer Carrot Raisin Salad",
+      "type": "snack",
+      "calories": 125.4,
+      "fat": 5.1,
+      "protein": 1.1,
+      "carbs": 20.4
+    },
+    {
+      "idx": 86,
+      "name": "Apricot Jello Mold",
+      "type": "snack",
+      "calories": 126.1,
+      "fat": 6.0,
+      "protein": 1.1,
+      "carbs": 18.5
+    },
+    {
+      "idx": 87,
+      "name": "Cream of Vegetable Soup",
+      "type": "snack",
+      "calories": 126.9,
+      "fat": 8.6,
+      "protein": 4.6,
+      "carbs": 8.1
+    },
+    {
+      "idx": 88,
+      "name": "Vanilla-Glazed Pecan Coconut Cookie Scones",
+      "type": "snack",
+      "calories": 127.6,
+      "fat": 8.7,
+      "protein": 1.3,
+      "carbs": 11.8
+    },
+    {
+      "idx": 89,
+      "name": "John's Red Beans and Rice",
+      "type": "snack",
+      "calories": 128.3,
+      "fat": 0.5,
+      "protein": 8.1,
+      "carbs": 24.0
+    },
+    {
+      "idx": 90,
+      "name": "Triple Chocolate Truffles",
+      "type": "snack",
+      "calories": 129.1,
+      "fat": 11.0,
+      "protein": 2.4,
+      "carbs": 9.2
+    },
+    {
+      "idx": 91,
+      "name": "Italian Vegetable-Ravioli Soup",
+      "type": "snack",
+      "calories": 129.9,
+      "fat": 5.1,
+      "protein": 6.7,
+      "carbs": 14.9
+    },
+    {
+      "idx": 92,
+      "name": "Riceless Salmon Sushi - Low Carb, Low Cal",
+      "type": "snack",
+      "calories": 130.7,
+      "fat": 4.4,
+      "protein": 18.9,
+      "carbs": 3.3
+    },
+    {
+      "idx": 93,
+      "name": "Salmon Patties",
+      "type": "snack",
+      "calories": 131.4,
+      "fat": 4.0,
+      "protein": 12.5,
+      "carbs": 10.7
+    },
+    {
+      "idx": 94,
+      "name": "Orange Dreamsicle Smoothie",
+      "type": "snack",
+      "calories": 132.2,
+      "fat": 4.7,
+      "protein": 4.8,
+      "carbs": 18.2
+    },
+    {
+      "idx": 95,
+      "name": "Lucy's Turkey Sandwich",
+      "type": "snack",
+      "calories": 133.0,
+      "fat": 1.6,
+      "protein": 3.8,
+      "carbs": 25.3
+    },
+    {
+      "idx": 96,
+      "name": "Spare Tin of Beans Casserole",
+      "type": "snack",
+      "calories": 133.8,
+      "fat": 5.3,
+      "protein": 4.0,
+      "carbs": 21.5
+    },
+    {
+      "idx": 97,
+      "name": "Broccoli Quiche",
+      "type": "snack",
+      "calories": 134.5,
+      "fat": 1.9,
+      "protein": 17.6,
+      "carbs": 14.5
+    },
+    {
+      "idx": 98,
+      "name": "Healthy Flourless Butterscotch Brownies",
+      "type": "snack",
+      "calories": 135.3,
+      "fat": 6.6,
+      "protein": 4.0,
+      "carbs": 16.1
+    },
+    {
+      "idx": 99,
+      "name": "Creole Wax Beans",
+      "type": "snack",
+      "calories": 136.0,
+      "fat": 9.4,
+      "protein": 2.2,
+      "carbs": 12.9
+    },
+    {
+      "idx": 100,
+      "name": "Blue Cornbread",
+      "type": "snack",
+      "calories": 136.8,
+      "fat": 3.3,
+      "protein": 5.2,
+      "carbs": 22.2
+    },
+    {
+      "idx": 101,
+      "name": "Aunt Alma's Sour Cream Date Cookies",
+      "type": "snack",
+      "calories": 137.6,
+      "fat": 2.8,
+      "protein": 2.2,
+      "carbs": 26.7
+    },
+    {
+      "idx": 102,
+      "name": "Celebrate With Sensational Cookies",
+      "type": "snack",
+      "calories": 138.3,
+      "fat": 7.7,
+      "protein": 2.5,
+      "carbs": 15.4
+    },
+    {
+      "idx": 103,
+      "name": "Big Chocolate Cookies",
+      "type": "snack",
+      "calories": 139.0,
+      "fat": 6.9,
+      "protein": 1.7,
+      "carbs": 19.4
+    },
+    {
+      "idx": 104,
+      "name": "One Free Hour in the Candy Store",
+      "type": "snack",
+      "calories": 139.8,
+      "fat": 5.7,
+      "protein": 1.6,
+      "carbs": 21.5
+    },
+    {
+      "idx": 105,
+      "name": "Chicken Korma a'la Eve",
+      "type": "snack",
+      "calories": 140.6,
+      "fat": 7.1,
+      "protein": 10.3,
+      "carbs": 9.1
+    },
+    {
+      "idx": 106,
+      "name": "Creepy Crawler Punch",
+      "type": "snack",
+      "calories": 141.3,
+      "fat": 0.3,
+      "protein": 0.4,
+      "carbs": 36.0
+    },
+    {
+      "idx": 107,
+      "name": "Quick Kids Snack",
+      "type": "snack",
+      "calories": 142.0,
+      "fat": 1.1,
+      "protein": 1.3,
+      "carbs": 31.9
+    },
+    {
+      "idx": 108,
+      "name": "Orange Rosemary Roasted Pork Tenderloin (Paleo + Whole30)",
+      "type": "snack",
+      "calories": 142.7,
+      "fat": 9.0,
+      "protein": 11.9,
+      "carbs": 3.0
+    },
+    {
+      "idx": 109,
+      "name": "5 Minute Frozen  Yogurt With Fruit Variations",
+      "type": "snack",
+      "calories": 143.5,
+      "fat": 0.5,
+      "protein": 1.9,
+      "carbs": 34.1
+    },
+    {
+      "idx": 110,
+      "name": "Almond Marzipan Shortbread Cookies",
+      "type": "snack",
+      "calories": 144.2,
+      "fat": 8.9,
+      "protein": 1.6,
+      "carbs": 14.8
+    },
+    {
+      "idx": 111,
+      "name": "Fortune Cookies",
+      "type": "snack",
+      "calories": 145.0,
+      "fat": 7.7,
+      "protein": 1.4,
+      "carbs": 17.9
+    },
+    {
+      "idx": 112,
+      "name": "Caramelized Adobo Onions",
+      "type": "snack",
+      "calories": 145.7,
+      "fat": 4.8,
+      "protein": 2.6,
+      "carbs": 25.0
+    },
+    {
+      "idx": 113,
+      "name": "Tacos Supreme",
+      "type": "snack",
+      "calories": 146.4,
+      "fat": 7.7,
+      "protein": 10.6,
+      "carbs": 9.4
+    },
+    {
+      "idx": 114,
+      "name": "Sunrise Biscotti",
+      "type": "snack",
+      "calories": 147.2,
+      "fat": 5.3,
+      "protein": 2.6,
+      "carbs": 22.8
+    },
+    {
+      "idx": 115,
+      "name": "Baked Zucchini Balls (Gluten-Free)",
+      "type": "snack",
+      "calories": 147.9,
+      "fat": 4.1,
+      "protein": 7.7,
+      "carbs": 20.3
+    },
+    {
+      "idx": 116,
+      "name": "Kisir",
+      "type": "snack",
+      "calories": 148.6,
+      "fat": 0.6,
+      "protein": 5.4,
+      "carbs": 33.0
+    },
+    {
+      "idx": 117,
+      "name": "Savoury Flan",
+      "type": "snack",
+      "calories": 149.4,
+      "fat": 11.6,
+      "protein": 7.7,
+      "carbs": 3.6
+    },
+    {
+      "idx": 118,
+      "name": "Sagu (Spiced Yellow Pumpkin)",
+      "type": "snack",
+      "calories": 150.2,
+      "fat": 8.7,
+      "protein": 4.1,
+      "carbs": 16.6
+    },
+    {
+      "idx": 119,
+      "name": "Bea's Broccoli Salad",
+      "type": "snack",
+      "calories": 150.9,
+      "fat": 7.4,
+      "protein": 5.3,
+      "carbs": 18.1
+    },
+    {
+      "idx": 120,
+      "name": "Good Old Chocolate Chip Cookies",
+      "type": "snack",
+      "calories": 151.7,
+      "fat": 6.2,
+      "protein": 1.9,
+      "carbs": 23.1
+    },
+    {
+      "idx": 121,
+      "name": "Whiskey Sours",
+      "type": "snack",
+      "calories": 152.5,
+      "fat": 0.0,
+      "protein": 0.1,
+      "carbs": 7.5
+    },
+    {
+      "idx": 122,
+      "name": "Tangerine Caipiroshka",
+      "type": "snack",
+      "calories": 153.2,
+      "fat": 0.1,
+      "protein": 0.3,
+      "carbs": 5.6
+    },
+    {
+      "idx": 123,
+      "name": "Banana Rum Cream",
+      "type": "snack",
+      "calories": 153.9,
+      "fat": 5.5,
+      "protein": 0.8,
+      "carbs": 1.1
+    },
+    {
+      "idx": 124,
+      "name": "Herbed Chicken and Vegetables",
+      "type": "snack",
+      "calories": 154.7,
+      "fat": 3.9,
+      "protein": 3.4,
+      "carbs": 27.5
+    },
+    {
+      "idx": 125,
+      "name": "Mom's Candy Bar Cookies",
+      "type": "snack",
+      "calories": 155.4,
+      "fat": 8.3,
+      "protein": 2.1,
+      "carbs": 20.3
+    },
+    {
+      "idx": 126,
+      "name": "Vegtable Pilaf",
+      "type": "snack",
+      "calories": 156.1,
+      "fat": 1.8,
+      "protein": 3.3,
+      "carbs": 31.1
+    },
+    {
+      "idx": 127,
+      "name": "Chocolate Dreams",
+      "type": "snack",
+      "calories": 156.8,
+      "fat": 8.5,
+      "protein": 0.2,
+      "carbs": 21.0
+    },
+    {
+      "idx": 128,
+      "name": "Stir-Fried Vegetables With Seasoned Croutons",
+      "type": "snack",
+      "calories": 157.6,
+      "fat": 9.3,
+      "protein": 4.3,
+      "carbs": 15.7
+    },
+    {
+      "idx": 129,
+      "name": "Garlicky Sun-Dried Tomato, Smoked Salmon Spread",
+      "type": "snack",
+      "calories": 158.3,
+      "fat": 13.8,
+      "protein": 5.5,
+      "carbs": 3.9
+    },
+    {
+      "idx": 130,
+      "name": "Diabetic, Low-Fat Grilled Portabella Mushrooms",
+      "type": "snack",
+      "calories": 159.0,
+      "fat": 13.9,
+      "protein": 2.1,
+      "carbs": 7.5
+    },
+    {
+      "idx": 131,
+      "name": "Ww Teriyaki Chicken",
+      "type": "snack",
+      "calories": 159.7,
+      "fat": 4.8,
+      "protein": 26.4,
+      "carbs": 1.1
+    },
+    {
+      "idx": 132,
+      "name": "Pickled Red Beets",
+      "type": "snack",
+      "calories": 160.5,
+      "fat": 0.3,
+      "protein": 2.6,
+      "carbs": 36.2
+    },
+    {
+      "idx": 133,
+      "name": "Peanut Butter Banana Wraps",
+      "type": "snack",
+      "calories": 161.2,
+      "fat": 3.4,
+      "protein": 1.1,
+      "carbs": 35.8
+    },
+    {
+      "idx": 134,
+      "name": "Light Vinagrette Salad Dressing",
+      "type": "snack",
+      "calories": 161.9,
+      "fat": 18.2,
+      "protein": 0.0,
+      "carbs": 0.1
+    },
+    {
+      "idx": 135,
+      "name": "Pumpkin Chocolate Chip Cookies",
+      "type": "snack",
+      "calories": 162.7,
+      "fat": 5.8,
+      "protein": 2.0,
+      "carbs": 26.8
+    },
+    {
+      "idx": 136,
+      "name": "Mika's Super Fast  Caesar Salad",
+      "type": "snack",
+      "calories": 163.4,
+      "fat": 13.5,
+      "protein": 4.3,
+      "carbs": 6.4
+    },
+    {
+      "idx": 137,
+      "name": "Potato Salad With Pesto and Bacon",
+      "type": "snack",
+      "calories": 164.2,
+      "fat": 6.8,
+      "protein": 4.0,
+      "carbs": 23.3
+    },
+    {
+      "idx": 138,
+      "name": "Egg Nog Thumbprint Cookies",
+      "type": "snack",
+      "calories": 164.9,
+      "fat": 10.7,
+      "protein": 2.1,
+      "carbs": 15.9
+    },
+    {
+      "idx": 139,
+      "name": "Simple Cucumber Sandwich",
+      "type": "snack",
+      "calories": 165.6,
+      "fat": 4.1,
+      "protein": 4.1,
+      "carbs": 28.0
+    },
+    {
+      "idx": 140,
+      "name": "Sweet Potato Waldorf Salad",
+      "type": "snack",
+      "calories": 166.3,
+      "fat": 3.8,
+      "protein": 2.0,
+      "carbs": 33.5
+    },
+    {
+      "idx": 141,
+      "name": "Chicken and Dumpling Delite",
+      "type": "snack",
+      "calories": 167.1,
+      "fat": 4.9,
+      "protein": 16.9,
+      "carbs": 14.5
+    },
+    {
+      "idx": 142,
+      "name": "Black Grape Sorbet",
+      "type": "snack",
+      "calories": 167.8,
+      "fat": 0.3,
+      "protein": 1.2,
+      "carbs": 41.8
+    },
+    {
+      "idx": 143,
+      "name": "Potato and Carrot Salsa",
+      "type": "snack",
+      "calories": 168.6,
+      "fat": 0.8,
+      "protein": 5.2,
+      "carbs": 38.0
+    },
+    {
+      "idx": 144,
+      "name": "Larry's Tropical Itch",
+      "type": "snack",
+      "calories": 169.3,
+      "fat": 0.0,
+      "protein": 0.1,
+      "carbs": 1.6
+    },
+    {
+      "idx": 145,
+      "name": "Veggies",
+      "type": "snack",
+      "calories": 170.0,
+      "fat": 6.0,
+      "protein": 4.9,
+      "carbs": 29.7
+    },
+    {
+      "idx": 146,
+      "name": "Southwestern Sweet Potato Soup",
+      "type": "snack",
+      "calories": 170.8,
+      "fat": 4.5,
+      "protein": 6.4,
+      "carbs": 27.4
+    },
+    {
+      "idx": 147,
+      "name": "Chocolate Coffee",
+      "type": "snack",
+      "calories": 171.5,
+      "fat": 12.8,
+      "protein": 1.8,
+      "carbs": 12.8
+    },
+    {
+      "idx": 148,
+      "name": "Layered Strawberry Dessert",
+      "type": "snack",
+      "calories": 172.2,
+      "fat": 0.7,
+      "protein": 4.5,
+      "carbs": 39.4
+    },
+    {
+      "idx": 149,
+      "name": "Classic Caesar Salad (From Cuisine at Home)",
+      "type": "snack",
+      "calories": 172.9,
+      "fat": 16.2,
+      "protein": 3.1,
+      "carbs": 5.4
+    },
+    {
+      "idx": 150,
+      "name": "Sweet Potato and Rutabaga Soup",
+      "type": "snack",
+      "calories": 173.6,
+      "fat": 5.1,
+      "protein": 6.7,
+      "carbs": 25.8
+    },
+    {
+      "idx": 151,
+      "name": "Just Peachy",
+      "type": "snack",
+      "calories": 174.4,
+      "fat": 0.2,
+      "protein": 0.8,
+      "carbs": 11.9
+    },
+    {
+      "idx": 152,
+      "name": "Shannon's Shrimp Alfredo",
+      "type": "snack",
+      "calories": 175.1,
+      "fat": 7.2,
+      "protein": 17.2,
+      "carbs": 10.7
+    },
+    {
+      "idx": 153,
+      "name": "Rosemary &amp; Garlic Flatbread",
+      "type": "snack",
+      "calories": 175.8,
+      "fat": 3.8,
+      "protein": 4.3,
+      "carbs": 30.5
+    },
+    {
+      "idx": 154,
+      "name": "Tropical Banana Smoothie",
+      "type": "snack",
+      "calories": 176.6,
+      "fat": 4.3,
+      "protein": 5.3,
+      "carbs": 32.0
+    },
+    {
+      "idx": 155,
+      "name": "Grilled Bocconcini and Pesto Sandwich",
+      "type": "snack",
+      "calories": 177.3,
+      "fat": 2.1,
+      "protein": 6.0,
+      "carbs": 35.0
+    },
+    {
+      "idx": 156,
+      "name": "Roasted Butternut Squash Soup With Crispy Croutons",
+      "type": "snack",
+      "calories": 178.1,
+      "fat": 5.2,
+      "protein": 5.7,
+      "carbs": 29.5
+    },
+    {
+      "idx": 157,
+      "name": "Blender Breakfast",
+      "type": "snack",
+      "calories": 178.9,
+      "fat": 0.7,
+      "protein": 6.3,
+      "carbs": 40.2
+    },
+    {
+      "idx": 158,
+      "name": "Awesome Cheddar Cheese Tea Biscuits",
+      "type": "snack",
+      "calories": 179.6,
+      "fat": 9.9,
+      "protein": 5.2,
+      "carbs": 17.3
+    },
+    {
+      "idx": 159,
+      "name": "Refried Beans and Cheese",
+      "type": "snack",
+      "calories": 180.3,
+      "fat": 7.4,
+      "protein": 10.6,
+      "carbs": 18.5
+    },
+    {
+      "idx": 160,
+      "name": "Bombay Potatoes OAMC Vegetarian",
+      "type": "snack",
+      "calories": 181.1,
+      "fat": 5.4,
+      "protein": 3.6,
+      "carbs": 30.6
+    },
+    {
+      "idx": 161,
+      "name": "White Tropical Fruit Sangria from Martinique Bistro",
+      "type": "snack",
+      "calories": 181.8,
+      "fat": 0.3,
+      "protein": 0.9,
+      "carbs": 19.1
+    },
+    {
+      "idx": 162,
+      "name": "Cheese Olive Puffs",
+      "type": "snack",
+      "calories": 182.6,
+      "fat": 14.1,
+      "protein": 5.9,
+      "carbs": 8.3
+    },
+    {
+      "idx": 163,
+      "name": "Orange Yogurt  Whip",
+      "type": "snack",
+      "calories": 183.3,
+      "fat": 2.1,
+      "protein": 23.1,
+      "carbs": 18.9
+    },
+    {
+      "idx": 164,
+      "name": "Peanut Butter Brownies",
+      "type": "snack",
+      "calories": 184.0,
+      "fat": 6.7,
+      "protein": 2.5,
+      "carbs": 29.4
+    },
+    {
+      "idx": 165,
+      "name": "Sticky Chicken",
+      "type": "snack",
+      "calories": 184.8,
+      "fat": 11.9,
+      "protein": 13.4,
+      "carbs": 6.0
+    },
+    {
+      "idx": 166,
+      "name": "Cornmeal Spoon Bread",
+      "type": "snack",
+      "calories": 185.5,
+      "fat": 10.5,
+      "protein": 8.0,
+      "carbs": 15.2
+    },
+    {
+      "idx": 167,
+      "name": "Mom's Orange Souffle Salad",
+      "type": "snack",
+      "calories": 186.3,
+      "fat": 5.5,
+      "protein": 2.8,
+      "carbs": 32.8
+    },
+    {
+      "idx": 168,
+      "name": "Baked &quot; Cranberry Nut Bread&quot; Oatmeal",
+      "type": "snack",
+      "calories": 187.0,
+      "fat": 7.2,
+      "protein": 5.3,
+      "carbs": 25.7
+    },
+    {
+      "idx": 169,
+      "name": "Smothered Nutria Cajun Style",
+      "type": "snack",
+      "calories": 187.7,
+      "fat": 9.7,
+      "protein": 7.1,
+      "carbs": 18.6
+    },
+    {
+      "idx": 170,
+      "name": "Sliced Kiwi and Banana with Strawberry Puree",
+      "type": "snack",
+      "calories": 188.5,
+      "fat": 0.8,
+      "protein": 1.9,
+      "carbs": 47.4
+    },
+    {
+      "idx": 171,
+      "name": "Green Peppermint & Chocolate Loaf Dessert",
+      "type": "snack",
+      "calories": 189.3,
+      "fat": 6.5,
+      "protein": 2.9,
+      "carbs": 30.9
+    },
+    {
+      "idx": 172,
+      "name": "Mango Curry Dip",
+      "type": "snack",
+      "calories": 190.1,
+      "fat": 18.4,
+      "protein": 4.0,
+      "carbs": 3.5
+    },
+    {
+      "idx": 173,
+      "name": "Pita Pockets",
+      "type": "snack",
+      "calories": 190.8,
+      "fat": 2.2,
+      "protein": 5.1,
+      "carbs": 36.8
+    },
+    {
+      "idx": 174,
+      "name": "Lemon Squash Soup With Orzo",
+      "type": "snack",
+      "calories": 191.6,
+      "fat": 11.8,
+      "protein": 6.6,
+      "carbs": 15.7
+    },
+    {
+      "idx": 175,
+      "name": "Garlic Roasted Japanese Eggplant",
+      "type": "snack",
+      "calories": 192.4,
+      "fat": 7.4,
+      "protein": 5.7,
+      "carbs": 32.5
+    },
+    {
+      "idx": 176,
+      "name": "Fire Shrimp Salad with Cilantro Lime Dressing",
+      "type": "snack",
+      "calories": 193.2,
+      "fat": 7.8,
+      "protein": 25.1,
+      "carbs": 4.5
+    },
+    {
+      "idx": 177,
+      "name": "Dhingri Gosht (Beef With Bell Peppers, Onions and Mushrooms)",
+      "type": "snack",
+      "calories": 193.9,
+      "fat": 12.9,
+      "protein": 14.2,
+      "carbs": 7.1
+    },
+    {
+      "idx": 178,
+      "name": "Marinated Vegetable Salad With Queso Fresco",
+      "type": "snack",
+      "calories": 194.7,
+      "fat": 6.0,
+      "protein": 9.0,
+      "carbs": 28.9
+    },
+    {
+      "idx": 179,
+      "name": "Spicy Sizzle Red Lentil Soup",
+      "type": "snack",
+      "calories": 195.4,
+      "fat": 4.5,
+      "protein": 10.4,
+      "carbs": 30.6
+    },
+    {
+      "idx": 180,
+      "name": "Garlic and Oregano Sweet Potato Wedges",
+      "type": "snack",
+      "calories": 196.2,
+      "fat": 8.8,
+      "protein": 3.1,
+      "carbs": 27.3
+    },
+    {
+      "idx": 181,
+      "name": "Coffee-Break Muffins",
+      "type": "snack",
+      "calories": 196.9,
+      "fat": 8.3,
+      "protein": 2.8,
+      "carbs": 28.0
+    },
+    {
+      "idx": 182,
+      "name": "Carrot and Orange Soup",
+      "type": "snack",
+      "calories": 197.7,
+      "fat": 7.9,
+      "protein": 3.2,
+      "carbs": 30.8
+    },
+    {
+      "idx": 183,
+      "name": "Minestrone",
+      "type": "snack",
+      "calories": 198.4,
+      "fat": 1.7,
+      "protein": 11.2,
+      "carbs": 35.6
+    },
+    {
+      "idx": 184,
+      "name": "Baking Powder Biscuits",
+      "type": "snack",
+      "calories": 199.2,
+      "fat": 11.1,
+      "protein": 3.8,
+      "carbs": 21.1
+    },
+    {
+      "idx": 185,
+      "name": "Ham &amp; Cheese Roll Ups",
+      "type": "snack",
+      "calories": 199.9,
+      "fat": 4.2,
+      "protein": 7.0,
+      "carbs": 33.6
+    },
+    {
+      "idx": 186,
+      "name": "Chocolate Cherry Cookies",
+      "type": "snack",
+      "calories": 200.7,
+      "fat": 10.8,
+      "protein": 2.4,
+      "carbs": 25.0
+    },
+    {
+      "idx": 187,
+      "name": "Cheesy Potatoes",
+      "type": "snack",
+      "calories": 201.5,
+      "fat": 12.3,
+      "protein": 5.4,
+      "carbs": 17.6
+    },
+    {
+      "idx": 188,
+      "name": "Marinade and Dipping Sauce",
+      "type": "snack",
+      "calories": 202.3,
+      "fat": 11.8,
+      "protein": 8.6,
+      "carbs": 14.6
+    },
+    {
+      "idx": 189,
+      "name": "Ham Calzones",
+      "type": "snack",
+      "calories": 203.1,
+      "fat": 14.1,
+      "protein": 16.1,
+      "carbs": 2.6
+    },
+    {
+      "idx": 190,
+      "name": "Cranberry Sour Cream Coffee Cake",
+      "type": "snack",
+      "calories": 203.8,
+      "fat": 6.5,
+      "protein": 2.9,
+      "carbs": 33.7
+    },
+    {
+      "idx": 191,
+      "name": "Easy Low Fat Oven Roasted Peppered Potato Wedges",
+      "type": "snack",
+      "calories": 204.6,
+      "fat": 3.6,
+      "protein": 4.6,
+      "carbs": 39.7
+    },
+    {
+      "idx": 192,
+      "name": "Chicken in Soy Sauce",
+      "type": "snack",
+      "calories": 205.4,
+      "fat": 5.5,
+      "protein": 28.1,
+      "carbs": 10.4
+    },
+    {
+      "idx": 193,
+      "name": "Low Fat Rice Krispie Meat Loaf",
+      "type": "snack",
+      "calories": 206.1,
+      "fat": 9.2,
+      "protein": 20.5,
+      "carbs": 9.2
+    },
+    {
+      "idx": 194,
+      "name": "Grilled Walleye",
+      "type": "snack",
+      "calories": 206.9,
+      "fat": 14.6,
+      "protein": 16.5,
+      "carbs": 2.6
+    },
+    {
+      "idx": 195,
+      "name": "Butter Toffee Brunch Cake",
+      "type": "snack",
+      "calories": 207.7,
+      "fat": 9.1,
+      "protein": 3.5,
+      "carbs": 28.5
+    },
+    {
+      "idx": 196,
+      "name": "Fresh Fruit Yogurt Parfait",
+      "type": "snack",
+      "calories": 208.5,
+      "fat": 7.7,
+      "protein": 6.6,
+      "carbs": 29.4
+    },
+    {
+      "idx": 197,
+      "name": "Cheesecake Lemon Bars",
+      "type": "snack",
+      "calories": 209.3,
+      "fat": 10.3,
+      "protein": 2.5,
+      "carbs": 27.3
+    },
+    {
+      "idx": 198,
+      "name": "Light and Luscious Chicken Enchillida Casserole",
+      "type": "snack",
+      "calories": 210.1,
+      "fat": 6.0,
+      "protein": 30.4,
+      "carbs": 7.9
+    },
+    {
+      "idx": 199,
+      "name": "Souper Nutritious Soup",
+      "type": "snack",
+      "calories": 210.8,
+      "fat": 11.6,
+      "protein": 8.0,
+      "carbs": 24.1
+    },
+    {
+      "idx": 200,
+      "name": "Orange Blossom Muffins",
+      "type": "snack",
+      "calories": 211.7,
+      "fat": 9.1,
+      "protein": 2.7,
+      "carbs": 31.1
+    },
+    {
+      "idx": 201,
+      "name": "Semi-Homemade Cream of Artichoke Soup - Sandra Lee",
+      "type": "snack",
+      "calories": 212.5,
+      "fat": 15.0,
+      "protein": 6.3,
+      "carbs": 16.6
+    },
+    {
+      "idx": 202,
+      "name": "Pressure Cooker Bison Meatloaf",
+      "type": "snack",
+      "calories": 213.3,
+      "fat": 4.7,
+      "protein": 27.5,
+      "carbs": 14.0
+    },
+    {
+      "idx": 203,
+      "name": "Shrimp in Yellow Curry (Gang Lueng Goong)",
+      "type": "snack",
+      "calories": 214.1,
+      "fat": 4.5,
+      "protein": 11.7,
+      "carbs": 33.3
+    },
+    {
+      "idx": 204,
+      "name": "35 (Or Slightly More) Minute Yeast Rolls",
+      "type": "snack",
+      "calories": 214.8,
+      "fat": 7.0,
+      "protein": 5.1,
+      "carbs": 32.8
+    },
+    {
+      "idx": 205,
+      "name": "Cranberry Banana Oat Muffins",
+      "type": "snack",
+      "calories": 215.7,
+      "fat": 6.6,
+      "protein": 4.4,
+      "carbs": 35.9
+    },
+    {
+      "idx": 206,
+      "name": "Miso Tofu Sticks",
+      "type": "snack",
+      "calories": 216.4,
+      "fat": 8.6,
+      "protein": 16.5,
+      "carbs": 22.8
+    },
+    {
+      "idx": 207,
+      "name": "Slawich....(Yes, That's Right)",
+      "type": "snack",
+      "calories": 217.2,
+      "fat": 9.6,
+      "protein": 11.4,
+      "carbs": 23.1
+    },
+    {
+      "idx": 208,
+      "name": "Fast and Easy Zucchini Pie",
+      "type": "snack",
+      "calories": 217.9,
+      "fat": 12.2,
+      "protein": 8.5,
+      "carbs": 19.2
+    },
+    {
+      "idx": 209,
+      "name": "Another Tomato and Garlic Bread Soup",
+      "type": "snack",
+      "calories": 218.7,
+      "fat": 9.0,
+      "protein": 5.1,
+      "carbs": 25.4
+    },
+    {
+      "idx": 210,
+      "name": "Tuna Kabobs",
+      "type": "snack",
+      "calories": 219.5,
+      "fat": 8.1,
+      "protein": 34.0,
+      "carbs": 0.5
+    },
+    {
+      "idx": 211,
+      "name": "Raspberry Bars",
+      "type": "snack",
+      "calories": 220.2,
+      "fat": 12.3,
+      "protein": 1.7,
+      "carbs": 26.5
+    },
+    {
+      "idx": 212,
+      "name": "Gail's Peach Muffins Supreme",
+      "type": "snack",
+      "calories": 221.1,
+      "fat": 6.5,
+      "protein": 3.6,
+      "carbs": 37.9
+    },
+    {
+      "idx": 213,
+      "name": "Blueberry-Ricotta Pancakes",
+      "type": "snack",
+      "calories": 221.9,
+      "fat": 7.8,
+      "protein": 11.1,
+      "carbs": 28.0
+    },
+    {
+      "idx": 214,
+      "name": "New Crush Potatoes",
+      "type": "snack",
+      "calories": 222.7,
+      "fat": 0.3,
+      "protein": 6.1,
+      "carbs": 50.3
+    },
+    {
+      "idx": 215,
+      "name": "Lettuce With Apricot Salad and Honey-Raspberry Dressing",
+      "type": "snack",
+      "calories": 223.5,
+      "fat": 13.8,
+      "protein": 2.3,
+      "carbs": 26.3
+    },
+    {
+      "idx": 216,
+      "name": "Berry Jam Muffins",
+      "type": "snack",
+      "calories": 224.2,
+      "fat": 6.7,
+      "protein": 3.2,
+      "carbs": 38.7
+    },
+    {
+      "idx": 217,
+      "name": "Colonial Potato Soup",
+      "type": "snack",
+      "calories": 225.0,
+      "fat": 10.5,
+      "protein": 8.4,
+      "carbs": 25.4
+    },
+    {
+      "idx": 218,
+      "name": "Sausage Stuffing",
+      "type": "snack",
+      "calories": 225.8,
+      "fat": 8.1,
+      "protein": 8.6,
+      "carbs": 29.0
+    },
+    {
+      "idx": 219,
+      "name": "Oatmeal Raisin Bars",
+      "type": "snack",
+      "calories": 226.5,
+      "fat": 9.7,
+      "protein": 3.2,
+      "carbs": 33.2
+    },
+    {
+      "idx": 220,
+      "name": "Apricot and Pinenut Chicken Stuffing",
+      "type": "snack",
+      "calories": 227.3,
+      "fat": 8.2,
+      "protein": 5.9,
+      "carbs": 34.1
+    },
+    {
+      "idx": 221,
+      "name": "Raspberry Sweetheart Cakelets (Williams-Sonoma Baking Pan)",
+      "type": "snack",
+      "calories": 228.1,
+      "fat": 8.9,
+      "protein": 3.1,
+      "carbs": 34.5
+    },
+    {
+      "idx": 222,
+      "name": "Sloppy Joes",
+      "type": "snack",
+      "calories": 228.9,
+      "fat": 12.4,
+      "protein": 16.1,
+      "carbs": 13.5
+    },
+    {
+      "idx": 223,
+      "name": "Valentine's Day Parfaits",
+      "type": "snack",
+      "calories": 229.7,
+      "fat": 3.6,
+      "protein": 5.2,
+      "carbs": 45.6
+    },
+    {
+      "idx": 224,
+      "name": "Slow Cooker Barbecue Sandwiches",
+      "type": "snack",
+      "calories": 230.5,
+      "fat": 4.1,
+      "protein": 5.5,
+      "carbs": 44.4
+    },
+    {
+      "idx": 225,
+      "name": "Sweet Cornbread",
+      "type": "snack",
+      "calories": 231.3,
+      "fat": 11.0,
+      "protein": 3.9,
+      "carbs": 29.9
+    },
+    {
+      "idx": 226,
+      "name": "Creamy Carrot-Ginger Bisque",
+      "type": "snack",
+      "calories": 232.1,
+      "fat": 16.7,
+      "protein": 4.5,
+      "carbs": 20.1
+    },
+    {
+      "idx": 227,
+      "name": "Broccoli-Cauliflower Salad",
+      "type": "snack",
+      "calories": 232.9,
+      "fat": 17.7,
+      "protein": 4.3,
+      "carbs": 16.3
+    },
+    {
+      "idx": 228,
+      "name": "Yook Gae Jang- Korean Spicy Beef and Vegetable Soup",
+      "type": "snack",
+      "calories": 233.7,
+      "fat": 18.4,
+      "protein": 11.9,
+      "carbs": 6.2
+    },
+    {
+      "idx": 229,
+      "name": "Stuffed Mushrooms With Dates Fruit",
+      "type": "snack",
+      "calories": 234.5,
+      "fat": 11.7,
+      "protein": 2.9,
+      "carbs": 34.1
+    },
+    {
+      "idx": 230,
+      "name": "Horchata",
+      "type": "snack",
+      "calories": 235.3,
+      "fat": 1.0,
+      "protein": 3.4,
+      "carbs": 51.6
+    },
+    {
+      "idx": 231,
+      "name": "America's Test Kitchen Blondies or Congo Bars",
+      "type": "snack",
+      "calories": 236.1,
+      "fat": 13.8,
+      "protein": 2.4,
+      "carbs": 27.4
+    },
+    {
+      "idx": 232,
+      "name": "Figs With Goat Cheese and Port Syrup",
+      "type": "snack",
+      "calories": 236.9,
+      "fat": 9.4,
+      "protein": 5.5,
+      "carbs": 27.8
+    },
+    {
+      "idx": 233,
+      "name": "Potato Chowder",
+      "type": "snack",
+      "calories": 237.7,
+      "fat": 7.7,
+      "protein": 9.9,
+      "carbs": 32.9
+    },
+    {
+      "idx": 234,
+      "name": "Easy Fried Rice",
+      "type": "snack",
+      "calories": 238.6,
+      "fat": 3.3,
+      "protein": 9.9,
+      "carbs": 41.4
+    },
+    {
+      "idx": 235,
+      "name": "Radicchio and Haricot Vert/Green Bean Salad With Candied Walnuts",
+      "type": "snack",
+      "calories": 239.4,
+      "fat": 20.2,
+      "protein": 3.3,
+      "carbs": 14.3
+    },
+    {
+      "idx": 236,
+      "name": "Orzo Summer  Salad",
+      "type": "snack",
+      "calories": 240.1,
+      "fat": 7.4,
+      "protein": 6.6,
+      "carbs": 37.7
+    },
+    {
+      "idx": 237,
+      "name": "Fish Glazed with Pomegranate Molasses",
+      "type": "snack",
+      "calories": 240.9,
+      "fat": 27.0,
+      "protein": 0.1,
+      "carbs": 0.5
+    },
+    {
+      "idx": 238,
+      "name": "Pan-Seared Shrimp (Atk)",
+      "type": "snack",
+      "calories": 241.7,
+      "fat": 9.8,
+      "protein": 34.6,
+      "carbs": 1.8
+    },
+    {
+      "idx": 239,
+      "name": "Good Bean Dip",
+      "type": "snack",
+      "calories": 242.5,
+      "fat": 12.2,
+      "protein": 12.0,
+      "carbs": 23.1
+    },
+    {
+      "idx": 240,
+      "name": "Roast Chicken with Autumn Fruits",
+      "type": "snack",
+      "calories": 243.3,
+      "fat": 5.1,
+      "protein": 28.2,
+      "carbs": 21.0
+    },
+    {
+      "idx": 241,
+      "name": "Quick and Easy Broccoli Soup",
+      "type": "snack",
+      "calories": 244.1,
+      "fat": 7.3,
+      "protein": 9.7,
+      "carbs": 36.0
+    },
+    {
+      "idx": 242,
+      "name": "Hot Hawaiian Pizza Gf Lf",
+      "type": "snack",
+      "calories": 244.9,
+      "fat": 4.6,
+      "protein": 11.5,
+      "carbs": 39.2
+    },
+    {
+      "idx": 243,
+      "name": "Czech Sauerkraut Soup",
+      "type": "snack",
+      "calories": 245.8,
+      "fat": 1.7,
+      "protein": 6.8,
+      "carbs": 53.0
+    },
+    {
+      "idx": 244,
+      "name": "Coconut Cloud Coffee",
+      "type": "snack",
+      "calories": 246.6,
+      "fat": 12.4,
+      "protein": 5.0,
+      "carbs": 22.0
+    },
+    {
+      "idx": 245,
+      "name": "Eleanor's Hot Chicken Salad",
+      "type": "snack",
+      "calories": 247.5,
+      "fat": 16.3,
+      "protein": 11.5,
+      "carbs": 14.7
+    },
+    {
+      "idx": 246,
+      "name": "Roasted Sweet Curry Squash",
+      "type": "snack",
+      "calories": 248.3,
+      "fat": 7.2,
+      "protein": 3.6,
+      "carbs": 49.2
+    },
+    {
+      "idx": 247,
+      "name": "Michael's Famous Guacamole",
+      "type": "snack",
+      "calories": 249.2,
+      "fat": 22.1,
+      "protein": 3.4,
+      "carbs": 15.0
+    },
+    {
+      "idx": 248,
+      "name": "Maple Butternut Squash",
+      "type": "breakfast",
+      "calories": 250.0,
+      "fat": 2.2,
+      "protein": 2.1,
+      "carbs": 60.3
+    },
+    {
+      "idx": 249,
+      "name": "Caramelized Onion Skillet Corn Bread",
+      "type": "breakfast",
+      "calories": 250.8,
+      "fat": 13.7,
+      "protein": 5.7,
+      "carbs": 26.9
+    },
+    {
+      "idx": 250,
+      "name": "Honeycomb Goodies",
+      "type": "breakfast",
+      "calories": 251.7,
+      "fat": 11.9,
+      "protein": 4.5,
+      "carbs": 33.1
+    },
+    {
+      "idx": 251,
+      "name": "Moist Brownie Cake",
+      "type": "breakfast",
+      "calories": 252.5,
+      "fat": 16.1,
+      "protein": 4.7,
+      "carbs": 25.0
+    },
+    {
+      "idx": 252,
+      "name": "Charles' Posole",
+      "type": "breakfast",
+      "calories": 253.4,
+      "fat": 11.6,
+      "protein": 33.7,
+      "carbs": 2.3
+    },
+    {
+      "idx": 253,
+      "name": "Italian White Beans With Chicken",
+      "type": "breakfast",
+      "calories": 254.2,
+      "fat": 5.2,
+      "protein": 14.9,
+      "carbs": 39.6
+    },
+    {
+      "idx": 254,
+      "name": "Oatmeal Raisin Patty",
+      "type": "breakfast",
+      "calories": 255.0,
+      "fat": 3.0,
+      "protein": 7.3,
+      "carbs": 52.8
+    },
+    {
+      "idx": 255,
+      "name": "Vegetarian Chopped  &quot; Liver &quot; ( Green Peas )",
+      "type": "breakfast",
+      "calories": 255.8,
+      "fat": 13.8,
+      "protein": 12.8,
+      "carbs": 22.3
+    },
+    {
+      "idx": 256,
+      "name": "Tahdig With Potato (Iranian)",
+      "type": "breakfast",
+      "calories": 256.6,
+      "fat": 1.9,
+      "protein": 5.7,
+      "carbs": 54.1
+    },
+    {
+      "idx": 257,
+      "name": "Orange Sherbet Gelatin",
+      "type": "breakfast",
+      "calories": 257.5,
+      "fat": 11.9,
+      "protein": 3.0,
+      "carbs": 36.5
+    },
+    {
+      "idx": 258,
+      "name": "Indian Style Roasted Potatoes",
+      "type": "breakfast",
+      "calories": 258.3,
+      "fat": 0.5,
+      "protein": 7.0,
+      "carbs": 58.7
+    },
+    {
+      "idx": 259,
+      "name": "Chinese Pork Roll-Ups",
+      "type": "breakfast",
+      "calories": 259.2,
+      "fat": 9.2,
+      "protein": 19.5,
+      "carbs": 24.3
+    },
+    {
+      "idx": 260,
+      "name": "Stuffed Peaches",
+      "type": "breakfast",
+      "calories": 260.0,
+      "fat": 14.4,
+      "protein": 4.4,
+      "carbs": 30.8
+    },
+    {
+      "idx": 261,
+      "name": "Chicken Steak",
+      "type": "breakfast",
+      "calories": 260.8,
+      "fat": 15.2,
+      "protein": 26.9,
+      "carbs": 2.8
+    },
+    {
+      "idx": 262,
+      "name": "Hot Artichoke Dip",
+      "type": "breakfast",
+      "calories": 261.7,
+      "fat": 16.7,
+      "protein": 11.7,
+      "carbs": 19.3
+    },
+    {
+      "idx": 263,
+      "name": "Sweet N' Delicious Pumpkin Pie",
+      "type": "breakfast",
+      "calories": 262.5,
+      "fat": 11.2,
+      "protein": 5.0,
+      "carbs": 36.5
+    },
+    {
+      "idx": 264,
+      "name": "Chili Chicken and Vegetable Soup",
+      "type": "breakfast",
+      "calories": 263.4,
+      "fat": 8.5,
+      "protein": 10.6,
+      "carbs": 41.6
+    },
+    {
+      "idx": 265,
+      "name": "Country Style Pork Ribs in a Crock Pot",
+      "type": "breakfast",
+      "calories": 264.3,
+      "fat": 13.7,
+      "protein": 22.5,
+      "carbs": 11.4
+    },
+    {
+      "idx": 266,
+      "name": "Salmon Wild Rice Soup",
+      "type": "breakfast",
+      "calories": 265.1,
+      "fat": 13.9,
+      "protein": 22.4,
+      "carbs": 11.9
+    },
+    {
+      "idx": 267,
+      "name": "Basic Panko",
+      "type": "breakfast",
+      "calories": 266.0,
+      "fat": 3.3,
+      "protein": 7.6,
+      "carbs": 50.6
+    },
+    {
+      "idx": 268,
+      "name": "Apricot Chicken Salad",
+      "type": "breakfast",
+      "calories": 266.9,
+      "fat": 13.7,
+      "protein": 20.1,
+      "carbs": 17.0
+    },
+    {
+      "idx": 269,
+      "name": "Berry-Lemon Shortcakes",
+      "type": "breakfast",
+      "calories": 267.8,
+      "fat": 8.7,
+      "protein": 3.9,
+      "carbs": 45.1
+    },
+    {
+      "idx": 270,
+      "name": "Sweet Potato and Pecan Flapjacks",
+      "type": "breakfast",
+      "calories": 268.7,
+      "fat": 7.7,
+      "protein": 7.7,
+      "carbs": 42.7
+    },
+    {
+      "idx": 271,
+      "name": "Chicken Broth",
+      "type": "breakfast",
+      "calories": 269.5,
+      "fat": 17.4,
+      "protein": 22.0,
+      "carbs": 5.0
+    },
+    {
+      "idx": 272,
+      "name": "Chicken Tortilla Soup",
+      "type": "breakfast",
+      "calories": 270.4,
+      "fat": 6.5,
+      "protein": 19.8,
+      "carbs": 36.0
+    },
+    {
+      "idx": 273,
+      "name": "Apple Butter Dessert",
+      "type": "breakfast",
+      "calories": 271.2,
+      "fat": 10.8,
+      "protein": 2.9,
+      "carbs": 41.3
+    },
+    {
+      "idx": 274,
+      "name": "Olive Garden Peach Fresco",
+      "type": "breakfast",
+      "calories": 272.1,
+      "fat": 0.1,
+      "protein": 0.1,
+      "carbs": 19.4
+    },
+    {
+      "idx": 275,
+      "name": "Spinach Ricotta Pie with a Hint of Feta",
+      "type": "breakfast",
+      "calories": 273.0,
+      "fat": 21.7,
+      "protein": 13.7,
+      "carbs": 7.4
+    },
+    {
+      "idx": 276,
+      "name": "Spicy Low fat, New Potatoes",
+      "type": "breakfast",
+      "calories": 273.9,
+      "fat": 7.2,
+      "protein": 5.6,
+      "carbs": 47.3
+    },
+    {
+      "idx": 277,
+      "name": "Easy Creamed Spinach",
+      "type": "breakfast",
+      "calories": 274.8,
+      "fat": 16.3,
+      "protein": 17.8,
+      "carbs": 15.9
+    },
+    {
+      "idx": 278,
+      "name": "Snappy Rolls",
+      "type": "breakfast",
+      "calories": 275.7,
+      "fat": 14.8,
+      "protein": 4.9,
+      "carbs": 31.7
+    },
+    {
+      "idx": 279,
+      "name": "Crunchy Asian Broccoli Coleslaw",
+      "type": "breakfast",
+      "calories": 276.5,
+      "fat": 20.0,
+      "protein": 5.4,
+      "carbs": 21.1
+    },
+    {
+      "idx": 280,
+      "name": "Hot Chocolate",
+      "type": "breakfast",
+      "calories": 277.4,
+      "fat": 10.4,
+      "protein": 10.1,
+      "carbs": 42.6
+    },
+    {
+      "idx": 281,
+      "name": "Apple Betty",
+      "type": "breakfast",
+      "calories": 278.3,
+      "fat": 15.5,
+      "protein": 2.8,
+      "carbs": 34.8
+    },
+    {
+      "idx": 282,
+      "name": "Back-To-School Raspberry Granola Bars",
+      "type": "breakfast",
+      "calories": 279.1,
+      "fat": 14.1,
+      "protein": 2.8,
+      "carbs": 36.6
+    },
+    {
+      "idx": 283,
+      "name": "Spicy Island Fish Saute",
+      "type": "breakfast",
+      "calories": 280.0,
+      "fat": 12.4,
+      "protein": 15.6,
+      "carbs": 29.6
+    },
+    {
+      "idx": 284,
+      "name": "Mojo Beef Kabobs",
+      "type": "breakfast",
+      "calories": 280.9,
+      "fat": 15.2,
+      "protein": 26.5,
+      "carbs": 10.6
+    },
+    {
+      "idx": 285,
+      "name": "Mile-High Salsa Pie",
+      "type": "breakfast",
+      "calories": 281.8,
+      "fat": 13.8,
+      "protein": 24.6,
+      "carbs": 15.1
+    },
+    {
+      "idx": 286,
+      "name": "Quick and Easy Pizza Sauce",
+      "type": "breakfast",
+      "calories": 282.7,
+      "fat": 14.6,
+      "protein": 8.3,
+      "carbs": 37.7
+    },
+    {
+      "idx": 287,
+      "name": "Weight Watchers Easy Chocolate Mousse",
+      "type": "breakfast",
+      "calories": 283.6,
+      "fat": 12.3,
+      "protein": 6.5,
+      "carbs": 42.2
+    },
+    {
+      "idx": 288,
+      "name": "Kids'night Spaghetti Sauce",
+      "type": "breakfast",
+      "calories": 284.5,
+      "fat": 12.0,
+      "protein": 25.4,
+      "carbs": 19.4
+    },
+    {
+      "idx": 289,
+      "name": "Tuna Puff Sandwiches",
+      "type": "breakfast",
+      "calories": 285.4,
+      "fat": 17.2,
+      "protein": 13.9,
+      "carbs": 19.0
+    },
+    {
+      "idx": 290,
+      "name": "Delicious Macaroni Salad",
+      "type": "breakfast",
+      "calories": 286.3,
+      "fat": 5.4,
+      "protein": 10.4,
+      "carbs": 48.1
+    },
+    {
+      "idx": 291,
+      "name": "Scones",
+      "type": "breakfast",
+      "calories": 287.2,
+      "fat": 12.7,
+      "protein": 5.7,
+      "carbs": 37.5
+    },
+    {
+      "idx": 292,
+      "name": "Cheddar-Polenta Biscuits With Ham Salad",
+      "type": "breakfast",
+      "calories": 288.1,
+      "fat": 18.1,
+      "protein": 11.7,
+      "carbs": 20.1
+    },
+    {
+      "idx": 293,
+      "name": "Chicken Breast Sandwich,  Onions, Watercress, Paprika Aioli",
+      "type": "breakfast",
+      "calories": 289.0,
+      "fat": 16.5,
+      "protein": 15.7,
+      "carbs": 20.8
+    },
+    {
+      "idx": 294,
+      "name": "Wholly Fantastic Whole Grain Zucchini Bread",
+      "type": "breakfast",
+      "calories": 289.9,
+      "fat": 15.1,
+      "protein": 4.5,
+      "carbs": 36.2
+    },
+    {
+      "idx": 295,
+      "name": "Cilantro Potatoes",
+      "type": "breakfast",
+      "calories": 290.9,
+      "fat": 13.8,
+      "protein": 4.6,
+      "carbs": 38.9
+    },
+    {
+      "idx": 296,
+      "name": "Gazpacho",
+      "type": "breakfast",
+      "calories": 291.8,
+      "fat": 24.6,
+      "protein": 5.2,
+      "carbs": 16.4
+    },
+    {
+      "idx": 297,
+      "name": "Chipotle Shrimp and Pineapple Kabobs",
+      "type": "breakfast",
+      "calories": 292.8,
+      "fat": 3.3,
+      "protein": 36.1,
+      "carbs": 30.2
+    },
+    {
+      "idx": 298,
+      "name": "New England Lobster Rolls",
+      "type": "breakfast",
+      "calories": 293.8,
+      "fat": 13.5,
+      "protein": 6.0,
+      "carbs": 37.5
+    },
+    {
+      "idx": 299,
+      "name": "Alayne's Traditional Italian Lasagna",
+      "type": "breakfast",
+      "calories": 294.7,
+      "fat": 22.0,
+      "protein": 20.7,
+      "carbs": 2.9
+    },
+    {
+      "idx": 300,
+      "name": "Pizza Dough Focaccia (Abm)",
+      "type": "breakfast",
+      "calories": 295.6,
+      "fat": 5.2,
+      "protein": 7.5,
+      "carbs": 53.6
+    },
+    {
+      "idx": 301,
+      "name": "Tie Me to the Bedpost",
+      "type": "breakfast",
+      "calories": 296.5,
+      "fat": 0.0,
+      "protein": 0.0,
+      "carbs": 0.0
+    },
+    {
+      "idx": 302,
+      "name": "Beer Steamed Crabs",
+      "type": "breakfast",
+      "calories": 297.5,
+      "fat": 1.3,
+      "protein": 18.0,
+      "carbs": 21.2
+    },
+    {
+      "idx": 303,
+      "name": "Beef Chili With Vegetables",
+      "type": "breakfast",
+      "calories": 298.4,
+      "fat": 17.9,
+      "protein": 23.1,
+      "carbs": 11.8
+    },
+    {
+      "idx": 304,
+      "name": "Conaways Mustard BBQ Sauce",
+      "type": "breakfast",
+      "calories": 299.3,
+      "fat": 14.0,
+      "protein": 6.1,
+      "carbs": 42.5
+    },
+    {
+      "idx": 305,
+      "name": "Sandra Lee's Sweet Onion Tartlets",
+      "type": "breakfast",
+      "calories": 300.2,
+      "fat": 21.4,
+      "protein": 5.4,
+      "carbs": 21.7
+    },
+    {
+      "idx": 306,
+      "name": "Swiss Enchiladas",
+      "type": "breakfast",
+      "calories": 301.1,
+      "fat": 13.5,
+      "protein": 28.4,
+      "carbs": 16.6
+    },
+    {
+      "idx": 307,
+      "name": "Apple and Feta Baked Peppers",
+      "type": "breakfast",
+      "calories": 302.0,
+      "fat": 20.0,
+      "protein": 10.4,
+      "carbs": 23.6
+    },
+    {
+      "idx": 308,
+      "name": "Collards Moroccan Style",
+      "type": "breakfast",
+      "calories": 302.9,
+      "fat": 4.3,
+      "protein": 15.3,
+      "carbs": 56.4
+    },
+    {
+      "idx": 309,
+      "name": "Butterscotch Pecan Bread Pudding",
+      "type": "breakfast",
+      "calories": 303.9,
+      "fat": 15.0,
+      "protein": 5.7,
+      "carbs": 36.6
+    },
+    {
+      "idx": 310,
+      "name": "Black Bean Soup With Hot Roast Pepper Cream.",
+      "type": "breakfast",
+      "calories": 304.9,
+      "fat": 8.8,
+      "protein": 16.7,
+      "carbs": 41.8
+    },
+    {
+      "idx": 311,
+      "name": "Sesame Rice",
+      "type": "breakfast",
+      "calories": 305.9,
+      "fat": 12.6,
+      "protein": 7.2,
+      "carbs": 40.9
+    },
+    {
+      "idx": 312,
+      "name": "BBQ Pulled Pork Sandwiches",
+      "type": "breakfast",
+      "calories": 306.9,
+      "fat": 15.5,
+      "protein": 14.6,
+      "carbs": 25.6
+    },
+    {
+      "idx": 313,
+      "name": "Capellini Pomodoro",
+      "type": "breakfast",
+      "calories": 307.9,
+      "fat": 13.0,
+      "protein": 10.9,
+      "carbs": 37.4
+    },
+    {
+      "idx": 314,
+      "name": "Easy Crock Pot Ham &amp; Beans",
+      "type": "breakfast",
+      "calories": 308.8,
+      "fat": 2.3,
+      "protein": 21.9,
+      "carbs": 51.2
+    },
+    {
+      "idx": 315,
+      "name": "Texas Roadhouse Style Baked Sweet Potato",
+      "type": "breakfast",
+      "calories": 309.8,
+      "fat": 7.8,
+      "protein": 2.6,
+      "carbs": 58.8
+    },
+    {
+      "idx": 316,
+      "name": "Corn, Cheddar, and Sun-Dried Tomato Muffins",
+      "type": "breakfast",
+      "calories": 310.8,
+      "fat": 24.2,
+      "protein": 7.0,
+      "carbs": 17.8
+    },
+    {
+      "idx": 317,
+      "name": "Cod With Spiced Red Lentils",
+      "type": "breakfast",
+      "calories": 311.8,
+      "fat": 9.8,
+      "protein": 32.8,
+      "carbs": 23.1
+    },
+    {
+      "idx": 318,
+      "name": "Apple Pear Scones",
+      "type": "breakfast",
+      "calories": 312.8,
+      "fat": 12.1,
+      "protein": 4.9,
+      "carbs": 46.7
+    },
+    {
+      "idx": 319,
+      "name": "Sweet and Sour Pork",
+      "type": "breakfast",
+      "calories": 313.8,
+      "fat": 11.9,
+      "protein": 30.8,
+      "carbs": 20.3
+    },
+    {
+      "idx": 320,
+      "name": "Feta Whipped With Basil, Lemon, and Pepper",
+      "type": "breakfast",
+      "calories": 314.8,
+      "fat": 30.1,
+      "protein": 8.3,
+      "carbs": 4.2
+    },
+    {
+      "idx": 321,
+      "name": "Easy Chicken &amp; Cheese Enchiladas",
+      "type": "breakfast",
+      "calories": 315.9,
+      "fat": 15.8,
+      "protein": 19.2,
+      "carbs": 24.1
+    },
+    {
+      "idx": 322,
+      "name": "Speedy Chili With Macaroni",
+      "type": "breakfast",
+      "calories": 316.9,
+      "fat": 8.7,
+      "protein": 23.0,
+      "carbs": 37.7
+    },
+    {
+      "idx": 323,
+      "name": "Aloo Achar ( Potato Salad)",
+      "type": "breakfast",
+      "calories": 317.9,
+      "fat": 18.2,
+      "protein": 8.6,
+      "carbs": 42.0
+    },
+    {
+      "idx": 324,
+      "name": "Baked Penne With Meat Sauce",
+      "type": "breakfast",
+      "calories": 318.9,
+      "fat": 9.2,
+      "protein": 19.3,
+      "carbs": 39.1
+    },
+    {
+      "idx": 325,
+      "name": "Simple Cheesecake",
+      "type": "breakfast",
+      "calories": 319.9,
+      "fat": 21.6,
+      "protein": 5.4,
+      "carbs": 27.2
+    },
+    {
+      "idx": 326,
+      "name": "Asparagus, Chicken and Penne Pasta  (Albertsons.com)",
+      "type": "breakfast",
+      "calories": 320.9,
+      "fat": 7.0,
+      "protein": 18.0,
+      "carbs": 47.8
+    },
+    {
+      "idx": 327,
+      "name": "Canned Clam Chowder Made Better",
+      "type": "breakfast",
+      "calories": 321.9,
+      "fat": 15.9,
+      "protein": 19.8,
+      "carbs": 24.3
+    },
+    {
+      "idx": 328,
+      "name": "Simple Spinach Manicotti",
+      "type": "breakfast",
+      "calories": 322.9,
+      "fat": 18.8,
+      "protein": 25.5,
+      "carbs": 16.7
+    },
+    {
+      "idx": 329,
+      "name": "Super Simple Beef Stew",
+      "type": "breakfast",
+      "calories": 323.9,
+      "fat": 14.8,
+      "protein": 17.2,
+      "carbs": 31.2
+    },
+    {
+      "idx": 330,
+      "name": "Chicken aux Framboises",
+      "type": "breakfast",
+      "calories": 325.0,
+      "fat": 10.7,
+      "protein": 23.8,
+      "carbs": 35.3
+    },
+    {
+      "idx": 331,
+      "name": "Grilled Swordfish With Rosemary",
+      "type": "breakfast",
+      "calories": 326.0,
+      "fat": 15.5,
+      "protein": 43.3,
+      "carbs": 0.6
+    },
+    {
+      "idx": 332,
+      "name": "Maple-Glazed Turkey Breast",
+      "type": "breakfast",
+      "calories": 327.1,
+      "fat": 17.6,
+      "protein": 27.1,
+      "carbs": 15.7
+    },
+    {
+      "idx": 333,
+      "name": "Pork Chops in Onion Gravy",
+      "type": "breakfast",
+      "calories": 328.1,
+      "fat": 21.4,
+      "protein": 23.7,
+      "carbs": 9.3
+    },
+    {
+      "idx": 334,
+      "name": "French Green Beans Saut&eacute;ed With Mushrooms and Almonds",
+      "type": "breakfast",
+      "calories": 329.1,
+      "fat": 24.9,
+      "protein": 11.9,
+      "carbs": 19.6
+    },
+    {
+      "idx": 335,
+      "name": "Pfeffernusse (Pepper Balls)",
+      "type": "breakfast",
+      "calories": 330.2,
+      "fat": 3.2,
+      "protein": 5.5,
+      "carbs": 71.5
+    },
+    {
+      "idx": 336,
+      "name": "Dog's Nose a la Dickens",
+      "type": "breakfast",
+      "calories": 331.3,
+      "fat": 0.0,
+      "protein": 1.6,
+      "carbs": 21.0
+    },
+    {
+      "idx": 337,
+      "name": "Magic Potato Puffs",
+      "type": "breakfast",
+      "calories": 332.4,
+      "fat": 8.7,
+      "protein": 7.4,
+      "carbs": 57.3
+    },
+    {
+      "idx": 338,
+      "name": "BEST Chicken Noodle Soup!",
+      "type": "breakfast",
+      "calories": 333.4,
+      "fat": 20.0,
+      "protein": 26.4,
+      "carbs": 10.4
+    },
+    {
+      "idx": 339,
+      "name": "Chicken Breasts in Ginger Lime Sauce",
+      "type": "breakfast",
+      "calories": 334.5,
+      "fat": 13.4,
+      "protein": 30.4,
+      "carbs": 19.3
+    },
+    {
+      "idx": 340,
+      "name": "No-Bake Berries and Cream Pie",
+      "type": "breakfast",
+      "calories": 335.6,
+      "fat": 18.2,
+      "protein": 4.1,
+      "carbs": 40.6
+    },
+    {
+      "idx": 341,
+      "name": "Baked White Fish",
+      "type": "breakfast",
+      "calories": 336.7,
+      "fat": 18.1,
+      "protein": 30.6,
+      "carbs": 14.3
+    },
+    {
+      "idx": 342,
+      "name": "United Cake of America",
+      "type": "breakfast",
+      "calories": 337.7,
+      "fat": 13.6,
+      "protein": 5.4,
+      "carbs": 49.5
+    },
+    {
+      "idx": 343,
+      "name": "Light Mexican Custard",
+      "type": "breakfast",
+      "calories": 338.7,
+      "fat": 15.4,
+      "protein": 17.4,
+      "carbs": 33.2
+    },
+    {
+      "idx": 344,
+      "name": "Baked Avocado With Red Salmon Filling",
+      "type": "breakfast",
+      "calories": 339.9,
+      "fat": 26.3,
+      "protein": 12.1,
+      "carbs": 15.1
+    },
+    {
+      "idx": 345,
+      "name": "Pasquale's Italian Tomato Sauce",
+      "type": "breakfast",
+      "calories": 340.9,
+      "fat": 19.6,
+      "protein": 5.1,
+      "carbs": 38.1
+    },
+    {
+      "idx": 346,
+      "name": "Chocolate Peanut-Butter Scones",
+      "type": "breakfast",
+      "calories": 342.0,
+      "fat": 16.9,
+      "protein": 7.8,
+      "carbs": 41.5
+    },
+    {
+      "idx": 347,
+      "name": "Tai's Green Chili",
+      "type": "breakfast",
+      "calories": 343.2,
+      "fat": 11.5,
+      "protein": 51.1,
+      "carbs": 5.9
+    },
+    {
+      "idx": 348,
+      "name": "Bologna Salad Sandwich Spread",
+      "type": "breakfast",
+      "calories": 344.3,
+      "fat": 24.0,
+      "protein": 11.5,
+      "carbs": 21.7
+    },
+    {
+      "idx": 349,
+      "name": "Open Faced Eggplant-Avocado Sandwich",
+      "type": "breakfast",
+      "calories": 345.4,
+      "fat": 25.3,
+      "protein": 5.7,
+      "carbs": 29.8
+    },
+    {
+      "idx": 350,
+      "name": "Pickle Juice Marinade for Chicken",
+      "type": "breakfast",
+      "calories": 346.6,
+      "fat": 4.3,
+      "protein": 70.4,
+      "carbs": 1.2
+    },
+    {
+      "idx": 351,
+      "name": "Brandied Carrots",
+      "type": "breakfast",
+      "calories": 347.7,
+      "fat": 25.3,
+      "protein": 2.3,
+      "carbs": 31.2
+    },
+    {
+      "idx": 352,
+      "name": "Strawberry Cinnamon Shortcakes",
+      "type": "breakfast",
+      "calories": 348.9,
+      "fat": 17.2,
+      "protein": 7.3,
+      "carbs": 43.4
+    },
+    {
+      "idx": 353,
+      "name": "Kang Jyd Taohu (Thai Tofu Soup)",
+      "type": "breakfast",
+      "calories": 350.0,
+      "fat": 19.7,
+      "protein": 27.5,
+      "carbs": 16.6
+    },
+    {
+      "idx": 354,
+      "name": "Roast Pork (Lechon Asado)",
+      "type": "breakfast",
+      "calories": 351.2,
+      "fat": 13.8,
+      "protein": 50.4,
+      "carbs": 3.2
+    },
+    {
+      "idx": 355,
+      "name": "Romano Rice and Beans",
+      "type": "breakfast",
+      "calories": 352.3,
+      "fat": 8.5,
+      "protein": 15.9,
+      "carbs": 55.1
+    },
+    {
+      "idx": 356,
+      "name": "Corn Chowder (Crock Pot)",
+      "type": "breakfast",
+      "calories": 353.5,
+      "fat": 7.2,
+      "protein": 9.8,
+      "carbs": 71.7
+    },
+    {
+      "idx": 357,
+      "name": "Chicken and Mushrooms",
+      "type": "breakfast",
+      "calories": 354.6,
+      "fat": 21.0,
+      "protein": 32.1,
+      "carbs": 6.7
+    },
+    {
+      "idx": 358,
+      "name": "Boeuf a La Hatienne (Haitian Beef With Tomatoes &amp; Peppers)",
+      "type": "breakfast",
+      "calories": 355.8,
+      "fat": 21.4,
+      "protein": 25.8,
+      "carbs": 16.3
+    },
+    {
+      "idx": 359,
+      "name": "Ghormeh Sabzi - Persian Green Stew",
+      "type": "breakfast",
+      "calories": 356.9,
+      "fat": 20.4,
+      "protein": 33.2,
+      "carbs": 9.0
+    },
+    {
+      "idx": 360,
+      "name": "Pukacapas - Spicy Cheese Empanadas (Bolivia)",
+      "type": "breakfast",
+      "calories": 358.0,
+      "fat": 18.4,
+      "protein": 8.2,
+      "carbs": 40.0
+    },
+    {
+      "idx": 361,
+      "name": "Chickpea Salad",
+      "type": "breakfast",
+      "calories": 359.2,
+      "fat": 11.6,
+      "protein": 11.4,
+      "carbs": 54.7
+    },
+    {
+      "idx": 362,
+      "name": "Turkey soup with corn stuffing fritters",
+      "type": "breakfast",
+      "calories": 360.4,
+      "fat": 17.0,
+      "protein": 15.2,
+      "carbs": 38.0
+    },
+    {
+      "idx": 363,
+      "name": "Cherry Treasure Mold",
+      "type": "breakfast",
+      "calories": 361.5,
+      "fat": 19.3,
+      "protein": 8.6,
+      "carbs": 42.6
+    },
+    {
+      "idx": 364,
+      "name": "Mediterranean Style Chicken Breast",
+      "type": "breakfast",
+      "calories": 362.6,
+      "fat": 24.3,
+      "protein": 27.3,
+      "carbs": 8.9
+    },
+    {
+      "idx": 365,
+      "name": "Apple Filled Crepes",
+      "type": "breakfast",
+      "calories": 363.8,
+      "fat": 14.8,
+      "protein": 7.3,
+      "carbs": 54.3
+    },
+    {
+      "idx": 366,
+      "name": "Chocolate-Peanut Butter Whoopie Pies",
+      "type": "breakfast",
+      "calories": 365.0,
+      "fat": 20.5,
+      "protein": 5.5,
+      "carbs": 44.1
+    },
+    {
+      "idx": 367,
+      "name": "Spinach, Shrooms, and Onions Says It All !!!",
+      "type": "breakfast",
+      "calories": 366.3,
+      "fat": 27.8,
+      "protein": 10.1,
+      "carbs": 24.4
+    },
+    {
+      "idx": 368,
+      "name": "Tangy &amp; Moist Meatloaf With Special Sauce",
+      "type": "breakfast",
+      "calories": 367.5,
+      "fat": 16.8,
+      "protein": 24.7,
+      "carbs": 28.8
+    },
+    {
+      "idx": 369,
+      "name": "Crock Pot Meatball Hoagies - A",
+      "type": "breakfast",
+      "calories": 368.7,
+      "fat": 13.8,
+      "protein": 14.8,
+      "carbs": 46.0
+    },
+    {
+      "idx": 370,
+      "name": "Hamburger Stew",
+      "type": "breakfast",
+      "calories": 369.8,
+      "fat": 17.5,
+      "protein": 25.3,
+      "carbs": 27.0
+    },
+    {
+      "idx": 371,
+      "name": "Healthy All-Grain Pancakes",
+      "type": "breakfast",
+      "calories": 371.1,
+      "fat": 14.5,
+      "protein": 13.8,
+      "carbs": 51.7
+    },
+    {
+      "idx": 372,
+      "name": "St Pat's Day Broccoli Salad",
+      "type": "breakfast",
+      "calories": 372.4,
+      "fat": 27.9,
+      "protein": 5.9,
+      "carbs": 28.8
+    },
+    {
+      "idx": 373,
+      "name": "French Pecan Pie IV",
+      "type": "breakfast",
+      "calories": 373.7,
+      "fat": 24.6,
+      "protein": 4.0,
+      "carbs": 36.7
+    },
+    {
+      "idx": 374,
+      "name": "Asparagus Pasta Salad With Parmesan Dressing",
+      "type": "breakfast",
+      "calories": 374.8,
+      "fat": 23.7,
+      "protein": 11.5,
+      "carbs": 32.0
+    },
+    {
+      "idx": 375,
+      "name": "Sweet Party Chex Mix With Berries",
+      "type": "breakfast",
+      "calories": 376.0,
+      "fat": 10.8,
+      "protein": 6.8,
+      "carbs": 65.5
+    },
+    {
+      "idx": 376,
+      "name": "Amazing Chicken Tacos",
+      "type": "breakfast",
+      "calories": 377.3,
+      "fat": 12.6,
+      "protein": 13.2,
+      "carbs": 54.5
+    },
+    {
+      "idx": 377,
+      "name": "Asian Beef Lettuce Wraps",
+      "type": "breakfast",
+      "calories": 378.6,
+      "fat": 17.9,
+      "protein": 26.4,
+      "carbs": 28.7
+    },
+    {
+      "idx": 378,
+      "name": "Treacle Scones",
+      "type": "breakfast",
+      "calories": 380.0,
+      "fat": 13.5,
+      "protein": 7.0,
+      "carbs": 57.6
+    },
+    {
+      "idx": 379,
+      "name": "Chocolate Chip Cookies",
+      "type": "breakfast",
+      "calories": 381.3,
+      "fat": 21.1,
+      "protein": 3.8,
+      "carbs": 44.8
+    },
+    {
+      "idx": 380,
+      "name": "Italian Bread Salad",
+      "type": "breakfast",
+      "calories": 382.6,
+      "fat": 22.5,
+      "protein": 6.3,
+      "carbs": 40.7
+    },
+    {
+      "idx": 381,
+      "name": "Carrot Pineapple Bread",
+      "type": "breakfast",
+      "calories": 383.8,
+      "fat": 19.2,
+      "protein": 5.3,
+      "carbs": 49.1
+    },
+    {
+      "idx": 382,
+      "name": "Mexi Chicken or Turkey Picadillo Nacho Bake",
+      "type": "breakfast",
+      "calories": 385.2,
+      "fat": 21.0,
+      "protein": 25.6,
+      "carbs": 25.1
+    },
+    {
+      "idx": 383,
+      "name": "Diabetic Breakfast Drink",
+      "type": "breakfast",
+      "calories": 386.6,
+      "fat": 15.5,
+      "protein": 18.2,
+      "carbs": 45.7
+    },
+    {
+      "idx": 384,
+      "name": "Best Fluffy Twice-Baked Potatoes!",
+      "type": "breakfast",
+      "calories": 387.9,
+      "fat": 8.8,
+      "protein": 12.6,
+      "carbs": 66.3
+    },
+    {
+      "idx": 385,
+      "name": "Mud Buddies",
+      "type": "breakfast",
+      "calories": 389.2,
+      "fat": 15.5,
+      "protein": 6.9,
+      "carbs": 61.0
+    },
+    {
+      "idx": 386,
+      "name": "&quot;never Fail&quot; Pastry for Double-Crust Pie",
+      "type": "breakfast",
+      "calories": 390.6,
+      "fat": 26.8,
+      "protein": 5.3,
+      "carbs": 31.9
+    },
+    {
+      "idx": 387,
+      "name": "BBQ Chicken Pizza",
+      "type": "breakfast",
+      "calories": 392.0,
+      "fat": 28.4,
+      "protein": 17.4,
+      "carbs": 17.3
+    },
+    {
+      "idx": 388,
+      "name": "Hot Tamale Casserole",
+      "type": "breakfast",
+      "calories": 393.4,
+      "fat": 19.8,
+      "protein": 26.9,
+      "carbs": 27.2
+    },
+    {
+      "idx": 389,
+      "name": "Warm Chicken and Potato Salad",
+      "type": "breakfast",
+      "calories": 394.8,
+      "fat": 18.0,
+      "protein": 32.8,
+      "carbs": 24.9
+    },
+    {
+      "idx": 390,
+      "name": "Chicken Stew With Tomatoes and Lima Beans",
+      "type": "breakfast",
+      "calories": 396.3,
+      "fat": 11.9,
+      "protein": 11.7,
+      "carbs": 67.2
+    },
+    {
+      "idx": 391,
+      "name": "Papaya Bread",
+      "type": "breakfast",
+      "calories": 397.7,
+      "fat": 20.9,
+      "protein": 5.8,
+      "carbs": 48.7
+    },
+    {
+      "idx": 392,
+      "name": "Ww Weight Watchers Zucchini &amp; Portobello Stacks",
+      "type": "breakfast",
+      "calories": 399.2,
+      "fat": 5.8,
+      "protein": 13.6,
+      "carbs": 73.5
+    },
+    {
+      "idx": 393,
+      "name": "Steamed Mussels Trieste Style (Lidia Bastianich)",
+      "type": "breakfast",
+      "calories": 400.7,
+      "fat": 23.4,
+      "protein": 28.1,
+      "carbs": 14.9
+    },
+    {
+      "idx": 394,
+      "name": "Potato Lasagna",
+      "type": "breakfast",
+      "calories": 402.2,
+      "fat": 17.9,
+      "protein": 22.3,
+      "carbs": 37.4
+    },
+    {
+      "idx": 395,
+      "name": "Super Easy Chicken and Noodles",
+      "type": "breakfast",
+      "calories": 403.6,
+      "fat": 16.2,
+      "protein": 25.8,
+      "carbs": 37.9
+    },
+    {
+      "idx": 396,
+      "name": "Crock Pot Stew (Beef and Sausage)",
+      "type": "breakfast",
+      "calories": 405.1,
+      "fat": 22.0,
+      "protein": 22.8,
+      "carbs": 30.1
+    },
+    {
+      "idx": 397,
+      "name": "Tropical Pina Colada Bread Pudding",
+      "type": "breakfast",
+      "calories": 406.5,
+      "fat": 15.7,
+      "protein": 12.9,
+      "carbs": 54.2
+    },
+    {
+      "idx": 398,
+      "name": "Risotto Sauvignon",
+      "type": "breakfast",
+      "calories": 408.1,
+      "fat": 15.3,
+      "protein": 14.9,
+      "carbs": 46.0
+    },
+    {
+      "idx": 399,
+      "name": "Tapas Pork Meatballs With Tomato &amp; Orange Sauce",
+      "type": "breakfast",
+      "calories": 409.6,
+      "fat": 26.8,
+      "protein": 24.3,
+      "carbs": 14.9
+    },
+    {
+      "idx": 400,
+      "name": "Italian Stuffed Meatloaf",
+      "type": "breakfast",
+      "calories": 411.1,
+      "fat": 27.2,
+      "protein": 34.9,
+      "carbs": 5.7
+    },
+    {
+      "idx": 401,
+      "name": "Hamburger Pot Pie",
+      "type": "breakfast",
+      "calories": 412.6,
+      "fat": 21.6,
+      "protein": 19.0,
+      "carbs": 34.5
+    },
+    {
+      "idx": 402,
+      "name": "Turkey Ball Soup",
+      "type": "breakfast",
+      "calories": 414.1,
+      "fat": 12.2,
+      "protein": 28.9,
+      "carbs": 43.9
+    },
+    {
+      "idx": 403,
+      "name": "Oven-Fried Parmesan Chicken",
+      "type": "breakfast",
+      "calories": 415.7,
+      "fat": 23.5,
+      "protein": 43.0,
+      "carbs": 5.6
+    },
+    {
+      "idx": 404,
+      "name": "Banana-Raisin Trail Mix",
+      "type": "breakfast",
+      "calories": 417.4,
+      "fat": 20.4,
+      "protein": 8.7,
+      "carbs": 58.8
+    },
+    {
+      "idx": 405,
+      "name": "Chicken Fried Rice",
+      "type": "breakfast",
+      "calories": 418.9,
+      "fat": 6.0,
+      "protein": 35.3,
+      "carbs": 55.3
+    },
+    {
+      "idx": 406,
+      "name": "Greek Meat Rolls in Tomato-wine Sauce",
+      "type": "breakfast",
+      "calories": 420.6,
+      "fat": 23.6,
+      "protein": 24.3,
+      "carbs": 21.6
+    },
+    {
+      "idx": 407,
+      "name": "Konigsberger Klopse (German Meatballs in Creamy Caper Sauce)",
+      "type": "breakfast",
+      "calories": 422.3,
+      "fat": 26.1,
+      "protein": 29.6,
+      "carbs": 14.0
+    },
+    {
+      "idx": 408,
+      "name": "Chocolate Cherry Bundt Cake",
+      "type": "breakfast",
+      "calories": 423.9,
+      "fat": 22.9,
+      "protein": 5.4,
+      "carbs": 55.1
+    },
+    {
+      "idx": 409,
+      "name": "Simple Corn and Bean Tortilla Pies",
+      "type": "breakfast",
+      "calories": 425.6,
+      "fat": 14.1,
+      "protein": 18.6,
+      "carbs": 56.2
+    },
+    {
+      "idx": 410,
+      "name": "Swedish Rice",
+      "type": "breakfast",
+      "calories": 427.3,
+      "fat": 13.3,
+      "protein": 14.6,
+      "carbs": 61.9
+    },
+    {
+      "idx": 411,
+      "name": "Jalapeno Chicken Salad",
+      "type": "breakfast",
+      "calories": 429.1,
+      "fat": 25.8,
+      "protein": 36.6,
+      "carbs": 12.1
+    },
+    {
+      "idx": 412,
+      "name": "Crock Pot Steak Sandwiches",
+      "type": "breakfast",
+      "calories": 430.8,
+      "fat": 23.5,
+      "protein": 51.4,
+      "carbs": 0.5
+    },
+    {
+      "idx": 413,
+      "name": "Oreo and Peanut Butter Brownie Cupcakes",
+      "type": "breakfast",
+      "calories": 432.4,
+      "fat": 23.5,
+      "protein": 6.8,
+      "carbs": 53.0
+    },
+    {
+      "idx": 414,
+      "name": "Chocolate Pecan Tart",
+      "type": "breakfast",
+      "calories": 434.2,
+      "fat": 25.4,
+      "protein": 4.8,
+      "carbs": 50.4
+    },
+    {
+      "idx": 415,
+      "name": "Sicilian Caponata",
+      "type": "breakfast",
+      "calories": 436.0,
+      "fat": 39.5,
+      "protein": 6.4,
+      "carbs": 20.2
+    },
+    {
+      "idx": 416,
+      "name": "Pork Apricot a La Creme",
+      "type": "breakfast",
+      "calories": 437.8,
+      "fat": 4.5,
+      "protein": 12.6,
+      "carbs": 84.1
+    },
+    {
+      "idx": 417,
+      "name": "Low Fat Pasta Frutti Di Mare",
+      "type": "breakfast",
+      "calories": 439.6,
+      "fat": 6.5,
+      "protein": 27.9,
+      "carbs": 59.9
+    },
+    {
+      "idx": 418,
+      "name": "Mom's Famous Turkey Meatloaf",
+      "type": "breakfast",
+      "calories": 441.4,
+      "fat": 17.6,
+      "protein": 36.5,
+      "carbs": 34.8
+    },
+    {
+      "idx": 419,
+      "name": "Pear Pie With No Roll Crust",
+      "type": "breakfast",
+      "calories": 443.2,
+      "fat": 21.8,
+      "protein": 5.8,
+      "carbs": 57.5
+    },
+    {
+      "idx": 420,
+      "name": "Rotis With Mint (Indian Flat Bread With Fresh Mint)",
+      "type": "breakfast",
+      "calories": 445.0,
+      "fat": 22.9,
+      "protein": 7.4,
+      "carbs": 52.0
+    },
+    {
+      "idx": 421,
+      "name": "Fiesta Taco Casserole",
+      "type": "breakfast",
+      "calories": 446.9,
+      "fat": 12.9,
+      "protein": 36.0,
+      "carbs": 49.4
+    },
+    {
+      "idx": 422,
+      "name": "Xochipilli's Enchiladas Vegetarianas",
+      "type": "breakfast",
+      "calories": 448.8,
+      "fat": 25.4,
+      "protein": 17.4,
+      "carbs": 40.5
+    },
+    {
+      "idx": 423,
+      "name": "Vegan Cinnamon Vanilla French Toast Sticks",
+      "type": "lunch",
+      "calories": 450.6,
+      "fat": 18.4,
+      "protein": 11.6,
+      "carbs": 59.0
+    },
+    {
+      "idx": 424,
+      "name": "Southwestern Chicken Pot Pie",
+      "type": "lunch",
+      "calories": 452.4,
+      "fat": 20.4,
+      "protein": 16.4,
+      "carbs": 52.8
+    },
+    {
+      "idx": 425,
+      "name": "Grilled Stuffed Chicken",
+      "type": "lunch",
+      "calories": 454.6,
+      "fat": 30.3,
+      "protein": 38.6,
+      "carbs": 6.7
+    },
+    {
+      "idx": 426,
+      "name": "Linda's Sausage & Bean Soup",
+      "type": "lunch",
+      "calories": 456.6,
+      "fat": 17.0,
+      "protein": 22.3,
+      "carbs": 56.8
+    },
+    {
+      "idx": 427,
+      "name": "Italian Peasant Soup",
+      "type": "lunch",
+      "calories": 458.5,
+      "fat": 9.1,
+      "protein": 32.6,
+      "carbs": 64.8
+    },
+    {
+      "idx": 428,
+      "name": "Pork &amp; Broccoli Stir-Fry",
+      "type": "lunch",
+      "calories": 460.5,
+      "fat": 7.2,
+      "protein": 37.8,
+      "carbs": 65.7
+    },
+    {
+      "idx": 429,
+      "name": "Reduced Calorie Chicken Tacos",
+      "type": "lunch",
+      "calories": 462.5,
+      "fat": 18.2,
+      "protein": 33.4,
+      "carbs": 41.0
+    },
+    {
+      "idx": 430,
+      "name": "Minced Lamb Skewers",
+      "type": "lunch",
+      "calories": 464.7,
+      "fat": 35.1,
+      "protein": 22.5,
+      "carbs": 14.0
+    },
+    {
+      "idx": 431,
+      "name": "Crazy Caesar's Salad",
+      "type": "lunch",
+      "calories": 466.7,
+      "fat": 22.2,
+      "protein": 19.5,
+      "carbs": 47.0
+    },
+    {
+      "idx": 432,
+      "name": "Spaghetti With Olive Sauce",
+      "type": "lunch",
+      "calories": 468.8,
+      "fat": 17.2,
+      "protein": 11.5,
+      "carbs": 66.8
+    },
+    {
+      "idx": 433,
+      "name": "Tuscan-Style Spaghetti With Kale and Cannellinis",
+      "type": "lunch",
+      "calories": 470.9,
+      "fat": 7.8,
+      "protein": 24.1,
+      "carbs": 85.7
+    },
+    {
+      "idx": 434,
+      "name": "Starbucks Banana Walnut Bread",
+      "type": "lunch",
+      "calories": 473.3,
+      "fat": 22.6,
+      "protein": 6.5,
+      "carbs": 64.0
+    },
+    {
+      "idx": 435,
+      "name": "Hamburger and Rice Casserole",
+      "type": "lunch",
+      "calories": 475.6,
+      "fat": 24.2,
+      "protein": 28.1,
+      "carbs": 35.2
+    },
+    {
+      "idx": 436,
+      "name": "Sturm's Granola",
+      "type": "lunch",
+      "calories": 477.8,
+      "fat": 28.7,
+      "protein": 10.7,
+      "carbs": 51.6
+    },
+    {
+      "idx": 437,
+      "name": "Venison for Chuck",
+      "type": "lunch",
+      "calories": 480.1,
+      "fat": 22.6,
+      "protein": 55.0,
+      "carbs": 9.4
+    },
+    {
+      "idx": 438,
+      "name": "Bruschetta Stuffed Chicken",
+      "type": "lunch",
+      "calories": 482.4,
+      "fat": 16.5,
+      "protein": 40.6,
+      "carbs": 41.6
+    },
+    {
+      "idx": 439,
+      "name": "Solo Chicken Breast and Bell Pepper",
+      "type": "lunch",
+      "calories": 485.0,
+      "fat": 28.6,
+      "protein": 28.2,
+      "carbs": 7.6
+    },
+    {
+      "idx": 440,
+      "name": "Chinese Chicken Casserole",
+      "type": "lunch",
+      "calories": 487.3,
+      "fat": 17.9,
+      "protein": 18.4,
+      "carbs": 62.6
+    },
+    {
+      "idx": 441,
+      "name": "Barbecue Chicken Wraps (No Coleslaw)",
+      "type": "lunch",
+      "calories": 489.4,
+      "fat": 32.3,
+      "protein": 28.4,
+      "carbs": 19.5
+    },
+    {
+      "idx": 442,
+      "name": "Hummingbird Carrot Cake",
+      "type": "lunch",
+      "calories": 491.9,
+      "fat": 28.0,
+      "protein": 4.8,
+      "carbs": 56.8
+    },
+    {
+      "idx": 443,
+      "name": "Gyro Burger With Greek Salad",
+      "type": "lunch",
+      "calories": 494.3,
+      "fat": 22.1,
+      "protein": 50.1,
+      "carbs": 25.2
+    },
+    {
+      "idx": 444,
+      "name": "Country Style Meatloaf",
+      "type": "lunch",
+      "calories": 496.8,
+      "fat": 27.6,
+      "protein": 35.0,
+      "carbs": 25.5
+    },
+    {
+      "idx": 445,
+      "name": "BUFFALO DRUMSTICKS",
+      "type": "lunch",
+      "calories": 499.6,
+      "fat": 34.5,
+      "protein": 44.1,
+      "carbs": 0.6
+    },
+    {
+      "idx": 446,
+      "name": "Penne Bolognese",
+      "type": "lunch",
+      "calories": 502.4,
+      "fat": 25.2,
+      "protein": 28.6,
+      "carbs": 33.7
+    },
+    {
+      "idx": 447,
+      "name": "Chipotle Ranch Burgers",
+      "type": "lunch",
+      "calories": 505.0,
+      "fat": 30.2,
+      "protein": 33.9,
+      "carbs": 22.6
+    },
+    {
+      "idx": 448,
+      "name": "Moroccan Spiced Salmon Marinade",
+      "type": "lunch",
+      "calories": 507.9,
+      "fat": 54.5,
+      "protein": 0.5,
+      "carbs": 7.0
+    },
+    {
+      "idx": 449,
+      "name": "Fresh Grilled Chicken, Asparagus and Potatoes",
+      "type": "lunch",
+      "calories": 510.7,
+      "fat": 26.5,
+      "protein": 37.9,
+      "carbs": 31.4
+    },
+    {
+      "idx": 450,
+      "name": "Kitchen Potpourri",
+      "type": "lunch",
+      "calories": 513.5,
+      "fat": 24.6,
+      "protein": 12.1,
+      "carbs": 104.2
+    },
+    {
+      "idx": 451,
+      "name": "Skippy Jammin French Toast",
+      "type": "lunch",
+      "calories": 516.3,
+      "fat": 24.2,
+      "protein": 15.8,
+      "carbs": 63.3
+    },
+    {
+      "idx": 452,
+      "name": "Teriyaki Salmon",
+      "type": "lunch",
+      "calories": 519.3,
+      "fat": 11.1,
+      "protein": 66.6,
+      "carbs": 35.6
+    },
+    {
+      "idx": 453,
+      "name": "Roasted Pork Tenderloin With Orange and Red Onion Salsa",
+      "type": "lunch",
+      "calories": 522.2,
+      "fat": 10.0,
+      "protein": 33.7,
+      "carbs": 73.8
+    },
+    {
+      "idx": 454,
+      "name": "Tangy Meatballs",
+      "type": "lunch",
+      "calories": 525.6,
+      "fat": 20.5,
+      "protein": 33.4,
+      "carbs": 54.2
+    },
+    {
+      "idx": 455,
+      "name": "Monkey Spread French Toast",
+      "type": "lunch",
+      "calories": 528.7,
+      "fat": 29.5,
+      "protein": 20.5,
+      "carbs": 52.7
+    },
+    {
+      "idx": 456,
+      "name": "Roast Pork in Horseradish Crust",
+      "type": "lunch",
+      "calories": 531.9,
+      "fat": 31.6,
+      "protein": 37.5,
+      "carbs": 22.0
+    },
+    {
+      "idx": 457,
+      "name": "Easy Chicken and Broccoli",
+      "type": "lunch",
+      "calories": 535.1,
+      "fat": 24.7,
+      "protein": 37.9,
+      "carbs": 40.0
+    },
+    {
+      "idx": 458,
+      "name": "Spiced Chicken With Maple Butter Glaze",
+      "type": "lunch",
+      "calories": 538.2,
+      "fat": 38.4,
+      "protein": 38.5,
+      "carbs": 7.6
+    },
+    {
+      "idx": 459,
+      "name": "Easy Salmon Cakes",
+      "type": "lunch",
+      "calories": 541.7,
+      "fat": 12.2,
+      "protein": 37.2,
+      "carbs": 67.9
+    },
+    {
+      "idx": 460,
+      "name": "Vietnamese Hue Noodle Soup - Bun Bo Hue",
+      "type": "lunch",
+      "calories": 545.2,
+      "fat": 5.7,
+      "protein": 17.8,
+      "carbs": 103.5
+    },
+    {
+      "idx": 461,
+      "name": "Gyro-Style Lamb",
+      "type": "lunch",
+      "calories": 548.9,
+      "fat": 26.5,
+      "protein": 30.9,
+      "carbs": 46.0
+    },
+    {
+      "idx": 462,
+      "name": "Chicken and Pasta With Creamy Tomato-Wine Sauce",
+      "type": "lunch",
+      "calories": 552.4,
+      "fat": 16.0,
+      "protein": 34.1,
+      "carbs": 64.9
+    },
+    {
+      "idx": 463,
+      "name": "Salmon Scallops With Tarragon Cream",
+      "type": "lunch",
+      "calories": 556.3,
+      "fat": 13.4,
+      "protein": 39.5,
+      "carbs": 68.4
+    },
+    {
+      "idx": 464,
+      "name": "Noom Pachok",
+      "type": "lunch",
+      "calories": 560.4,
+      "fat": 11.5,
+      "protein": 26.0,
+      "carbs": 90.8
+    },
+    {
+      "idx": 465,
+      "name": "Eggplant Rice Casserole",
+      "type": "lunch",
+      "calories": 564.2,
+      "fat": 21.8,
+      "protein": 24.6,
+      "carbs": 67.2
+    },
+    {
+      "idx": 466,
+      "name": "Chicken Cacciatore",
+      "type": "lunch",
+      "calories": 568.1,
+      "fat": 27.0,
+      "protein": 67.6,
+      "carbs": 11.9
+    },
+    {
+      "idx": 467,
+      "name": "Sinigang Soup",
+      "type": "lunch",
+      "calories": 572.4,
+      "fat": 54.9,
+      "protein": 3.0,
+      "carbs": 20.9
+    },
+    {
+      "idx": 468,
+      "name": "Chili Plum Stir Fry Chicken",
+      "type": "lunch",
+      "calories": 576.7,
+      "fat": 36.4,
+      "protein": 39.8,
+      "carbs": 23.4
+    },
+    {
+      "idx": 469,
+      "name": "Chicken Pot Pie",
+      "type": "lunch",
+      "calories": 581.2,
+      "fat": 20.1,
+      "protein": 32.4,
+      "carbs": 66.7
+    },
+    {
+      "idx": 470,
+      "name": "Chicken New Orleans",
+      "type": "lunch",
+      "calories": 586.0,
+      "fat": 21.9,
+      "protein": 61.3,
+      "carbs": 28.6
+    },
+    {
+      "idx": 471,
+      "name": "Hummus, Hummous- a Delicious Recipe Either Way!",
+      "type": "lunch",
+      "calories": 590.8,
+      "fat": 36.7,
+      "protein": 13.6,
+      "carbs": 55.9
+    },
+    {
+      "idx": 472,
+      "name": "Grilled Cobb Salad",
+      "type": "lunch",
+      "calories": 595.7,
+      "fat": 31.7,
+      "protein": 47.8,
+      "carbs": 34.0
+    },
+    {
+      "idx": 473,
+      "name": "French Beef Stew",
+      "type": "lunch",
+      "calories": 600.5,
+      "fat": 35.1,
+      "protein": 38.3,
+      "carbs": 21.3
+    },
+    {
+      "idx": 474,
+      "name": "Simple Beef Stew",
+      "type": "lunch",
+      "calories": 605.7,
+      "fat": 34.2,
+      "protein": 32.7,
+      "carbs": 41.5
+    },
+    {
+      "idx": 475,
+      "name": "Easy Chicken &amp; Noodles -- the Best",
+      "type": "lunch",
+      "calories": 611.1,
+      "fat": 18.8,
+      "protein": 34.3,
+      "carbs": 74.8
+    },
+    {
+      "idx": 476,
+      "name": "Nana Dog",
+      "type": "lunch",
+      "calories": 617.0,
+      "fat": 35.8,
+      "protein": 22.1,
+      "carbs": 61.2
+    },
+    {
+      "idx": 477,
+      "name": "Pizzalinni Greek Salad Dressing",
+      "type": "lunch",
+      "calories": 623.2,
+      "fat": 68.8,
+      "protein": 1.8,
+      "carbs": 2.0
+    },
+    {
+      "idx": 478,
+      "name": "Risotto Salad",
+      "type": "lunch",
+      "calories": 629.5,
+      "fat": 23.2,
+      "protein": 12.2,
+      "carbs": 92.1
+    },
+    {
+      "idx": 479,
+      "name": "Roast Dill Marinated Salmon",
+      "type": "lunch",
+      "calories": 636.2,
+      "fat": 31.9,
+      "protein": 79.8,
+      "carbs": 2.6
+    },
+    {
+      "idx": 480,
+      "name": "Grilled Salmon With Peanut Hoisin Sauce",
+      "type": "lunch",
+      "calories": 643.5,
+      "fat": 28.4,
+      "protein": 73.1,
+      "carbs": 23.9
+    },
+    {
+      "idx": 481,
+      "name": "Marsala Burgers",
+      "type": "dinner",
+      "calories": 650.5,
+      "fat": 35.3,
+      "protein": 46.9,
+      "carbs": 8.4
+    },
+    {
+      "idx": 482,
+      "name": "Sausage and Kale Pasta (Vegetarian)",
+      "type": "dinner",
+      "calories": 658.1,
+      "fat": 35.5,
+      "protein": 29.7,
+      "carbs": 56.9
+    },
+    {
+      "idx": 483,
+      "name": "Southwest Beef Shanks &amp; Black Beans",
+      "type": "dinner",
+      "calories": 666.1,
+      "fat": 24.6,
+      "protein": 58.3,
+      "carbs": 55.3
+    },
+    {
+      "idx": 484,
+      "name": "Spicy Mex-Style Chickpea Snacks",
+      "type": "dinner",
+      "calories": 674.2,
+      "fat": 20.0,
+      "protein": 24.1,
+      "carbs": 104.3
+    },
+    {
+      "idx": 485,
+      "name": "Sweet and Sour Pork Chops (Gluten Free)",
+      "type": "dinner",
+      "calories": 683.5,
+      "fat": 23.1,
+      "protein": 34.1,
+      "carbs": 82.7
+    },
+    {
+      "idx": 486,
+      "name": "Easy Pizza Pancakes (Thick Crepe Style)",
+      "type": "dinner",
+      "calories": 693.2,
+      "fat": 17.1,
+      "protein": 29.2,
+      "carbs": 103.9
+    },
+    {
+      "idx": 487,
+      "name": "Tuna Noodle Casserole",
+      "type": "dinner",
+      "calories": 703.2,
+      "fat": 27.3,
+      "protein": 31.4,
+      "carbs": 82.2
+    },
+    {
+      "idx": 488,
+      "name": "EZ Chicken Noodle Soup",
+      "type": "dinner",
+      "calories": 714.5,
+      "fat": 46.2,
+      "protein": 54.4,
+      "carbs": 18.8
+    },
+    {
+      "idx": 489,
+      "name": "Sweet Baked Beans",
+      "type": "dinner",
+      "calories": 727.3,
+      "fat": 25.6,
+      "protein": 28.6,
+      "carbs": 100.4
+    },
+    {
+      "idx": 490,
+      "name": "Green Rice",
+      "type": "dinner",
+      "calories": 741.6,
+      "fat": 32.2,
+      "protein": 20.4,
+      "carbs": 91.7
+    },
+    {
+      "idx": 491,
+      "name": "Chicken Curry With Whole Spices",
+      "type": "dinner",
+      "calories": 756.2,
+      "fat": 27.9,
+      "protein": 108.6,
+      "carbs": 13.2
+    },
+    {
+      "idx": 492,
+      "name": "Mussels With Red Curry Garlic Broth and Basil Toasts",
+      "type": "dinner",
+      "calories": 771.7,
+      "fat": 19.2,
+      "protein": 43.2,
+      "carbs": 84.4
+    },
+    {
+      "idx": 493,
+      "name": "Spicy Pistachios",
+      "type": "dinner",
+      "calories": 789.9,
+      "fat": 65.3,
+      "protein": 26.5,
+      "carbs": 37.0
+    },
+    {
+      "idx": 494,
+      "name": "Manly Meat Sauce",
+      "type": "dinner",
+      "calories": 811.0,
+      "fat": 26.1,
+      "protein": 40.8,
+      "carbs": 98.6
+    },
+    {
+      "idx": 495,
+      "name": "The Best Seafood Potpies",
+      "type": "dinner",
+      "calories": 837.5,
+      "fat": 51.1,
+      "protein": 35.7,
+      "carbs": 58.4
+    },
+    {
+      "idx": 496,
+      "name": "Lower Carb Bread/Hogie Roll",
+      "type": "dinner",
+      "calories": 869.0,
+      "fat": 23.6,
+      "protein": 29.8,
+      "carbs": 140.0
+    },
+    {
+      "idx": 497,
+      "name": "Pasta With a Lot of Mussel",
+      "type": "dinner",
+      "calories": 907.7,
+      "fat": 32.9,
+      "protein": 42.9,
+      "carbs": 96.5
+    },
+    {
+      "idx": 498,
+      "name": "Hummus With Toasted Pine Nuts, Cumin Seeds and Parsley Oil",
+      "type": "dinner",
+      "calories": 961.6,
+      "fat": 67.3,
+      "protein": 21.8,
+      "carbs": 75.3
+    },
+    {
+      "idx": 499,
+      "name": "Noodles With Chicken and Spicy Peanut Sauce",
+      "type": "dinner",
+      "calories": 1059.8,
+      "fat": 54.7,
+      "protein": 50.7,
+      "carbs": 97.7
+    }
+  ]
+}

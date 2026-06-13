@@ -1,0 +1,50 @@
+{
+  "model_name": "NutriMind Brain Health Nutrition Model",
+  "model_type": "StandardScaler + KNN (Cosine Distance)",
+  "training_data": "20 curated brain-healthy Mediterranean/Tunisian recipes",
+  "features": [
+    "Calories",
+    "FatContent",
+    "SaturatedFatContent",
+    "CholesterolContent",
+    "SodiumContent",
+    "CarbohydrateContent",
+    "FiberContent",
+    "SugarContent",
+    "ProteinContent"
+  ],
+  "n_samples": 20,
+  "n_features": 9,
+  "k_default": 5,
+  "scaler": {
+    "mean": [
+      366.0,
+      15.3,
+      3.15,
+      54.0,
+      266.1,
+      36.3,
+      7.7,
+      9.4,
+      19.8
+    ],
+    "std": [
+      104.1345283755585,
+      5.523585791856591,
+      2.056088519495209,
+      88.11356308764276,
+      186.94515238432905,
+      14.085808461000738,
+      3.1953090617340916,
+      5.295280917949491,
+      12.42014492669067
+    ]
+  },
+  "recipe_types": {
+    "0": "breakfast",
+    "1": "lunch",
+    "2": "dinner",
+    "3": "snack"
+  },
+  "model_file": "nutrition_model.bin"
+}

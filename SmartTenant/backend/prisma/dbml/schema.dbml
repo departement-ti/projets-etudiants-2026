@@ -1,0 +1,357 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Organization {
+  id String [pk]
+  name String [not null]
+  slug String [unique, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  isActive Boolean [not null, default: true]
+  users User [not null]
+  properties Property [not null]
+  units Unit [not null]
+  leases Lease [not null]
+  subscriptions Subscription
+  invites Invite [not null]
+  tickets Ticket [not null]
+  predictions AI_Prediction [not null]
+  notifications Notification [not null]
+}
+
+Table User {
+  id String [pk]
+  email String [unique, not null]
+  passwordHash String [not null]
+  firstName String
+  lastName String
+  phone String
+  role Role [not null, default: 'TENANT']
+  organizationId String
+  organization Organization
+  invites Invite [not null]
+  refreshTokens RefreshToken [not null]
+  tenant Tenant
+  ticketsCreated Ticket [not null]
+  ticketsAssigned Ticket [not null]
+  messagesSent Message [not null]
+  notifications Notification [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Invite {
+  id String [pk]
+  email String [not null]
+  role Role [not null]
+  organizationId String [not null]
+  organization Organization [not null]
+  token String [unique, not null]
+  expiresAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  used Boolean [not null, default: false]
+  invitedById String
+  invitedBy User
+}
+
+Table RefreshToken {
+  id String [pk]
+  token String [unique, not null]
+  userId String [not null]
+  user User [not null]
+  expiresAt DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  revoked Boolean [not null, default: false]
+}
+
+Table Property {
+  id String [pk]
+  organizationId String [not null]
+  organization Organization [not null]
+  title String [not null]
+  name String [not null]
+  description String
+  address String [not null]
+  city String
+  country String
+  location Json
+  type String
+  images Json
+  documents Json
+  units Unit [not null]
+  tickets Ticket [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  isActive Boolean [not null, default: true]
+}
+
+Table Unit {
+  id String [pk]
+  propertyId String [not null]
+  property Property [not null]
+  organizationId String [not null]
+  organization Organization [not null]
+  title String [not null]
+  floor Int
+  number String
+  sizeSqm Float
+  bedrooms Int
+  bathrooms Int
+  rentAmount Float [not null]
+  status UnitStatus [not null, default: 'AVAILABLE']
+  currentLease Lease
+  leases Lease [not null]
+  tickets Ticket [not null]
+  metadata Json
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Tenant {
+  id String [pk]
+  userId String [unique, not null]
+  user User [not null]
+  nationalId String
+  guarantor Json
+  riskScore Float
+  leases Lease [not null]
+  payments Payment [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Lease {
+  id String [pk]
+  organizationId String [not null]
+  organization Organization [not null]
+  unitId String [not null]
+  unit Unit [not null]
+  currentUnitId String [unique]
+  currentUnit Unit
+  tenantId String [not null]
+  tenant Tenant [not null]
+  startDate DateTime [not null]
+  endDate DateTime [not null]
+  rentAmount Float [not null]
+  frequency PaymentFrequency [not null]
+  depositAmount Float
+  contractDoc String
+  status LeaseStatus [not null, default: 'ACTIVE']
+  invoices Invoice [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Invoice {
+  id String [pk]
+  leaseId String [not null]
+  lease Lease [not null]
+  amount Float [not null]
+  dueDate DateTime [not null]
+  status InvoiceStatus [not null, default: 'UNPAID']
+  paid Boolean [not null, default: false]
+  paidAt DateTime
+  metadata Json
+  payments Payment [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Payment {
+  id String [pk]
+  tenantId String [not null]
+  tenant Tenant [not null]
+  invoiceId String
+  invoice Invoice
+  amount Float [not null]
+  provider String
+  providerRef String
+  status String [not null, default: 'COMPLETED']
+  method String
+  metadata Json
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Ticket {
+  id String [pk]
+  organizationId String [not null]
+  organization Organization [not null]
+  propertyId String
+  property Property
+  unitId String
+  unit Unit
+  createdById String [not null]
+  createdBy User [not null]
+  assignedToId String
+  assignedTo User
+  title String [not null]
+  description String
+  status TicketStatus [not null, default: 'OPEN']
+  priority String
+  attachments Json
+  messages Message [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Message {
+  id String [pk]
+  ticketId String [not null]
+  ticket Ticket [not null]
+  senderId String [not null]
+  sender User [not null]
+  body String [not null]
+  attachments Json
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table AI_Prediction {
+  id String [pk]
+  organizationId String
+  organization Organization
+  type String [not null]
+  input Json [not null]
+  output Json [not null]
+  score Float
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Subscription {
+  id String [pk]
+  organizationId String [unique, not null]
+  organization Organization [not null]
+  tier String [not null]
+  stripeCustomer String
+  stripeSub String
+  startsAt DateTime
+  endsAt DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table AuditLog {
+  id String [pk]
+  organizationId String
+  actorId String
+  actorEmail String
+  actorRole String
+  action String [not null]
+  resource String
+  resourceId String
+  before Json
+  after Json
+  metadata Json
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Table Notification {
+  id String [pk]
+  organizationId String
+  organization Organization
+  userId String [not null]
+  user User [not null]
+  title String [not null]
+  body String [not null]
+  type String [not null, default: 'INFO']
+  resource String
+  resourceId String
+  actionUrl String
+  isRead Boolean [not null, default: false]
+  readAt DateTime
+  metadata Json
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Enum Role {
+  OWNER
+  AGENT
+  ASSISTANT
+  TENANT
+  ADMIN
+}
+
+Enum UnitStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  RESERVED
+}
+
+Enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+Enum LeaseStatus {
+  ACTIVE
+  TERMINATED
+}
+
+Enum PaymentFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+Enum InvoiceStatus {
+  UNPAID
+  PAID
+  PARTIALLY_PAID
+}
+
+Ref: User.organizationId > Organization.id
+
+Ref: Invite.organizationId > Organization.id
+
+Ref: Invite.invitedById > User.id
+
+Ref: RefreshToken.userId > User.id
+
+Ref: Property.organizationId > Organization.id
+
+Ref: Unit.propertyId > Property.id
+
+Ref: Unit.organizationId > Organization.id
+
+Ref: Tenant.userId - User.id
+
+Ref: Lease.organizationId > Organization.id
+
+Ref: Lease.unitId - Unit.id
+
+Ref: Lease.currentUnitId - Unit.id
+
+Ref: Lease.tenantId > Tenant.id
+
+Ref: Invoice.leaseId > Lease.id
+
+Ref: Payment.tenantId > Tenant.id
+
+Ref: Payment.invoiceId > Invoice.id
+
+Ref: Ticket.organizationId > Organization.id
+
+Ref: Ticket.propertyId > Property.id
+
+Ref: Ticket.unitId > Unit.id
+
+Ref: Ticket.createdById > User.id
+
+Ref: Ticket.assignedToId > User.id
+
+Ref: Message.ticketId > Ticket.id
+
+Ref: Message.senderId > User.id
+
+Ref: AI_Prediction.organizationId > Organization.id
+
+Ref: Subscription.organizationId - Organization.id
+
+Ref: Notification.organizationId > Organization.id
+
+Ref: Notification.userId > User.id

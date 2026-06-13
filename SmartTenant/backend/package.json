@@ -1,0 +1,48 @@
+{
+  "name": "smarttenant-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "start:dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:seed": "ts-node prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.0.0",
+    "@nestjs/mapped-types": "^2.1.0",
+    "@nestjs/passport": "^10.0.0",
+    "@nestjs/platform-express": "^10.4.20",
+    "@prisma/client": "^5.22.0",
+    "all": "^0.0.0",
+    "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "date-fns": "^4.1.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.0",
+    "pdfkit": "^0.18.0",
+    "prisma": "^5.0.0",
+    "react": "^19.2.1",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.8.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^25.0.2",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/pdfkit": "^0.17.6",
+    "prisma-dbml-generator": "^0.12.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
+  }
+}

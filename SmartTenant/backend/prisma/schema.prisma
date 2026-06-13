@@ -1,0 +1,383 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  AGENT
+  ASSISTANT
+  TENANT
+  ADMIN
+}
+
+enum UnitStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  RESERVED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum LeaseStatus {
+  ACTIVE
+  TERMINATED
+}
+
+enum PaymentFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PAID
+  PARTIALLY_PAID
+}
+
+model Organization {
+  id            String          @id @default(uuid())
+  name          String
+  slug          String          @unique
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  isActive      Boolean         @default(true)
+
+  users         User[]
+  properties    Property[]
+  units         Unit[]
+  leases        Lease[]
+  subscriptions Subscription?
+  invites       Invite[]
+  tickets       Ticket[]
+  predictions   AI_Prediction[]
+  notifications Notification[]
+}
+
+model User {
+  id              String         @id @default(uuid())
+  email           String         @unique
+  passwordHash    String
+  firstName       String?
+  lastName        String?
+  phone           String?
+  role            Role           @default(TENANT)
+
+  organizationId  String?
+  organization    Organization?  @relation(fields: [organizationId], references: [id])
+
+  invites         Invite[]
+  refreshTokens   RefreshToken[]
+
+  tenant          Tenant?
+
+  ticketsCreated  Ticket[]       @relation("TicketsCreated")
+  ticketsAssigned Ticket[]       @relation("TicketsAssigned")
+  messagesSent    Message[]      @relation("MessagesSent")
+
+  notifications   Notification[]
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model Invite {
+  id             String       @id @default(uuid())
+  email          String
+  role           Role
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  token          String       @unique
+  expiresAt      DateTime
+  createdAt      DateTime     @default(now())
+  used           Boolean      @default(false)
+
+  invitedById    String?
+  invitedBy      User?        @relation(fields: [invitedById], references: [id])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revoked   Boolean  @default(false)
+}
+
+model Property {
+  id             String       @id @default(uuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  title          String
+  name           String
+  description    String?
+  address        String
+  city           String?
+  country        String?
+  location       Json?
+  type           String?
+  images         Json?
+  documents      Json?
+
+  units          Unit[]
+  tickets        Ticket[]
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  isActive       Boolean      @default(true)
+}
+
+model Unit {
+  id             String       @id @default(uuid())
+
+  propertyId     String
+  property       Property     @relation(fields: [propertyId], references: [id])
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  title          String
+  floor          Int?
+  number         String?
+  sizeSqm        Float?
+  bedrooms       Int?
+  bathrooms      Int?
+  rentAmount     Float
+  status         UnitStatus   @default(AVAILABLE)
+
+  currentLease   Lease?       @relation("CurrentLeaseForUnit")
+  leases         Lease[]      @relation("AllLeasesForUnit")
+  tickets        Ticket[]
+
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Tenant {
+  id         String   @id @default(uuid())
+
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id])
+
+  nationalId String?
+  guarantor  Json?
+  riskScore  Float?
+
+  leases     Lease[]
+  payments   Payment[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Lease {
+  id             String           @id @default(uuid())
+
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+
+  unitId         String
+  unit           Unit             @relation("AllLeasesForUnit", fields: [unitId], references: [id])
+
+  currentUnitId  String?          @unique
+  currentUnit    Unit?            @relation("CurrentLeaseForUnit", fields: [currentUnitId], references: [id])
+
+  tenantId       String
+  tenant         Tenant           @relation(fields: [tenantId], references: [id])
+
+  startDate      DateTime
+  endDate        DateTime
+  rentAmount     Float
+  frequency      PaymentFrequency
+  depositAmount  Float?
+  contractDoc    String?
+  status         LeaseStatus      @default(ACTIVE)
+
+  invoices       Invoice[]
+
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Invoice {
+  id        String        @id @default(uuid())
+
+  leaseId   String
+  lease     Lease         @relation(fields: [leaseId], references: [id])
+
+  amount    Float
+  dueDate   DateTime
+  status    InvoiceStatus @default(UNPAID)
+  paid      Boolean       @default(false)
+  paidAt    DateTime?
+  metadata  Json?
+
+  payments  Payment[]
+
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+
+  invoiceId   String?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+
+  amount      Float
+  provider    String?
+  providerRef String?
+  status      String   @default("COMPLETED")
+  method      String?
+  metadata    Json?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Ticket {
+  id             String       @id @default(uuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  propertyId     String?
+  property       Property?    @relation(fields: [propertyId], references: [id])
+
+  unitId         String?
+  unit           Unit?        @relation(fields: [unitId], references: [id])
+
+  createdById    String
+  createdBy      User         @relation("TicketsCreated", fields: [createdById], references: [id])
+
+  assignedToId   String?
+  assignedTo     User?        @relation("TicketsAssigned", fields: [assignedToId], references: [id])
+
+  title          String
+  description    String?
+  status         TicketStatus @default(OPEN)
+  priority       String?
+  attachments    Json?
+
+  messages       Message[]
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Message {
+  id          String   @id @default(uuid())
+
+  ticketId    String
+  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+
+  senderId    String
+  sender      User     @relation("MessagesSent", fields: [senderId], references: [id])
+
+  body        String
+  attachments Json?
+
+  createdAt   DateTime @default(now())
+}
+
+model AI_Prediction {
+  id             String        @id @default(uuid())
+
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  type           String
+  input          Json
+  output         Json
+  score          Float?
+
+  createdAt      DateTime      @default(now())
+}
+
+model Subscription {
+  id             String       @id @default(uuid())
+
+  organizationId String       @unique
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  tier           String
+  stripeCustomer String?
+  stripeSub      String?
+  startsAt       DateTime?
+  endsAt         DateTime?
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+
+  organizationId String?
+
+  actorId        String?
+  actorEmail     String?
+  actorRole      String?
+
+  action         String
+  resource       String?
+  resourceId     String?
+
+  before         Json?
+  after          Json?
+  metadata       Json?
+
+  createdAt      DateTime @default(now())
+}
+
+model Notification {
+  id             String        @id @default(uuid())
+
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+
+  title          String
+  body           String
+  type           String        @default("INFO")
+
+  resource       String?
+  resourceId     String?
+  actionUrl      String?
+
+  isRead         Boolean       @default(false)
+  readAt         DateTime?
+
+  metadata       Json?
+
+  createdAt      DateTime      @default(now())
+}
+generator dbml {
+  provider = "prisma-dbml-generator"
+}

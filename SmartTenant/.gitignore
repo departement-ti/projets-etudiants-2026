@@ -1,0 +1,24 @@
+# Backend / NestJS
+backend/node_modules/
+backend/dist/
+backend/.env
+
+# Flutter
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/build/
+frontend/pubspec.lock
+
+# Android / Gradle
+frontend/android/.gradle/
+frontend/android/local.properties
+
+# IDE
+.vscode/
+.idea/
+
+# System
+.DS_Store
+Thumbs.db

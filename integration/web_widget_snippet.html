@@ -1,0 +1,71 @@
+<!--
+  SMART SUPPORT AI - Web Widget Integration Snippet
+  Replace YOUR_SUPABASE_URL, YOUR_ANON_KEY, and COMPANY_ID with your values.
+  Embed this script in your website to show the chatbot widget.
+-->
+<script>
+(function() {
+  var config = {
+    supabaseUrl: 'https://YOUR_PROJECT.supabase.co',
+    anonKey: 'YOUR_ANON_KEY',
+    companyId: 'COMPANY_UUID',
+    position: 'bottom-right', // bottom-right | bottom-left
+    primaryColor: '#6366F1',
+    welcomeMessage: 'Hello! How can I help you today?'
+  };
+
+  var style = document.createElement('style');
+  style.textContent = `
+    #smart-support-root {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999999;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    #smart-support-root iframe {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      width: 380px;
+      height: 520px;
+    }
+    #smart-support-toggle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: ${config.primaryColor};
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    #smart-support-toggle:hover { opacity: 0.9; }
+  `;
+  document.head.appendChild(style);
+
+  var root = document.createElement('div');
+  root.id = 'smart-support-root';
+  var iframe = document.createElement('iframe');
+  iframe.id = 'smart-support-iframe';
+  iframe.src = config.supabaseUrl + '/embed/chat?company_id=' + encodeURIComponent(config.companyId);
+  iframe.style.display = 'none';
+
+  var toggle = document.createElement('button');
+  toggle.id = 'smart-support-toggle';
+  toggle.innerHTML = '💬';
+  toggle.setAttribute('aria-label', 'Open chat');
+  toggle.onclick = function() {
+    var open = iframe.style.display === 'none';
+    iframe.style.display = open ? 'block' : 'none';
+  };
+
+  root.appendChild(iframe);
+  root.appendChild(toggle);
+  document.body.appendChild(root);
+})();
+</script>

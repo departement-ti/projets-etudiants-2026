@@ -1,0 +1,422 @@
+﻿@page "/cameras"
+@using SR750.Listener
+@inject AuthService AuthService
+@inject CameraService CameraService
+@inject ProjectService ProjectService
+@inject NavigationManager Navigation
+@inject LanguageService LangService
+@rendermode InteractiveServer
+@implements IDisposable
+
+<PageTitle>Cameras — DMC System</PageTitle>
+
+@if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+{
+    <div>Redirecting...</div>
+}
+else
+{
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-left">
+            <h1>@LangService.T("camera_management")</h1>
+        </div>
+        <button class="btn btn-primary" @onclick="OpenAddModal">
+            @LangService.T("add_camera")
+        </button>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="stat-box">
+            <div class="stat-number">@_cameras.Count</div>
+            <div class="stat-label">@LangService.T("total_cameras")</div>
+        </div>
+        <div class="stat-box active">
+            <div class="stat-number">@_cameras.Count(c => c.IsActive)</div>
+            <div class="stat-label">@LangService.T("active")</div>
+        </div>
+        <div class="stat-box inactive">
+            <div class="stat-number">@_cameras.Count(c => !c.IsActive)</div>
+            <div class="stat-label">@LangService.T("inactive")</div>
+        </div>
+    </section>
+
+    <!-- CAMERA CARDS -->
+    <section class="cards-section">
+        @if (_cameras.Count == 0)
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📷</div>
+                @LangService.T("no_cameras")
+            </div>
+        }
+        else
+        {
+            <div class="cards-grid">
+                @foreach (var cam in _cameras)
+                {
+                    <div class="camera-card @(cam.IsActive ? "active" : "inactive")">
+                        <div class="card-header">
+                            <h3>@cam.CameraId</h3>
+                            <span class="status-badge @(cam.IsActive ? "active" : "inactive")">
+                                @(cam.IsActive ? LangService.T("active") : LangService.T("inactive"))
+                            </span>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="info-row">
+                                <span class="label">@LangService.T("ip_address")</span>
+                                <span class="value mono">@cam.IpAddress</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">@LangService.T("station")</span>
+                                <span class="value">@cam.StationName</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">@LangService.T("project")</span>
+                                <span class="value">@cam.Project</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">@LangService.T("location")</span>
+                                <span class="value">@cam.Location</span>
+                            </div>
+                            <div class="info-row timestamp">
+                                <span class="label">@LangService.T("added")</span>
+                                <span class="value">@cam.AddedAt.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="btn-sm btn-edit" @onclick="() => OpenEditModal(cam)">@LangService.T("edit")</button>
+                            <button class="btn-sm @(cam.IsActive ? "btn-warn" : "btn-success")" @onclick="() => ToggleActive(cam)">
+                                @(cam.IsActive ? LangService.T("disable") : LangService.T("enable"))
+                            </button>
+                            <button class="btn-sm btn-danger" @onclick="() => DeleteCamera(cam)">@LangService.T("delete")</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    <!-- MODAL -->
+    @if (_showModal)
+    {
+        <div class="modal-overlay" @onclick="CloseModal">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h3>@(_editCamera == null ? LangService.T("add_camera") : LangService.T("edit_camera"))</h3>
+                    <button class="modal-close" @onclick="CloseModal">✕</button>
+                </div>
+
+                @if (_modalError)
+                {
+                    <div class="modal-error">@_modalErrorMsg</div>
+                }
+
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("camera_id") *</label>
+                            <input @bind="_formCameraId" placeholder="e.g. CAM01" />
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("ip_address") *</label>
+                            <input @bind="_formIpAddress" placeholder="e.g. 192.168.100.100" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>@LangService.T("station_name") *</label>
+                        <input @bind="_formStationName" placeholder="e.g. Joyson Line 1" />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("project")</label>
+                            <select @bind="_formProject">
+                                <option value="">@LangService.T("select_project")</option>
+                                @foreach (var p in _projects)
+                                {
+                                    <option value="@p.CustomerNumber">@p.StationName (@p.CustomerNumber)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("location")</label>
+                            <input @bind="_formLocation" placeholder="e.g. Hall A" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">@LangService.T("cancel")</button>
+                    <button class="btn btn-primary" @onclick="SaveCamera">
+                        @(_editCamera == null ? LangService.T("add_camera") : LangService.T("save_changes"))
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- CONFIRM DELETE -->
+    @if (_confirmDelete != null)
+    {
+        <div class="modal-overlay" @onclick="() => _confirmDelete = null">
+            <div class="confirm-dialog" @onclick:stopPropagation>
+                <div class="confirm-icon">⚠️</div>
+                <h3>@LangService.T("delete_camera_title")</h3>
+                <p>@LangService.T("delete_confirm") <strong>@_confirmDelete.CameraId</strong> — @_confirmDelete.StationName?</p>
+                <div class="confirm-actions">
+                    <button class="btn btn-secondary" @onclick="() => _confirmDelete = null">@LangService.T("cancel")</button>
+                    <button class="btn btn-danger" @onclick="ConfirmDelete">@LangService.T("delete")</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    :root {
+        --primary: #0077B6; --primary-dark: #00597A;
+        --success: #27ae60; --danger: #e74c3c; --warning: #e67e22;
+        --bg: #f8fafc; --surface: #ffffff;
+        --text-primary: #1a202c; --text-secondary: #718096;
+        --border: #e2e8f0;
+        --shadow: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; }
+    body { background: var(--bg); }
+
+    .admin-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 28px 32px; display: flex; justify-content: space-between;
+        align-items: center; box-shadow: var(--shadow-lg);
+    }
+    .admin-header h1 { margin: 0; color: white; font-size: 28px; font-weight: 700; }
+
+    .stats-section {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px; padding: 32px; background: var(--bg);
+    }
+
+    .stat-box {
+        background: var(--surface); border-radius: 10px; padding: 24px;
+        text-align: center; box-shadow: var(--shadow);
+        border: 2px solid transparent; transition: all 0.2s ease;
+    }
+    .stat-box:hover { box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .stat-box.active { border-color: var(--success); }
+    .stat-box.inactive { border-color: #ccc; }
+    .stat-number { font-size: 36px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .stat-box.active .stat-number { color: var(--success); }
+    .stat-box.inactive .stat-number { color: #aaa; }
+    .stat-label { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+    .cards-section { padding: 0 32px 32px 32px; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+    .camera-card {
+        background: var(--surface); border-radius: 12px; overflow: hidden;
+        box-shadow: var(--shadow); border-top: 4px solid var(--primary);
+        transition: all 0.2s ease;
+    }
+    .camera-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .camera-card.inactive { border-top-color: #aaa; opacity: 0.8; }
+
+    .card-header {
+        padding: 16px 20px; border-bottom: 1px solid var(--border);
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .card-header h3 { margin: 0; font-size: 18px; color: var(--primary); font-weight: 700; }
+
+    .status-badge {
+        display: inline-block; padding: 4px 10px; border-radius: 12px;
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+    }
+    .status-badge.active { background: rgba(39,174,96,0.1); color: var(--success); }
+    .status-badge.inactive { background: #f5f5f5; color: #aaa; }
+
+    .card-body { padding: 16px 20px; }
+    .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+    .info-row:last-child { margin-bottom: 0; }
+    .info-row.timestamp { padding-top: 12px; border-top: 1px solid var(--border); }
+    .info-row .label { color: var(--text-secondary); font-weight: 600; }
+    .info-row .value { color: var(--text-primary); text-align: right; }
+    .info-row .value.mono { font-family: monospace; font-size: 12px; color: var(--text-secondary); }
+
+    .card-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 6px; }
+
+    .btn {
+        padding: 9px 16px; border: none; border-radius: 6px; cursor: pointer;
+        font-size: 13px; font-weight: 600; transition: all 0.2s ease;
+        text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); box-shadow: var(--shadow-lg); }
+    .btn-secondary { background: #f0f0f0; color: var(--text-secondary); }
+    .btn-secondary:hover { background: #e0e0e0; }
+    .btn-danger { background: var(--danger); color: white; }
+
+    .btn-sm { padding: 5px 12px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .btn-edit { background: #3498db; color: white; flex: 1; }
+    .btn-warn { background: var(--warning); color: white; flex: 1; }
+    .btn-success { background: var(--success); color: white; flex: 1; }
+    .btn-danger { background: var(--danger); color: white; flex: 1; }
+
+    .empty-state { padding: 60px 32px; text-align: center; color: var(--text-secondary); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6); z-index: 1000;
+        display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-content {
+        background: var(--surface); border-radius: 12px; width: 100%;
+        max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg);
+    }
+    .modal-header {
+        padding: 24px 28px; border-bottom: 1px solid var(--border);
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-header h3 { margin: 0; font-size: 18px; color: var(--primary); font-weight: 700; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); }
+    .modal-error {
+        margin: 20px 28px; padding: 12px 16px; background: #fdf2f2;
+        color: var(--danger); border-radius: 6px; font-size: 13px; border-left: 3px solid var(--danger);
+    }
+    .modal-body { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: flex; gap: 16px; }
+    .form-group { flex: 1; display: flex; flex-direction: column; }
+    .form-group label {
+        font-size: 12px; font-weight: 600; color: var(--text-secondary);
+        margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .form-group input, .form-group select {
+        padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px;
+        font-size: 13px; color: var(--text-primary); font-family: inherit; transition: all 0.2s ease;
+    }
+    .form-group input:focus, .form-group select:focus {
+        outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,119,182,0.1);
+    }
+    .modal-footer {
+        padding: 20px 28px; border-top: 1px solid var(--border);
+        display: flex; gap: 12px; justify-content: flex-end;
+    }
+
+    .confirm-dialog {
+        background: var(--surface); border-radius: 12px; padding: 40px 32px;
+        width: 100%; max-width: 360px; text-align: center; box-shadow: var(--shadow-lg);
+    }
+    .confirm-icon { font-size: 48px; margin-bottom: 16px; }
+    .confirm-dialog h3 { margin: 0 0 8px 0; font-size: 18px; color: var(--primary); }
+    .confirm-dialog p { margin: 0 0 28px 0; color: var(--text-secondary); font-size: 14px; }
+    .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+
+    @@media (max-width: 768px) {
+        .admin-header { flex-direction: column; gap: 16px; text-align: center; padding: 16px; }
+        .stats-section { grid-template-columns: 1fr; padding: 20px 16px; }
+        .cards-section { padding: 0 16px 20px 16px; }
+        .cards-grid { grid-template-columns: 1fr; }
+        .form-row { flex-direction: column; gap: 0; }
+        .modal-content { max-width: 95%; }
+    }
+</style>
+
+@code {
+    private List<CameraItem> _cameras = new();
+    private List<ProjectItem> _projects = new();
+    private bool _showModal = false;
+    private CameraItem? _editCamera = null;
+    private CameraItem? _confirmDelete = null;
+    private bool _modalError = false;
+    private string _modalErrorMsg = string.Empty;
+    private string _formCameraId = string.Empty;
+    private string _formIpAddress = string.Empty;
+    private string _formStationName = string.Empty;
+    private string _formProject = string.Empty;
+    private string _formLocation = string.Empty;
+    private Action? _langChanged;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+        _langChanged = () => InvokeAsync(StateHasChanged);
+        LangService.OnLanguageChanged += _langChanged;
+        LoadData();
+    }
+
+    public void Dispose()
+    {
+        LangService.OnLanguageChanged -= _langChanged;
+    }
+
+    private void LoadData()
+    {
+        _cameras = CameraService.GetAll();
+        _projects = ProjectService.GetAll();
+    }
+
+    private void OpenAddModal()
+    {
+        _editCamera = null;
+        _formCameraId = _formIpAddress = _formStationName = _formProject = _formLocation = string.Empty;
+        _modalError = false;
+        _showModal = true;
+    }
+
+    private void OpenEditModal(CameraItem cam)
+    {
+        _editCamera = cam;
+        _formCameraId = cam.CameraId;
+        _formIpAddress = cam.IpAddress;
+        _formStationName = cam.StationName;
+        _formProject = cam.Project;
+        _formLocation = cam.Location;
+        _modalError = false;
+        _showModal = true;
+    }
+
+    private void CloseModal() { _showModal = false; _editCamera = null; _modalError = false; }
+
+    private void SaveCamera()
+    {
+        _modalError = false;
+        if (string.IsNullOrWhiteSpace(_formCameraId) ||
+            string.IsNullOrWhiteSpace(_formIpAddress) ||
+            string.IsNullOrWhiteSpace(_formStationName))
+        {
+            _modalError = true;
+            _modalErrorMsg = LangService.T("camera_required_fields");
+            return;
+        }
+
+        if (_editCamera == null)
+            CameraService.Add(_formCameraId, _formIpAddress, _formStationName, _formProject, _formLocation);
+        else
+            CameraService.Update(_editCamera.Id, _formCameraId, _formIpAddress, _formStationName, _formProject, _formLocation);
+
+        LoadData();
+        CloseModal();
+    }
+
+    private void ToggleActive(CameraItem cam) { CameraService.ToggleActive(cam.Id); LoadData(); }
+    private void DeleteCamera(CameraItem cam) => _confirmDelete = cam;
+    private void ConfirmDelete()
+    {
+        if (_confirmDelete != null)
+        {
+            CameraService.Delete(_confirmDelete.Id);
+            _confirmDelete = null;
+            LoadData();
+        }
+    }
+}

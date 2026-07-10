@@ -1,0 +1,446 @@
+﻿@page "/"
+@using SR750.Listener
+@inject AuthService AuthService
+@inject ScanService ScanService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject LanguageService LangService
+@implements IDisposable
+@rendermode InteractiveServer
+
+<PageTitle>DMC Dashboard</PageTitle>
+
+@if (!AuthService.IsAuthenticated)
+{
+    <div>Redirecting...</div>
+}
+else
+{
+    <!-- HEADER -->
+    <div class="header-container">
+        <h1>@LangService.T("dashboard")</h1>
+        <div class="user-info">
+            <span class="user-name">@AuthService.CurrentUser?.Username</span>
+            <span class="user-time">@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</span>
+        </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-container">
+        <div class="filter-title">🔍 @LangService.T("search_filters")</div>
+        <div class="filter-group">
+            <div class="filter-field">
+                <label>@LangService.T("date_from")</label>
+                <input type="date" @bind="_filterFrom" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("date_to")</label>
+                <input type="date" @bind="_filterTo" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("station")</label>
+                <select @bind="_filterCustomer">
+                    <option value="">@LangService.T("all_stations")</option>
+                    @foreach (var c in ScanService.GetCustomers)
+                    {
+                        <option value="@c">@c</option>
+                    }
+                </select>
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("camera")</label>
+                <select @bind="_filterCamera">
+                    <option value="">@LangService.T("all_cameras")</option>
+                    @foreach (var cam in ScanService.GetCameras)
+                    {
+                        <option value="@cam">@cam</option>
+                    }
+                </select>
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("status")</label>
+                <select @bind="_filterDecision">
+                    <option value="">@LangService.T("all_status")</option>
+                    <option value="GREEN">@LangService.T("valid")</option>
+                    <option value="RED">@LangService.T("rejected")</option>
+                </select>
+            </div>
+            <button class="btn-filter primary" @onclick="ApplyFilters">@LangService.T("apply_filters")</button>
+            <button class="btn-filter secondary" @onclick="ResetFilters">@LangService.T("reset")</button>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value">@_filtered.Count</div>
+            <div class="stat-label">@LangService.T("results")</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-value">@_filtered.Count(s => s.Decision == "GREEN")</div>
+            <div class="stat-label">GREEN ✅</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-value">@_filtered.Count(s => s.Decision == "RED")</div>
+            <div class="stat-label">RED ❌</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-value">@_filtered.Count(s => s.Reason == "Duplicate")</div>
+            <div class="stat-label">@LangService.T("duplicates") 🔁</div>
+        </div>
+    </div>
+
+    <!-- LAST SCAN -->
+    @if (_lastScan != null)
+    {
+        <div class="last-scan-container">
+            <div class="table-header">
+                <div>@LangService.T("latest_scan")</div>
+            </div>
+            <div class="last-scan-body">
+                <div class="last-scan-badge @(_lastScan.Decision == "GREEN" ? "green" : "red")">
+                    @(_lastScan.Decision == "GREEN" ? "✅ " + LangService.T("valid") : "❌ " + LangService.T("rejected"))
+                </div>
+                <div class="last-scan-grid">
+                    <div class="last-scan-item">
+                        <span class="ls-label">@LangService.T("code")</span>
+                        <span class="ls-value mono">@_lastScan.DmcCode</span>
+                    </div>
+                    <div class="last-scan-item">
+                        <span class="ls-label">@LangService.T("station")</span>
+                        <span class="ls-value">@_lastScan.Customer</span>
+                    </div>
+                    <div class="last-scan-item">
+                        <span class="ls-label">@LangService.T("camera")</span>
+                        <span class="ls-value">@_lastScan.CameraId</span>
+                    </div>
+                    <div class="last-scan-item">
+                        <span class="ls-label">@LangService.T("counter")</span>
+                        <span class="ls-value">@_lastScan.Counter</span>
+                    </div>
+                    <div class="last-scan-item">
+                        <span class="ls-label">@LangService.T("time")</span>
+                        <span class="ls-value">@_lastScan.Timestamp.ToString("HH:mm:ss")</span>
+                    </div>
+                    @if (_lastScan.Decision == "RED")
+                    {
+                        <div class="last-scan-item error">
+                            <span class="ls-label">@LangService.T("reason")</span>
+                            <span class="ls-value">@_lastScan.Reason</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <div class="table-header">
+            <div>@LangService.T("live_scan_history") — @_filtered.Count @LangService.T("results")</div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>@LangService.T("time")</th>
+                        <th>@LangService.T("camera")</th>
+                        <th>@LangService.T("station")</th>
+                        <th>@LangService.T("code")</th>
+                        <th>@LangService.T("counter")</th>
+                        <th>@LangService.T("status")</th>
+                        <th>@LangService.T("reason")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var scan in _filtered.Take(100))
+                    {
+                        <tr class="table-row
+    @(IsLastScan(scan)
+        ? (_lastScan.Decision == "GREEN" ? "last-green" : "last-red")
+        : (scan.Decision == "GREEN" ? "green" : "red"))">
+                            <td>@scan.Id</td>
+                            <td class="time">@scan.Timestamp.ToString("dd/MM HH:mm:ss")</td>
+                            <td class="camera">@scan.CameraId</td>
+                            <td class="customer">@scan.Customer</td>
+                            <td class="dmc-code">@scan.DmcCode</td>
+                            <td>@scan.Counter</td>
+                            <td>
+                                <span class="badge @(scan.Decision == "GREEN" ? "green" : "red")">
+                                    @scan.Decision
+                                </span>
+                            </td>
+                            <td class="reason">
+                                @if (!string.IsNullOrEmpty(scan.Reason) && scan.Reason != "None")
+                                {
+                                    <span class="reason-badge">@scan.Reason</span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (_filtered.Count == 0)
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <div>@LangService.T("no_data")</div>
+            </div>
+        }
+    </div>
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.renderCharts = function(scansPerDay, duplicatesPerDay, topDuplicates, byCamera, green, red) {
+        const chartConfig = { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: true, position: 'top' } } };
+        const ctx1 = document.getElementById('chartScansPerDay');
+        if (ctx1) { if (ctx1._chart) ctx1._chart.destroy(); ctx1._chart = new Chart(ctx1, { type: 'bar', data: { labels: scansPerDay.labels, datasets: [{ label: 'Scans', data: scansPerDay.values, backgroundColor: '#0077B6', borderColor: '#00597A', borderWidth: 1 }] }, options: chartConfig }); }
+        const ctx2 = document.getElementById('chartDuplicates');
+        if (ctx2) { if (ctx2._chart) ctx2._chart.destroy(); ctx2._chart = new Chart(ctx2, { type: 'line', data: { labels: duplicatesPerDay.labels, datasets: [{ label: 'Duplicates', data: duplicatesPerDay.values, borderColor: '#e67e22', backgroundColor: 'rgba(230,126,34,0.1)', fill: true, tension: 0.4 }] }, options: chartConfig }); }
+        const ctx5 = document.getElementById('chartGreenRed');
+        if (ctx5) { if (ctx5._chart) ctx5._chart.destroy(); ctx5._chart = new Chart(ctx5, { type: 'doughnut', data: { labels: ['Passed','Failed'], datasets: [{ data: [green,red], backgroundColor: ['#27ae60','#e74c3c'], borderWidth: 2, borderColor: '#fff' }] }, options: chartConfig }); }
+    };
+</script>
+
+<style>
+    :root {
+        --primary-color: #0077B6;
+        --primary-dark: #00597A;
+        --success-color: #27ae60;
+        --danger-color: #e74c3c;
+        --warning-color: #e67e22;
+        --bg-lighter: #F7F9FC;
+        --text-primary: #333;
+        --text-secondary: #555;
+        --text-light: #888;
+        --border-color: #ddd;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+        --shadow-md: 0 4px 15px rgba(0,0,0,0.15);
+        --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+/* LAST SCAN HIGHLIGHT (FULL ROW) */
+tbody tr.last-green td {
+    background-color: #28a745 !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+tbody tr.last-red td {
+    background-color: #dc3545 !important;
+    color: white !important;
+    font-weight: 600;
+}
+
+/* optional: stronger effect */
+tbody tr.last-green:hover td,
+tbody tr.last-red:hover td {
+    filter: brightness(1.1);
+}
+    * { box-sizing: border-box; }
+
+    body {
+        background: linear-gradient(135deg, var(--bg-lighter) 0%, #e8eef7 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        color: var(--text-primary); margin: 0; padding: 0;
+    }
+
+    /* HEADER */
+    .header-container {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        padding: 25px 30px; display: flex; align-items: center; justify-content: space-between;
+        box-shadow: var(--shadow-md); animation: slideDown 0.5s ease-out;
+    }
+    .header-container h1 { color: white; margin: 0; font-size: 1.8em; font-weight: 700; letter-spacing: 0.5px; }
+    .user-info { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .user-name { color: white; font-size: 13px; font-weight: 600; }
+    .user-time { color: rgba(255,255,255,0.8); font-size: 12px; }
+
+    @@keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* FILTER */
+    .filter-container {
+        margin: 25px; background: white; border-radius: 12px;
+        padding: 25px; box-shadow: var(--shadow-sm);
+        animation: fadeIn 0.5s ease-out 0.1s both;
+    }
+    .filter-title { font-weight: 700; color: var(--primary-color); margin-bottom: 20px; font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
+    .filter-group { display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end; }
+    .filter-field { display: flex; flex-direction: column; }
+    .filter-field label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filter-field input, .filter-field select { padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 13px; transition: var(--transition); background: white; color: var(--text-primary); font-family: inherit; }
+    .filter-field input:focus, .filter-field select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,119,182,0.1); }
+    .btn-filter { padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-filter.primary { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; box-shadow: var(--shadow-sm); }
+    .btn-filter.primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-filter.secondary { background: #95a5a6; color: white; }
+    .btn-filter.secondary:hover { background: #7f8c8d; transform: translateY(-2px); }
+
+    /* STATS */
+    .stats-container {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px; margin: 0 25px 25px 25px;
+        animation: fadeIn 0.5s ease-out 0.2s both;
+    }
+    .stat-card { background: white; border-radius: 10px; padding: 20px; text-align: center; box-shadow: var(--shadow-sm); transition: var(--transition); border: 2px solid transparent; position: relative; overflow: hidden; }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary-color); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-color); }
+    .stat-card:hover::before { transform: scaleX(1); }
+    .stat-value { font-size: 2em; font-weight: 700; margin-bottom: 8px; color: var(--primary-color); }
+    .stat-label { color: var(--text-light); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card.green .stat-value { color: var(--success-color); }
+    .stat-card.red .stat-value { color: var(--danger-color); }
+    .stat-card.warning .stat-value { color: var(--warning-color); }
+
+    /* LAST SCAN */
+    .last-scan-container { margin: 0 25px 25px 25px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; animation: fadeIn 0.5s ease-out 0.25s both; }
+    .last-scan-body { padding: 20px; }
+    .last-scan-badge { display: inline-block; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-bottom: 16px; }
+    .last-scan-badge.green { background: #d5f5e3; color: var(--success-color); }
+    .last-scan-badge.red { background: #fde8e8; color: var(--danger-color); }
+    .last-scan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .last-scan-item { display: flex; flex-direction: column; gap: 4px; padding: 10px; background: #f8fafc; border-radius: 6px; }
+    .last-scan-item.error { background: #fde8e8; }
+    .ls-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+    .ls-value { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+    .ls-value.mono { font-family: 'Courier New', monospace; font-size: 12px; }
+
+    /* TABLE */
+    .table-container { margin: 0 25px 25px 25px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm); overflow: hidden; animation: fadeIn 0.5s ease-out 0.3s both; }
+    .table-header { padding: 18px 25px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; font-weight: 700; font-size: 0.95em; }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: #f8f9fa; }
+    thead th { padding: 15px; text-align: left; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #eee; transition: var(--transition); }
+    tbody tr.green { background: white; }
+    tbody tr.red { background: #fff8f8; }
+    tbody tr:hover { background: #f5f9fc; }
+    tbody td { padding: 12px 15px; color: var(--text-primary); }
+    td.time { white-space: nowrap; font-weight: 500; color: var(--text-secondary); }
+    td.camera { color: var(--primary-color); font-weight: 700; }
+    td.customer { font-weight: 700; }
+    td.dmc-code { font-family: 'Courier New', monospace; font-size: 12px; background: #f5f5f5; padding: 4px 8px; border-radius: 4px; }
+    td.reason { color: var(--text-light); font-size: 12px; }
+    .badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; transition: var(--transition); }
+    .badge.green { background: linear-gradient(135deg, #d5f5e3, #c8e6c9); color: var(--success-color); }
+    .badge.red { background: linear-gradient(135deg, #fde8e8, #ffcdd2); color: var(--danger-color); }
+    .reason-badge { background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .empty-state { padding: 60px 20px; text-align: center; color: var(--text-light); }
+    .empty-icon { font-size: 48px; margin-bottom: 15px; opacity: 0.5; }
+
+    @@media (max-width: 768px) {
+        .header-container { flex-direction: column; gap: 12px; padding: 15px; text-align: center; }
+        .filter-container { margin: 15px; padding: 15px; }
+        .filter-group { flex-direction: column; }
+        .filter-field input, .filter-field select { width: 100%; }
+        .btn-filter { width: 100%; justify-content: center; }
+        .stats-container { grid-template-columns: repeat(2,1fr); margin: 0 15px 15px 15px; }
+        .last-scan-container, .table-container { margin: 0 15px 15px 15px; }
+        .last-scan-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @@media (max-width: 480px) {
+        .stats-container { grid-template-columns: 1fr; margin: 0 10px 10px 10px; }
+        .last-scan-container, .table-container { margin: 0 10px 10px 10px; }
+        .last-scan-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+@code {
+    private bool IsLastScan(ScanResult scan)
+{
+    return _lastScan != null && scan.Id == _lastScan.Id;
+}
+    private List<ScanResult> _scans = new();
+    private List<ScanResult> _filtered = new();
+    private ScanResult? _lastScan;
+    private double _okRate = 0;
+    private System.Threading.Timer? _timer;
+    private DateTime? _filterFrom;
+    private DateTime? _filterTo;
+    private string _filterCustomer = string.Empty;
+    private string _filterCamera = string.Empty;
+    private string _filterDecision = string.Empty;
+    private Action? _langChanged;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+        if (AuthService.IsSupervisor && !AuthService.IsAdmin)
+        {
+            Navigation.NavigateTo("/charts", forceLoad: true);
+            return;
+        }
+        ScanService.OnScanAdded += OnNewScan;
+        _langChanged = () => InvokeAsync(StateHasChanged);
+        LangService.OnLanguageChanged += _langChanged;
+        RefreshData();
+        _timer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() => { RefreshData(); StateHasChanged(); });
+        }, null, 5000, 5000);
+    }
+
+    public void Dispose()
+    {
+        ScanService.OnScanAdded -= OnNewScan;
+        LangService.OnLanguageChanged -= _langChanged;
+        _timer?.Dispose();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await RenderCharts();
+    }
+
+    private void OnNewScan()
+    {
+        InvokeAsync(async () => { RefreshData(); StateHasChanged(); await RenderCharts(); });
+    }
+
+    private void RefreshData()
+    {
+        _scans = ScanService.GetScans();
+        _filtered = ScanService.GetFilteredScans(_filterFrom, _filterTo,
+            string.IsNullOrEmpty(_filterCustomer) ? null : _filterCustomer,
+            string.IsNullOrEmpty(_filterCamera) ? null : _filterCamera,
+            string.IsNullOrEmpty(_filterDecision) ? null : _filterDecision);
+        _lastScan = _scans.FirstOrDefault();
+        _okRate = _filtered.Count == 0 ? 0 : Math.Round((double)_filtered.Count(s => s.Decision == "GREEN") / _filtered.Count * 100, 1);
+    }
+
+    private async Task ApplyFilters() { RefreshData(); StateHasChanged(); await RenderCharts(); }
+
+    private async Task ResetFilters()
+    {
+        _filterFrom = null; _filterTo = null;
+        _filterCustomer = _filterCamera = _filterDecision = string.Empty;
+        RefreshData(); StateHasChanged(); await RenderCharts();
+    }
+
+    private async Task RenderCharts()
+    {
+        var spd = ScanService.ScansByDay; var dpd = ScanService.DuplicatesByDay;
+        var tops = ScanService.TopDuplicates; var cams = ScanService.ScansByCamera;
+        await JSRuntime.InvokeVoidAsync("renderCharts",
+            new { labels = spd.Keys.ToArray(), values = spd.Values.ToArray() },
+            new { labels = dpd.Keys.ToArray(), values = dpd.Values.ToArray() },
+            new { labels = tops.Select(x => x.Customer).ToArray(), values = tops.Select(x => x.Count).ToArray() },
+            new { labels = cams.Keys.ToArray(), values = cams.Values.ToArray() },
+            _filtered.Count(s => s.Decision == "GREEN"),
+            _filtered.Count(s => s.Decision == "RED"));
+    }
+}

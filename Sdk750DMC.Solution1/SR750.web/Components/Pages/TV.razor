@@ -1,0 +1,347 @@
+@page "/tv"
+@using SR750.Listener
+@inject ScanService ScanService
+@implements IDisposable
+@rendermode InteractiveServer
+
+<PageTitle>TV Dashboard — DMC</PageTitle>
+
+<div class="tv-root">
+
+    <!-- HEADER -->
+    <div class="tv-header">
+        <div class="tv-logo-block">
+            <span class="tv-logo">D-BRAUN</span>
+            <span class="tv-logo-sub">Tunisia</span>
+        </div>
+        <div class="tv-title-block">
+            <span class="tv-title">DMC Validation — Live Monitor</span>
+            <span class="tv-subtitle">Real-time cable quality tracking</span>
+        </div>
+        <div class="tv-clock-block">
+            <div class="tv-clock">@_now.ToString("HH:mm:ss")</div>
+            <div class="tv-date">@_now.ToString("dd/MM/yyyy")</div>
+        </div>
+    </div>
+
+    <!-- KPI ROW -->
+    <div class="tv-kpi-row">
+        <div class="tv-kpi-card green-card">
+            <div class="tv-kpi-num green-num">@_totalGreen</div>
+            <div class="tv-kpi-lbl">GREEN ✓</div>
+        </div>
+        <div class="tv-kpi-card red-card">
+            <div class="tv-kpi-num red-num">@_totalRed</div>
+            <div class="tv-kpi-lbl">RED ✕</div>
+        </div>
+        <div class="tv-kpi-card orange-card">
+            <div class="tv-kpi-num orange-num">@_totalDup</div>
+            <div class="tv-kpi-lbl">Duplicates</div>
+        </div>
+        <div class="tv-kpi-card blue-card">
+            <div class="tv-kpi-num blue-num">@_okRate%</div>
+            <div class="tv-kpi-lbl">OK Rate</div>
+        </div>
+    </div>
+
+    <!-- LAST SCAN BANNER -->
+    @if (_lastScan != null)
+    {
+        <div class="tv-last-scan @(_lastScan.Decision == "GREEN" ? "ls-green" : "ls-red")">
+            <div class="ls-pulse @(_lastScan.Decision == "GREEN" ? "pulse-green" : "pulse-red")"></div>
+            <div class="ls-status @(_lastScan.Decision == "GREEN" ? "green-num" : "red-num")">
+                @(_lastScan.Decision == "GREEN" ? "● PASSED" : "● REJECTED — " + _lastScan.Reason)
+            </div>
+            <div class="ls-details">
+                <span class="ls-item"><span class="ls-lbl">Code:</span><span class="ls-val">@_lastScan.DmcCode</span></span>
+                <span class="ls-item"><span class="ls-lbl">Station:</span><span class="ls-val">@_lastScan.Customer</span></span>
+                <span class="ls-item"><span class="ls-lbl">Camera:</span><span class="ls-val">@_lastScan.CameraId</span></span>
+                <span class="ls-item"><span class="ls-lbl">Counter:</span><span class="ls-val">@_lastScan.Counter</span></span>
+                <span class="ls-item"><span class="ls-lbl">Time:</span><span class="ls-val">@_lastScan.Timestamp.ToString("HH:mm:ss")</span></span>
+            </div>
+        </div>
+    }
+
+    <!-- PROJECT CARDS -->
+    <div class="tv-project-grid">
+        @foreach (var proj in _projectStats)
+        {
+            <div class="tv-proj-card">
+                <div class="tv-proj-top">
+                    <span class="tv-proj-name">@proj.Customer</span>
+                    <span class="tv-proj-cam">@proj.CameraId</span>
+                </div>
+                <div class="tv-proj-nums">
+                    <div class="tv-proj-stat">
+                        <div class="tv-proj-num green-num">@proj.Green</div>
+                        <div class="tv-proj-lbl green-lbl">GREEN</div>
+                    </div>
+                    <div class="tv-proj-divider"></div>
+                    <div class="tv-proj-stat">
+                        <div class="tv-proj-num red-num">@proj.Red</div>
+                        <div class="tv-proj-lbl red-lbl">RED</div>
+                    </div>
+                    <div class="tv-proj-divider"></div>
+                    <div class="tv-proj-stat">
+                        <div class="tv-proj-num orange-num">@proj.Duplicates</div>
+                        <div class="tv-proj-lbl orange-lbl">DUP</div>
+                    </div>
+                </div>
+                @if (proj.LastCode != null)
+                {
+                    <div class="tv-proj-last @(proj.LastDecision == "GREEN" ? "last-green" : "last-red")">
+                        <span class="tv-proj-last-code">@proj.LastCode</span>
+                        <span class="tv-proj-last-time">@proj.LastTime</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+</div>
+
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { background: #f0f4f8; height: 100%; }
+
+    .tv-root {
+        background: #f0f4f8;
+        color: #1a2e35;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding-bottom: 24px;
+    }
+
+    /* HEADER */
+    .tv-header {
+        background: linear-gradient(135deg, #003f6b 0%, #0077B6 100%);
+        padding: 16px 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 20px rgba(0,119,182,0.3);
+    }
+
+    .tv-logo-block { display: flex; align-items: center; gap: 14px; }
+    .tv-logo {
+        background: white; color: #0077B6;
+        padding: 6px 14px; border-radius: 6px;
+        font-weight: 900; font-size: 18px; letter-spacing: 2px;
+    }
+    .tv-logo-sub { display: none; }
+
+    .tv-title-block { flex: 1; padding-left: 20px; }
+    .tv-title { font-size: 22px; font-weight: 700; color: #fff; display: block; }
+    .tv-subtitle { font-size: 13px; color: rgba(255,255,255,0.6); display: block; margin-top: 2px; }
+
+    .tv-clock-block { text-align: right; }
+    .tv-clock {
+        font-size: 40px; font-weight: 900;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 3px; color: #fff;
+    }
+    .tv-date { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+    /* KPI ROW */
+    .tv-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        padding: 0 28px;
+    }
+
+    .tv-kpi-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px 16px 32px;
+        text-align: center;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+        border-top: 7px solid transparent;
+    }
+
+    .green-card  { border-top-color: #27ae60; }
+    .red-card    { border-top-color: #e74c3c; }
+    .orange-card { border-top-color: #e67e22; }
+    .blue-card   { border-top-color: #0077B6; }
+
+    .tv-kpi-num {
+        font-size: 120px;
+        font-weight: 900;
+        font-family: 'Courier New', monospace;
+        line-height: 1;
+    }
+
+    .tv-kpi-lbl {
+        font-size: 18px; letter-spacing: 4px;
+        font-weight: 700; margin-top: 14px;
+        color: #999; text-transform: uppercase;
+    }
+
+    .green-num  { color: #27ae60; }
+    .red-num    { color: #e74c3c; }
+    .orange-num { color: #e67e22; }
+    .blue-num   { color: #0077B6; }
+
+    /* LAST SCAN */
+    .tv-last-scan {
+        margin: 0 28px;
+        padding: 18px 28px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .ls-green { background: #eafaf1; border: 2px solid #a9dfbf; border-left: 7px solid #27ae60; }
+    .ls-red   { background: #fdf2f2; border: 2px solid #f5b7b1; border-left: 7px solid #e74c3c; }
+
+    .ls-pulse { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; animation: blink 1s infinite; }
+    .pulse-green { background: #27ae60; }
+    .pulse-red   { background: #e74c3c; }
+
+    @@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+    .ls-status  { font-size: 22px; font-weight: 900; letter-spacing: 1px; flex-shrink: 0; }
+    .ls-details { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; flex: 1; }
+    .ls-item    { display: flex; gap: 6px; align-items: center; }
+    .ls-lbl     { font-size: 14px; color: #888; font-weight: 600; }
+    .ls-val     { font-size: 14px; font-weight: 700; color: #1a2e35; font-family: 'Courier New', monospace; }
+
+    /* PROJECT GRID */
+    .tv-project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 0 28px;
+        flex: 1;
+    }
+
+    .tv-proj-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        border: 1px solid #e2e8f0;
+    }
+
+    .tv-proj-top {
+        background: linear-gradient(135deg, #003f6b, #0077B6);
+        padding: 16px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .tv-proj-name { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 1px; }
+    .tv-proj-cam  { font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 600; }
+
+    .tv-proj-nums {
+        display: flex;
+        padding: 28px 16px;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .tv-proj-stat    { text-align: center; flex: 1; }
+    .tv-proj-divider { width: 1px; height: 65px; background: #e2e8f0; }
+
+    .tv-proj-num {
+        font-size: 64px; font-weight: 900;
+        font-family: 'Courier New', monospace; line-height: 1;
+    }
+
+    .tv-proj-lbl {
+        font-size: 13px; letter-spacing: 2px; font-weight: 700;
+        margin-top: 6px; text-transform: uppercase;
+    }
+    .green-lbl  { color: #27ae60; }
+    .red-lbl    { color: #e74c3c; }
+    .orange-lbl { color: #e67e22; }
+
+    .tv-proj-last {
+        padding: 10px 22px;
+        display: flex; justify-content: space-between; align-items: center;
+        border-top: 1px solid #f0f0f0;
+    }
+    .last-green { background: #eafaf1; }
+    .last-red   { background: #fdf2f2; }
+    .tv-proj-last-code { font-family: 'Courier New', monospace; color: #555; font-size: 12px; }
+    .tv-proj-last-time { color: #aaa; font-weight: 600; font-size: 12px; }
+</style>
+
+@code {
+    private ScanResult? _lastScan;
+    private int _totalGreen, _totalRed, _totalDup;
+    private double _okRate;
+    private DateTime _now = DateTime.Now;
+    private System.Threading.Timer? _timer;
+    private List<ProjectStat> _projectStats = new();
+
+    protected override void OnInitialized()
+    {
+        ScanService.OnScanAdded += OnNewScan;
+        RefreshData();
+        _timer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() => { _now = DateTime.Now; RefreshData(); StateHasChanged(); });
+        }, null, 3000, 3000);
+    }
+
+    private void OnNewScan() =>
+        InvokeAsync(() => { RefreshData(); StateHasChanged(); });
+
+    private void RefreshData()
+    {
+        _lastScan = ScanService.GetScans().FirstOrDefault();
+
+        using var db = new SR750.Listener.DatabaseContext();
+        var todayScans = db.ScanResults.Where(s => s.Timestamp >= DateTime.Today).ToList();
+
+        _totalGreen = todayScans.Count(s => s.Decision == "GREEN");
+        _totalRed   = todayScans.Count(s => s.Decision == "RED");
+        _totalDup   = todayScans.Count(s => s.Reason   == "Duplicate");
+        _okRate     = todayScans.Count == 0 ? 0 :
+            Math.Round((double)_totalGreen / todayScans.Count * 100, 1);
+
+        _projectStats = todayScans
+            .Where(s => s.Customer != null)
+            .GroupBy(s => new { s.Customer, s.CameraId })
+            .Select(g => {
+                var last = g.OrderByDescending(x => x.Timestamp).First();
+                return new ProjectStat {
+                    Customer     = g.Key.Customer  ?? "",
+                    CameraId     = g.Key.CameraId  ?? "",
+                    Green        = g.Count(x => x.Decision == "GREEN"),
+                    Red          = g.Count(x => x.Decision == "RED"),
+                    Duplicates   = g.Count(x => x.Reason   == "Duplicate"),
+                    LastCode     = last.DmcCode,
+                    LastDecision = last.Decision,
+                    LastTime     = last.Timestamp.ToString("HH:mm:ss")
+                };
+            })
+            .OrderBy(p => p.Customer)
+            .ToList();
+    }
+
+    public void Dispose()
+    {
+        ScanService.OnScanAdded -= OnNewScan;
+        _timer?.Dispose();
+    }
+
+    class ProjectStat
+    {
+        public string  Customer     { get; set; } = "";
+        public string  CameraId     { get; set; } = "";
+        public int     Green        { get; set; }
+        public int     Red          { get; set; }
+        public int     Duplicates   { get; set; }
+        public string? LastCode     { get; set; }
+        public string? LastDecision { get; set; }
+        public string? LastTime     { get; set; }
+    }
+}

@@ -1,0 +1,273 @@
+﻿@page "/charts"
+@using SR750.Listener
+@using System.Net.Http.Json
+@inject AuthService AuthService
+@inject ScanService ScanService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject LanguageService LangService
+@rendermode InteractiveServer
+@implements IDisposable
+@inject IConfiguration Configuration
+
+<PageTitle>Charts — DMC System</PageTitle>
+
+@if (!AuthService.IsAuthenticated)
+{
+    <div>Redirecting...</div>
+}
+else if (!AuthService.IsSupervisor && !AuthService.IsAdmin)
+{
+    <div class="access-denied">
+        <div class="denied-icon">❌</div>
+        <div class="denied-text">@LangService.T("access_denied")</div>
+    </div>
+}
+else
+{
+    <!-- HEADER -->
+    <div class="header-container">
+        <h1> @LangService.T("charts_ai")</h1>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-container">
+        <div class="filter-title">🔍 @LangService.T("search_filters")</div>
+        <div class="filter-group">
+            <div class="filter-field">
+                <label>@LangService.T("date_from")</label>
+                <input type="date" @bind="_filterFrom" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("date_to")</label>
+                <input type="date" @bind="_filterTo" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("station")</label>
+                <select @bind="_filterCustomer">
+                    <option value="">@LangService.T("all")</option>
+                    @foreach (var c in ScanService.GetCustomers)
+                    {
+                        <option value="@c">@c</option>
+                    }
+                </select>
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("camera")</label>
+                <select @bind="_filterCamera">
+                    <option value="">@LangService.T("all")</option>
+                    @foreach (var cam in ScanService.GetCameras)
+                    {
+                        <option value="@cam">@cam</option>
+                    }
+                </select>
+            </div>
+            <button class="btn-filter primary" @onclick="ApplyFilters">@LangService.T("apply_filters")</button>
+            <button class="btn-filter secondary" @onclick="ResetFilters">@LangService.T("reset")</button>
+        </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-container">
+        <div class="kpi-card">
+            <div class="kpi-value">@_filtered.Count</div>
+            <div class="kpi-label">@LangService.T("total_scans")</div>
+        </div>
+        <div class="kpi-card green">
+            <div class="kpi-value">@_greenCount</div>
+            <div class="kpi-label">GREEN ✅</div>
+        </div>
+        <div class="kpi-card red">
+            <div class="kpi-value">@_redCount</div>
+            <div class="kpi-label">RED ❌</div>
+        </div>
+        <div class="kpi-card warning">
+            <div class="kpi-value">@_dupCount</div>
+            <div class="kpi-label">@LangService.T("duplicates") 🔁</div>
+        </div>
+        <div class="kpi-card info">
+            <div class="kpi-value" style="color: @(_okRate >= 95 ? "var(--success-color)" : _okRate >= 80 ? "var(--warning-color)" : "var(--danger-color)");">@_okRate%</div>
+            <div class="kpi-label">@LangService.T("ok_rate")</div>
+        </div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="charts-row">
+        <div class="chart-card chart-card-lg">
+            <div class="chart-title">📈 @LangService.T("chart_scans_per_day")</div>
+            <canvas id="chartScansPerDay" height="120"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">🔁 @LangService.T("chart_duplicates_per_day")</div>
+            <canvas id="chartDuplicates" height="120"></canvas>
+        </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="charts-row">
+        <div class="chart-card">
+            <div class="chart-title">🏆 @LangService.T("chart_top_references")</div>
+            <canvas id="chartTopDuplicates" height="180"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">📷 @LangService.T("chart_scans_by_camera")</div>
+            <canvas id="chartByCamera" height="180"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">✅ @LangService.T("chart_green_red")</div>
+            <canvas id="chartGreenRed" height="180"></canvas>
+        </div>
+    </div>
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.renderChartsPage = function(scansPerDay, duplicatesPerDay, topDuplicates, byCamera, green, red) {
+        const destroy = (id) => { const el = document.getElementById(id); if (el && el._chart) el._chart.destroy(); return el; };
+        const c1 = destroy('chartScansPerDay');
+        if (c1) c1._chart = new Chart(c1, { type: 'bar', data: { labels: scansPerDay.labels, datasets: [{ label: 'Scans', data: scansPerDay.values, backgroundColor: '#3498db' }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
+        const c2 = destroy('chartDuplicates');
+        if (c2) c2._chart = new Chart(c2, { type: 'line', data: { labels: duplicatesPerDay.labels, datasets: [{ label: 'Duplicates', data: duplicatesPerDay.values, borderColor: '#e67e22', backgroundColor: 'rgba(230,126,34,0.1)', fill: true }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
+        const c3 = destroy('chartTopDuplicates');
+        if (c3) c3._chart = new Chart(c3, { type: 'bar', data: { labels: topDuplicates.labels, datasets: [{ data: topDuplicates.values, backgroundColor: '#e74c3c' }] }, options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } } } });
+        const c4 = destroy('chartByCamera');
+        if (c4) c4._chart = new Chart(c4, { type: 'doughnut', data: { labels: byCamera.labels, datasets: [{ data: byCamera.values, backgroundColor: ['#3498db','#9b59b6','#1abc9c','#e67e22'] }] }, options: { responsive: true } });
+        const c5 = destroy('chartGreenRed');
+        if (c5) c5._chart = new Chart(c5, { type: 'doughnut', data: { labels: ['GREEN','RED'], datasets: [{ data: [green, red], backgroundColor: ['#27ae60','#e74c3c'] }] }, options: { responsive: true } });
+    };
+</script>
+
+<style>
+    :root {
+        --primary-color: #0077B6; --primary-dark: #00597A;
+        --success-color: #27ae60; --danger-color: #e74c3c; --warning-color: #e67e22;
+        --bg-light: #f0f2f5; --bg-lighter: #F7F9FC;
+        --text-primary: #333; --text-secondary: #555; --text-light: #888;
+        --border-color: #ddd;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+        --shadow-md: 0 4px 15px rgba(0,0,0,0.15);
+        --shadow-lg: 0 8px 20px rgba(0,0,0,0.2);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { box-sizing: border-box; }
+    body { background: linear-gradient(135deg, var(--bg-lighter) 0%, #e8eef7 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-primary); margin: 0; padding: 0; }
+
+    .header-container { background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); padding: 30px; box-shadow: var(--shadow-md); animation: slideDown 0.5s ease-out; }
+    .header-container h1 { color: white; margin: 0; font-size: 2em; font-weight: 700; letter-spacing: 0.5px; }
+
+    @@keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .access-denied { padding: 80px 20px; text-align: center; animation: fadeIn 0.5s ease-out; }
+    .denied-icon { font-size: 64px; margin-bottom: 20px; opacity: 0.7; }
+    .denied-text { color: var(--danger-color); font-size: 20px; font-weight: 600; }
+
+    .filter-container { margin: 25px; background: white; border-radius: 12px; padding: 25px; box-shadow: var(--shadow-sm); animation: slideUp 0.5s ease-out 0.1s both; }
+    .filter-title { font-weight: 700; color: var(--primary-color); margin-bottom: 20px; font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
+    .filter-group { display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end; }
+    .filter-field { display: flex; flex-direction: column; }
+    .filter-field label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filter-field input, .filter-field select { padding: 10px 12px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 13px; transition: var(--transition); background: white; color: var(--text-primary); font-family: inherit; min-width: 150px; }
+    .filter-field input:focus, .filter-field select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0,119,182,0.1); }
+    .btn-filter { padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition); text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-filter.primary { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; box-shadow: var(--shadow-sm); }
+    .btn-filter.primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-filter.secondary { background: #95a5a6; color: white; }
+    .btn-filter.secondary:hover { background: #7f8c8d; transform: translateY(-2px); }
+
+    .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; margin: 0 25px 25px 25px; animation: fadeIn 0.5s ease-out 0.2s both; }
+    .kpi-card { background: white; border-radius: 12px; padding: 25px; text-align: center; box-shadow: var(--shadow-sm); transition: var(--transition); border: 2px solid transparent; position: relative; overflow: hidden; }
+    .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-color); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+    .kpi-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
+    .kpi-card:hover::before { transform: scaleX(1); }
+    .kpi-value { font-size: 2.2em; font-weight: 700; margin-bottom: 10px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .kpi-label { color: var(--text-light); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .kpi-card.green .kpi-value { background: linear-gradient(135deg, var(--success-color), #229954); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .kpi-card.red .kpi-value { background: linear-gradient(135deg, var(--danger-color), #c0392b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .kpi-card.warning .kpi-value { background: linear-gradient(135deg, var(--warning-color), #d35400); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .kpi-card.info .kpi-value { background: linear-gradient(135deg, #3498db, #2980b9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    .charts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 0 25px 25px 25px; animation: fadeIn 0.5s ease-out 0.3s both; }
+    .chart-card { background: white; border-radius: 12px; padding: 25px; box-shadow: var(--shadow-sm); transition: var(--transition); border: 2px solid transparent; }
+    .chart-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary-color); transform: translateY(-4px); }
+    .chart-card-lg { grid-column: span 2; }
+    .chart-title { font-weight: 700; color: var(--primary-color); margin-bottom: 20px; font-size: 1.05em; display: flex; align-items: center; gap: 8px; letter-spacing: 0.3px; }
+
+    @@media (max-width: 1024px) { .filter-container { margin: 20px; } .kpi-container { margin: 0 20px 20px 20px; } .charts-row { grid-template-columns: 1fr; margin: 0 20px 20px 20px; } .chart-card-lg { grid-column: span 1; } }
+    @@media (max-width: 768px) { .header-container { padding: 20px; } .header-container h1 { font-size: 1.5em; } .filter-container { margin: 15px; padding: 15px; } .filter-group { flex-direction: column; } .filter-field input, .filter-field select { width: 100%; min-width: unset; } .btn-filter { width: 100%; justify-content: center; } .kpi-container { grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 15px 15px 15px; } .charts-row { margin: 0 15px 15px 15px; } }
+    @@media (max-width: 480px) { .kpi-container { grid-template-columns: 1fr; margin: 0 10px 10px 10px; } .charts-row { margin: 0 10px 10px 10px; } }
+    @@media print { body { background: white; } .filter-container, .kpi-card, .chart-card { box-shadow: none; border: 1px solid var(--border-color); page-break-inside: avoid; } }
+</style>
+
+@code {
+    private List<ScanResult> _filtered = new();
+    private double _okRate = 0;
+    private int _greenCount = 0;
+    private int _redCount = 0;
+    private int _dupCount = 0;
+    private DateTime? _filterFrom;
+    private DateTime? _filterTo;
+    private string _filterCustomer = string.Empty;
+    private string _filterCamera = string.Empty;
+    private Action? _langChanged;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+        if (!AuthService.IsAdmin && !AuthService.IsSupervisor)
+        {
+            Navigation.NavigateTo("/", forceLoad: true);
+            return;
+        }
+        _langChanged = () => InvokeAsync(StateHasChanged);
+        LangService.OnLanguageChanged += _langChanged;
+        RefreshData();
+    }
+
+    public void Dispose() => LangService.OnLanguageChanged -= _langChanged;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await RenderCharts();
+    }
+
+    private void RefreshData()
+    {
+        _filtered = ScanService.GetFilteredScans(_filterFrom, _filterTo,
+            string.IsNullOrEmpty(_filterCustomer) ? null : _filterCustomer,
+            string.IsNullOrEmpty(_filterCamera) ? null : _filterCamera);
+        _greenCount = _filtered.Count(s => s.Decision == "GREEN");
+        _redCount = _filtered.Count(s => s.Decision == "RED");
+        _dupCount = _filtered.Count(s => s.Reason == "Duplicate");
+        _okRate = _filtered.Count == 0 ? 0 : Math.Round((double)_greenCount / _filtered.Count * 100, 1);
+    }
+
+    private async Task ApplyFilters() { RefreshData(); StateHasChanged(); await RenderCharts(); }
+
+    private async Task ResetFilters()
+    {
+        _filterFrom = null; _filterTo = null;
+        _filterCustomer = string.Empty; _filterCamera = string.Empty;
+        RefreshData(); StateHasChanged(); await RenderCharts();
+    }
+
+    private async Task RenderCharts()
+    {
+        var spd = ScanService.ScansByDay;
+        var dpd = ScanService.DuplicatesByDay;
+        var tops = ScanService.TopDuplicates;
+        var cams = ScanService.ScansByCamera;
+        await JSRuntime.InvokeVoidAsync("renderChartsPage",
+            new { labels = spd.Keys.ToArray(), values = spd.Values.ToArray() },
+            new { labels = dpd.Keys.ToArray(), values = dpd.Values.ToArray() },
+            new { labels = tops.Select(x => x.Customer).ToArray(), values = tops.Select(x => x.Count).ToArray() },
+            new { labels = cams.Keys.ToArray(), values = cams.Values.ToArray() },
+            _greenCount, _redCount);
+    }
+}

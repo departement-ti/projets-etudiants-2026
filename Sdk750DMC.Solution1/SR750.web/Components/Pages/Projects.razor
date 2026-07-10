@@ -1,0 +1,410 @@
+﻿@page "/projects"
+@using SR750.Listener
+@inject AuthService AuthService
+@inject ProjectService ProjectService
+@inject NavigationManager Navigation
+@inject LanguageService LangService
+@rendermode InteractiveServer
+@implements IDisposable
+
+<PageTitle>Projects — DMC System</PageTitle>
+
+@if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+{
+    <div>Redirecting...</div>
+}
+else
+{
+    <!-- HEADER -->
+    <header class="admin-header">
+        <div class="header-left">
+            <h1>@LangService.T("project_management")</h1>
+        </div>
+        <button class="btn btn-primary" @onclick="OpenAddModal">
+            @LangService.T("add_project")
+        </button>
+    </header>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="stat-box">
+            <div class="stat-number">@_projects.Count</div>
+            <div class="stat-label">@LangService.T("total_projects")</div>
+        </div>
+        <div class="stat-box active">
+            <div class="stat-number">@_projects.Count(p => p.IsActive)</div>
+            <div class="stat-label">@LangService.T("active")</div>
+        </div>
+        <div class="stat-box inactive">
+            <div class="stat-number">@_projects.Count(p => !p.IsActive)</div>
+            <div class="stat-label">@LangService.T("inactive")</div>
+        </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="table-section">
+        <div class="table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>@LangService.T("station_name")</th>
+                        <th>@LangService.T("customer")</th>
+                        <th>@LangService.T("prefix")</th>
+                        <th>@LangService.T("label_length")</th>
+                        <th>@LangService.T("counter_max")</th>
+                        <th>@LangService.T("status")</th>
+                        <th>@LangService.T("actions")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in _projects)
+                    {
+                        <tr class="@(project.IsActive ? "active" : "inactive")">
+                            <td class="id">@project.Id</td>
+                            <td class="bold">@project.StationName</td>
+                            <td>
+                                <span class="badge badge-primary">@project.CustomerNumber</span>
+                            </td>
+                            <td class="mono">@project.Prefix</td>
+                            <td class="center">@project.LabelLength</td>
+                            <td class="center">@project.CounterMax</td>
+                            <td>
+                                <span class="status-badge @(project.IsActive ? "active" : "inactive")">
+                                    @(project.IsActive ? LangService.T("active") : LangService.T("inactive"))
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <button class="btn-sm btn-edit" @onclick="() => OpenEditModal(project)">@LangService.T("edit")</button>
+                                <button class="btn-sm @(project.IsActive ? "btn-warn" : "btn-success")" @onclick="() => ToggleActive(project)">
+                                    @(project.IsActive ? LangService.T("disable") : LangService.T("enable"))
+                                </button>
+                                <button class="btn-sm btn-danger" @onclick="() => DeleteProject(project)">@LangService.T("delete")</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (_projects.Count == 0)
+            {
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    @LangService.T("no_projects")
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- MODAL -->
+    @if (_showModal)
+    {
+        <div class="modal-overlay" @onclick="CloseModal">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h3>@(_editProject == null ? LangService.T("add_project") : LangService.T("edit_project"))</h3>
+                    <button class="modal-close" @onclick="CloseModal">✕</button>
+                </div>
+
+                @if (_modalError)
+                {
+                    <div class="modal-error">@_modalErrorMsg</div>
+                }
+
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("station_name") *</label>
+                            <input @bind="_formStationName" placeholder="e.g. Joyson Line 1" />
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("customer_number") *</label>
+                            <input @bind="_formCustomerNumber" placeholder="e.g. KTAD" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("prefix") *</label>
+                            <input @bind="_formPrefix" placeholder="e.g. KTAD" />
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("label_length") *</label>
+                            <input @bind="_formLabelLength" type="number" placeholder="e.g. 18" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("counter_max") *</label>
+                            <input @bind="_formCounterMax" type="number" placeholder="e.g. 99999" />
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("counter_start")</label>
+                            <input @bind="_formCounterStart" type="number" placeholder="e.g. 13" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("counter_length")</label>
+                            <input @bind="_formCounterLength" type="number" placeholder="e.g. 5" />
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("year_start")</label>
+                            <input @bind="_formYearStart" type="number" placeholder="e.g. 8" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>@LangService.T("day_start")</label>
+                            <input @bind="_formDayStart" type="number" placeholder="e.g. 10" />
+                        </div>
+                        <div class="form-group">
+                            <label>@LangService.T("day_length")</label>
+                            <input @bind="_formDayLength" type="number" placeholder="e.g. 3" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">@LangService.T("cancel")</button>
+                    <button class="btn btn-primary" @onclick="SaveProject">
+                        @(_editProject == null ? LangService.T("add_project") : LangService.T("save_changes"))
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- CONFIRM DELETE -->
+    @if (_confirmDelete != null)
+    {
+        <div class="modal-overlay" @onclick="() => _confirmDelete = null">
+            <div class="confirm-dialog" @onclick:stopPropagation>
+                <div class="confirm-icon">⚠️</div>
+                <h3>@LangService.T("delete_project_title")</h3>
+                <p>@LangService.T("delete_confirm") <strong>@_confirmDelete.StationName</strong>?</p>
+                <div class="confirm-actions">
+                    <button class="btn btn-secondary" @onclick="() => _confirmDelete = null">@LangService.T("cancel")</button>
+                    <button class="btn btn-danger" @onclick="ConfirmDelete">@LangService.T("delete")</button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    :root {
+        --primary: #0077B6; --primary-dark: #00597A;
+        --success: #27ae60; --danger: #e74c3c; --warning: #e67e22;
+        --bg: #f8fafc; --surface: #ffffff;
+        --text-primary: #1a202c; --text-secondary: #718096;
+        --border: #e2e8f0;
+        --shadow: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    * { box-sizing: border-box; }
+    body { background: var(--bg); }
+
+    .admin-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 28px 32px; display: flex; justify-content: space-between;
+        align-items: center; box-shadow: var(--shadow-lg);
+    }
+    .admin-header h1 { margin: 0; color: white; font-size: 28px; font-weight: 700; }
+
+    .stats-section {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px; padding: 32px; background: var(--bg);
+    }
+
+    .stat-box {
+        background: var(--surface); border-radius: 10px; padding: 24px;
+        text-align: center; box-shadow: var(--shadow);
+        border: 2px solid transparent; transition: all 0.2s ease;
+    }
+    .stat-box:hover { box-shadow: var(--shadow-lg); border-color: var(--primary); }
+    .stat-box.active { border-color: var(--success); }
+    .stat-box.inactive { border-color: #ccc; }
+    .stat-number { font-size: 36px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .stat-box.active .stat-number { color: var(--success); }
+    .stat-box.inactive .stat-number { color: #aaa; }
+    .stat-label { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+    .table-section { padding: 0 32px 32px 32px; }
+    .table-wrapper { background: var(--surface); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+
+    .admin-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .admin-table thead { background: #f1f5f9; border-bottom: 2px solid var(--border); }
+    .admin-table th {
+        padding: 14px 16px; text-align: left; font-weight: 700;
+        color: var(--text-secondary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.4px;
+    }
+    .admin-table tr { border-bottom: 1px solid var(--border); transition: background 0.2s ease; }
+    .admin-table tr:hover { background: #f9fafb; }
+    .admin-table tr.inactive { background: #f5f5f5; }
+    .admin-table td { padding: 12px 16px; color: var(--text-primary); }
+    .admin-table td.id { color: var(--text-secondary); font-size: 12px; }
+    .admin-table td.bold { font-weight: 600; }
+    .admin-table td.mono { font-family: monospace; font-size: 13px; }
+    .admin-table td.center { text-align: center; }
+
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-primary { background: rgba(0,119,182,0.1); color: var(--primary); }
+
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .status-badge.active { background: rgba(39,174,96,0.1); color: var(--success); }
+    .status-badge.inactive { background: #f5f5f5; color: #aaa; }
+
+    .actions { display: flex; gap: 6px; }
+
+    .btn { padding: 9px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.3px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); box-shadow: var(--shadow-lg); }
+    .btn-secondary { background: #f0f0f0; color: var(--text-secondary); }
+    .btn-secondary:hover { background: #e0e0e0; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #c0392b; }
+
+    .btn-sm { padding: 5px 12px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; }
+    .btn-edit { background: #3498db; color: white; }
+    .btn-warn { background: var(--warning); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+
+    .empty-state { padding: 60px 32px; text-align: center; color: var(--text-secondary); }
+    .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6); z-index: 1000;
+        display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-content { background: var(--surface); border-radius: 12px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
+    .modal-header { padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h3 { margin: 0; font-size: 18px; color: var(--primary); font-weight: 700; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); }
+    .modal-error { margin: 20px 28px; padding: 12px 16px; background: #fdf2f2; color: var(--danger); border-radius: 6px; font-size: 13px; border-left: 3px solid var(--danger); }
+    .modal-body { padding: 28px; }
+    .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
+    .form-group { flex: 1; display: flex; flex-direction: column; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .form-group input { padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-primary); font-family: inherit; transition: all 0.2s ease; }
+    .form-group input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,119,182,0.1); }
+    .modal-footer { padding: 20px 28px; border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; }
+
+    .confirm-dialog { background: var(--surface); border-radius: 12px; padding: 40px 32px; width: 100%; max-width: 360px; text-align: center; box-shadow: var(--shadow-lg); }
+    .confirm-icon { font-size: 48px; margin-bottom: 16px; }
+    .confirm-dialog h3 { margin: 0 0 8px 0; font-size: 18px; color: var(--primary); }
+    .confirm-dialog p { margin: 0 0 28px 0; color: var(--text-secondary); font-size: 14px; }
+    .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+
+    @@media (max-width: 768px) {
+        .admin-header { flex-direction: column; gap: 16px; text-align: center; padding: 16px; }
+        .stats-section { grid-template-columns: 1fr; padding: 20px 16px; }
+        .table-section { padding: 0 16px 20px 16px; }
+        .admin-table { font-size: 12px; }
+        .admin-table th, .admin-table td { padding: 10px 8px; }
+        .form-row { flex-direction: column; gap: 0; }
+        .modal-content { max-width: 95%; }
+    }
+</style>
+
+@code {
+    private List<ProjectItem> _projects = new();
+    private bool _showModal = false;
+    private ProjectItem? _editProject = null;
+    private ProjectItem? _confirmDelete = null;
+    private bool _modalError = false;
+    private string _modalErrorMsg = string.Empty;
+    private string _formStationName = string.Empty;
+    private string _formCustomerNumber = string.Empty;
+    private string _formPrefix = string.Empty;
+    private int _formLabelLength = 18;
+    private int _formCounterMax = 99999;
+    private int _formCounterStart = 13;
+    private int _formCounterLength = 5;
+    private int _formYearStart = 8;
+    private int _formYearLength = 2;
+    private int _formDayStart = 10;
+    private int _formDayLength = 3;
+    private Action? _langChanged;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+        _langChanged = () => InvokeAsync(StateHasChanged);
+        LangService.OnLanguageChanged += _langChanged;
+        LoadProjects();
+    }
+
+    public void Dispose() => LangService.OnLanguageChanged -= _langChanged;
+
+    private void LoadProjects() => _projects = ProjectService.GetAll();
+
+    private void OpenAddModal()
+    {
+        _editProject = null;
+        _formStationName = _formCustomerNumber = _formPrefix = string.Empty;
+        _formLabelLength = 18; _formCounterMax = 99999; _formCounterStart = 13;
+        _formCounterLength = 5; _formYearStart = 8; _formYearLength = 2;
+        _formDayStart = 10; _formDayLength = 3;
+        _modalError = false; _showModal = true;
+    }
+
+    private void OpenEditModal(ProjectItem p)
+    {
+        _editProject = p;
+        _formStationName = p.StationName; _formCustomerNumber = p.CustomerNumber;
+        _formPrefix = p.Prefix; _formLabelLength = p.LabelLength;
+        _formCounterMax = p.CounterMax; _formCounterStart = p.CounterStart;
+        _formCounterLength = p.CounterLength; _formYearStart = p.YearStart;
+        _formYearLength = p.YearLength; _formDayStart = p.DayStart; _formDayLength = p.DayLength;
+        _modalError = false; _showModal = true;
+    }
+
+    private void CloseModal() { _showModal = false; _editProject = null; _modalError = false; }
+
+    private void SaveProject()
+    {
+        _modalError = false;
+        if (string.IsNullOrWhiteSpace(_formStationName) ||
+            string.IsNullOrWhiteSpace(_formCustomerNumber) ||
+            string.IsNullOrWhiteSpace(_formPrefix))
+        {
+            _modalError = true;
+            _modalErrorMsg = LangService.T("project_required_fields");
+            return;
+        }
+
+        if (_editProject == null)
+            ProjectService.Add(_formStationName, _formCustomerNumber, _formPrefix,
+                _formLabelLength, _formCounterMax, _formCounterStart, _formCounterLength,
+                _formYearStart, _formYearLength, _formDayStart, _formDayLength);
+        else
+            ProjectService.Update(_editProject.Id, _formStationName, _formCustomerNumber, _formPrefix,
+                _formLabelLength, _formCounterMax, _formCounterStart, _formCounterLength,
+                _formYearStart, _formYearLength, _formDayStart, _formDayLength);
+
+        LoadProjects(); CloseModal();
+    }
+
+    private void ToggleActive(ProjectItem p) { ProjectService.ToggleActive(p.Id); LoadProjects(); }
+    private void DeleteProject(ProjectItem p) => _confirmDelete = p;
+    private void ConfirmDelete()
+    {
+        if (_confirmDelete != null)
+        {
+            ProjectService.Delete(_confirmDelete.Id);
+            _confirmDelete = null;
+            LoadProjects();
+        }
+    }
+}

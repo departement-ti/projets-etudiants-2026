@@ -1,0 +1,630 @@
+﻿@page "/logs"
+@using SR750.Listener
+@inject AuthService AuthService
+@inject ScanService ScanService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject LanguageService LangService
+@rendermode InteractiveServer
+@implements IDisposable
+
+<PageTitle>Scan Logs - DMC System</PageTitle>
+
+@if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+{
+    <div>Redirecting...</div>
+}
+else
+{
+    <!-- HEADER -->
+    <div class="header-container">
+        <h1>@LangService.T("scan_logs")</h1>
+        <button class="btn-export" @onclick="ExportCsv">
+            📥 @LangService.T("export_csv")
+        </button>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filter-container">
+        <div class="filter-title">@LangService.T("search_filters")</div>
+        <div class="filter-group">
+            <div class="filter-field search-field">
+                <label>@LangService.T("search_dmc")</label>
+                <input @bind="_searchCode" @bind:event="oninput" placeholder="@LangService.T("search_placeholder")" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("date_from")</label>
+                <input type="date" @bind="_filterFrom" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("date_to")</label>
+                <input type="date" @bind="_filterTo" />
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("station")</label>
+                <select @bind="_filterCustomer">
+                    <option value="">@LangService.T("all")</option>
+                    @foreach (var c in ScanService.GetCustomers)
+                    {
+                        <option value="@c">@c</option>
+                    }
+                </select>
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("status")</label>
+                <select @bind="_filterDecision">
+                    <option value="">@LangService.T("all")</option>
+                    <option value="GREEN">GREEN</option>
+                    <option value="RED">RED</option>
+                </select>
+            </div>
+            <div class="filter-field">
+                <label>@LangService.T("reason")</label>
+                <select @bind="_filterReason">
+                    <option value="">@LangService.T("all")</option>
+                    <option value="Duplicate">Duplicate</option>
+                    <option value="CounterJump">Counter Jump</option>
+                    <option value="CounterBackward">Counter Backward</option>
+                    <option value="NoRead">No Read</option>
+                    <option value="UnknownCode">Unknown Code</option>
+                    <option value="InvalidLength">Invalid Length</option>
+                    <option value="Overflow">Overflow</option>
+                </select>
+            </div>
+            <button class="btn-filter primary" @onclick="ApplyFilters">@LangService.T("apply_filters")</button>
+            <button class="btn-filter secondary" @onclick="ResetFilters">@LangService.T("reset")</button>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value">@_filtered.Count</div>
+            <div class="stat-label">@LangService.T("results")</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-value">@_filtered.Count(s => s.Decision == "GREEN")</div>
+            <div class="stat-label">GREEN ✅</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-value">@_filtered.Count(s => s.Decision == "RED")</div>
+            <div class="stat-label">RED ❌</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-value">@_filtered.Count(s => s.Reason == "Duplicate")</div>
+            <div class="stat-label">@LangService.T("duplicates") 🔁</div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-container">
+        <div class="table-header">
+            <div>@LangService.T("scan_history") — @LangService.T("page") @_currentPage / @_totalPages (@_filtered.Count @LangService.T("total"))</div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="sortable" @onclick='() => Sort("Timestamp")'>
+                            @LangService.T("time") @SortIcon("Timestamp")
+                        </th>
+                        <th class="sortable" @onclick='() => Sort("CameraId")'>
+                            @LangService.T("camera") @SortIcon("CameraId")
+                        </th>
+                        <th class="sortable" @onclick='() => Sort("Customer")'>
+                            @LangService.T("station") @SortIcon("Customer")
+                        </th>
+                        <th>@LangService.T("dmc_code")</th>
+                        <th>@LangService.T("counter")</th>
+                        <th>@LangService.T("year")</th>
+                        <th>@LangService.T("day")</th>
+                        <th class="sortable" @onclick='() => Sort("Decision")'>
+                            @LangService.T("status") @SortIcon("Decision")
+                        </th>
+                        <th>@LangService.T("reason")</th>
+                        <th>@LangService.T("detail")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var scan in _paginated)
+                    {
+                        <tr class="table-row @(scan.Decision == "GREEN" ? "green" : "red")" @onclick="() => SelectScan(scan)">
+                            <td>@scan.Id</td>
+                            <td class="time">@scan.Timestamp.ToString("dd/MM/yy HH:mm:ss")</td>
+                            <td class="camera">@scan.CameraId</td>
+                            <td class="customer">@scan.Customer</td>
+                            <td class="dmc-code">@scan.DmcCode</td>
+                            <td>@scan.Counter</td>
+                            <td>@scan.Year</td>
+                            <td>@scan.DayOfYear</td>
+                            <td>
+                                <span class="badge @(scan.Decision == "GREEN" ? "green" : "red")">
+                                    @scan.Decision
+                                </span>
+                            </td>
+                            <td class="reason">
+                                @if (scan.Reason != "None")
+                                {
+                                    <span class="reason-badge">@scan.Reason</span>
+                                }
+                            </td>
+                            <td>
+                                <button class="btn-view" @onclick="() => SelectScan(scan)" @onclick:stopPropagation>
+                                    @LangService.T("view")
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (_filtered.Count == 0)
+        {
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <div>@LangService.T("no_data")</div>
+            </div>
+        }
+
+        <!-- PAGINATION -->
+        <div class="pagination">
+            <button class="btn-page" @onclick="PrevPage" disabled="@(_currentPage <= 1)">← @LangService.T("prev")</button>
+
+            @for (int p = Math.Max(1, _currentPage - 2); p <= Math.Min(_totalPages, _currentPage + 2); p++)
+            {
+                var pageNum = p;
+                <button class="btn-page @(pageNum == _currentPage ? "active" : "")" @onclick="() => GoToPage(pageNum)">
+                    @pageNum
+                </button>
+            }
+
+            <button class="btn-page" @onclick="NextPage" disabled="@(_currentPage >= _totalPages)">@LangService.T("next") →</button>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    @if (_selectedScan != null)
+    {
+        <div class="modal-overlay" @onclick="CloseModal">
+            <div class="modal-content" @onclick:stopPropagation>
+                <div class="modal-header">
+                    <h3>@LangService.T("scan_detail") #@_selectedScan.Id</h3>
+                    <button class="modal-close" @onclick="CloseModal">✕</button>
+                </div>
+
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(_selectedScan.ImagePath))
+                    {
+                        <div class="image-section">
+                            <div class="image-label">@LangService.T("label_capture")</div>
+                            <img src="@_selectedScan.ImagePath" alt="Scan Capture" />
+                        </div>
+                    }
+
+                    <div class="decision-banner @(_selectedScan.Decision == "GREEN" ? "green" : "red")">
+                        @(_selectedScan.Decision == "GREEN" ? "✅ OK GREEN" : "❌ REJECT RED")
+                        @if (_selectedScan.Reason != "None")
+                        {
+                            <span class="reason-text">— @_selectedScan.Reason</span>
+                        }
+                    </div>
+
+                    <table class="detail-table">
+                        <tr>
+                            <td class="label">@LangService.T("dmc_code")</td>
+                            <td class="value mono">@_selectedScan.DmcCode</td>
+                        </tr>
+                        <tr>
+                            <td class="label">@LangService.T("camera")</td>
+                            <td class="value">@_selectedScan.CameraId</td>
+                        </tr>
+                        <tr>
+                            <td class="label">@LangService.T("station")</td>
+                            <td class="value">@_selectedScan.Customer</td>
+                        </tr>
+                        <tr>
+                            <td class="label">@LangService.T("counter")</td>
+                            <td class="value">@_selectedScan.Counter</td>
+                        </tr>
+                        <tr>
+                            <td class="label">@LangService.T("year_day")</td>
+                            <td class="value">@_selectedScan.Year / @_selectedScan.DayOfYear</td>
+                        </tr>
+                        <tr>
+                            <td class="label">@LangService.T("timestamp")</td>
+                            <td class="value">@_selectedScan.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<script>
+    window.downloadCsv = function(content, filename) {
+        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+</script>
+
+<style>
+    :root {
+        --primary-color: #0077B6;
+        --primary-dark: #00597A;
+        --success-color: #27ae60;
+        --danger-color: #e74c3c;
+        --warning-color: #e67e22;
+        --bg-light: #f0f2f5;
+        --bg-lighter: #F7F9FC;
+        --text-primary: #333;
+        --text-secondary: #555;
+        --text-light: #888;
+        --border-color: #ddd;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.15);
+        --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.2);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        background: linear-gradient(135deg, var(--bg-lighter) 0%, #e8eef7 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        color: var(--text-primary);
+        margin: 0; padding: 0;
+    }
+
+    .header-container {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        padding: 25px 30px;
+        display: flex; align-items: center; justify-content: space-between;
+        box-shadow: var(--shadow-md);
+        animation: slideDown 0.5s ease-out;
+    }
+
+    .header-container h1 {
+        color: white; margin: 0; font-size: 1.8em;
+        font-weight: 700; letter-spacing: 0.5px;
+    }
+
+    @@keyframes slideDown {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .btn-export {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, var(--success-color), #229954);
+        color: white; border: none; border-radius: 8px;
+        cursor: pointer; font-size: 13px; font-weight: 600;
+        transition: var(--transition); box-shadow: var(--shadow-sm);
+    }
+    .btn-export:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+    .filter-container {
+        margin: 25px; background: white; border-radius: 12px;
+        padding: 25px; box-shadow: var(--shadow-sm);
+        animation: fadeIn 0.5s ease-out 0.1s both;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .filter-title {
+        font-weight: 700; color: var(--primary-color);
+        margin-bottom: 20px; font-size: 1.1em;
+        display: flex; align-items: center; gap: 8px;
+    }
+
+    .filter-group { display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end; }
+    .filter-field { display: flex; flex-direction: column; }
+
+    .filter-field label {
+        font-size: 13px; color: var(--text-secondary);
+        margin-bottom: 8px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .filter-field input, .filter-field select {
+        padding: 10px 12px; border: 2px solid var(--border-color);
+        border-radius: 8px; font-size: 13px; transition: var(--transition);
+        background: white; color: var(--text-primary); font-family: inherit;
+    }
+    .filter-field.search-field input { min-width: 220px; }
+    .filter-field input:focus, .filter-field select:focus {
+        outline: none; border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+    }
+
+    .btn-filter {
+        padding: 10px 24px; border: none; border-radius: 8px;
+        cursor: pointer; font-size: 13px; font-weight: 600;
+        transition: var(--transition); text-transform: uppercase;
+        letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-filter.primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white; box-shadow: var(--shadow-sm);
+    }
+    .btn-filter.primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .btn-filter.secondary { background: #95a5a6; color: white; }
+    .btn-filter.secondary:hover { background: #7f8c8d; transform: translateY(-2px); }
+
+    .stats-container {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px; margin: 0 25px 25px 25px;
+        animation: fadeIn 0.5s ease-out 0.2s both;
+    }
+
+    .stat-card {
+        background: white; border-radius: 10px; padding: 20px;
+        text-align: center; box-shadow: var(--shadow-sm);
+        transition: var(--transition); border: 2px solid transparent;
+        position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: var(--primary-color); transform: scaleX(0);
+        transform-origin: left; transition: transform 0.3s ease;
+    }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-color); }
+    .stat-card:hover::before { transform: scaleX(1); }
+    .stat-value { font-size: 2em; font-weight: 700; margin-bottom: 8px; color: var(--primary-color); }
+    .stat-label { color: var(--text-light); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card.green .stat-value { color: var(--success-color); }
+    .stat-card.red .stat-value { color: var(--danger-color); }
+    .stat-card.warning .stat-value { color: var(--warning-color); }
+
+    .table-container {
+        margin: 0 25px 25px 25px; background: white;
+        border-radius: 12px; box-shadow: var(--shadow-sm);
+        overflow: hidden; animation: fadeIn 0.5s ease-out 0.3s both;
+    }
+    .table-header {
+        padding: 18px 25px;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white; font-weight: 700; font-size: 0.95em;
+    }
+    .table-wrapper { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: #f8f9fa; }
+    thead th {
+        padding: 15px; text-align: left; color: var(--text-secondary);
+        font-weight: 700; text-transform: uppercase; font-size: 11px;
+        letter-spacing: 0.5px; border-bottom: 2px solid var(--border-color); white-space: nowrap;
+    }
+    thead th.sortable { cursor: pointer; user-select: none; }
+    thead th.sortable:hover { background: #eef4f8; }
+    tbody tr { border-bottom: 1px solid #eee; transition: var(--transition); cursor: pointer; }
+    tbody tr.green { background: white; }
+    tbody tr.red { background: #fff8f8; }
+    tbody tr:hover { background: #f5f9fc; box-shadow: inset 0 0 10px rgba(0, 119, 182, 0.05); }
+    tbody td { padding: 12px 15px; color: var(--text-primary); }
+    td.time { white-space: nowrap; font-weight: 500; color: var(--text-secondary); }
+    td.camera { color: var(--primary-color); font-weight: 700; }
+    td.customer { font-weight: 700; }
+    td.dmc-code { font-family: 'Courier New', monospace; font-size: 12px; background: #f5f5f5; padding: 4px 8px; border-radius: 4px; }
+    td.reason { color: var(--text-light); font-size: 12px; }
+
+    .badge {
+        display: inline-block; padding: 6px 12px; border-radius: 20px;
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.5px; transition: var(--transition);
+    }
+    .badge.green { background: linear-gradient(135deg, #d5f5e3, #c8e6c9); color: var(--success-color); }
+    .badge.red { background: linear-gradient(135deg, #fde8e8, #ffcdd2); color: var(--danger-color); }
+    .badge:hover { transform: scale(1.08); }
+    .reason-badge { background: #fff3cd; color: #856404; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+
+    .btn-view {
+        padding: 5px 12px; background: var(--primary-color); color: white;
+        border: none; border-radius: 6px; cursor: pointer;
+        font-size: 11px; font-weight: 600; transition: var(--transition);
+    }
+    .btn-view:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+    .empty-state { padding: 60px 20px; text-align: center; color: var(--text-light); }
+    .empty-icon { font-size: 48px; margin-bottom: 15px; opacity: 0.5; }
+
+    .pagination {
+        padding: 20px 25px; display: flex; justify-content: center;
+        gap: 8px; border-top: 1px solid #eee; flex-wrap: wrap;
+    }
+    .btn-page {
+        padding: 8px 14px; border: 2px solid var(--border-color);
+        background: white; color: var(--text-primary); border-radius: 8px;
+        cursor: pointer; font-size: 13px; font-weight: 600; transition: var(--transition);
+    }
+    .btn-page:hover:not(:disabled) { border-color: var(--primary-color); color: var(--primary-color); }
+    .btn-page.active { background: var(--primary-color); border-color: var(--primary-color); color: white; }
+    .btn-page:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.6); z-index: 1000;
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px; animation: fadeIn 0.3s ease-out;
+    }
+    .modal-content {
+        background: white; border-radius: 15px; width: 100%;
+        max-width: 600px; max-height: 90vh; overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.3s ease-out;
+    }
+    @@keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        padding: 25px; display: flex; justify-content: space-between;
+        align-items: center; border-radius: 15px 15px 0 0;
+    }
+    .modal-header h3 { margin: 0; color: white; font-size: 16px; font-weight: 700; }
+    .modal-close {
+        background: rgba(255, 255, 255, 0.2); border: none; color: white;
+        width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+        font-size: 18px; font-weight: 700; transition: var(--transition);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { background: rgba(255, 255, 255, 0.3); }
+    .modal-body { padding: 25px; }
+    .image-section {
+        margin-bottom: 25px; text-align: center;
+        border: 2px solid var(--border-color); border-radius: 10px;
+        padding: 15px; background: #f9f9f9;
+    }
+    .image-label {
+        font-size: 12px; color: var(--primary-color); margin-bottom: 10px;
+        font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .image-section img {
+        width: 100%; max-height: 350px; object-fit: contain;
+        border-radius: 8px; border: 1px solid var(--border-color);
+    }
+    .decision-banner {
+        padding: 15px 20px; border-radius: 10px; margin-bottom: 25px;
+        font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 10px;
+    }
+    .decision-banner.green { background: linear-gradient(135deg, #d5f5e3, #c8e6c9); color: var(--success-color); }
+    .decision-banner.red { background: linear-gradient(135deg, #fde8e8, #ffcdd2); color: var(--danger-color); }
+    .reason-text { font-size: 13px; font-weight: 500; }
+    .detail-table { width: 100%; font-size: 14px; }
+    .detail-table tr { border-bottom: 1px solid #eee; }
+    .detail-table tr:last-child { border-bottom: none; }
+    .detail-table td { padding: 12px 0; }
+    .detail-table td.label { color: var(--text-light); font-weight: 600; width: 40%; }
+    .detail-table td.value { color: var(--text-primary); font-weight: 500; }
+    .detail-table td.value.mono { font-family: 'Courier New', monospace; font-size: 13px; }
+
+    @@media (max-width: 768px) {
+        .header-container { flex-direction: column; gap: 15px; padding: 15px; }
+        .header-container h1 { font-size: 1.5em; }
+        .filter-container { margin: 15px; padding: 15px; }
+        .filter-group { flex-direction: column; }
+        .filter-field input, .filter-field select { width: 100%; }
+        .btn-filter, .btn-export { width: 100%; justify-content: center; }
+        .stats-container { grid-template-columns: repeat(2, 1fr); margin: 0 15px 15px 15px; }
+        .table-container { margin: 0 15px 15px 15px; }
+    }
+
+    @@media (max-width: 480px) {
+        .stats-container { grid-template-columns: 1fr; margin: 0 10px 10px 10px; }
+        .table-container { margin: 0 10px 10px 10px; }
+    }
+
+    @@media print {
+        .header-container, .filter-container, .pagination, .btn-export { display: none; }
+        .table-container { box-shadow: none; margin: 0; }
+    }
+</style>
+
+@code {
+    private List<ScanResult> _filtered = new();
+    private List<ScanResult> _paginated = new();
+    private ScanResult? _selectedScan;
+    private string _searchCode = string.Empty;
+    private DateTime? _filterFrom;
+    private DateTime? _filterTo;
+    private string _filterCustomer = string.Empty;
+    private string _filterCamera = string.Empty;
+    private string _filterDecision = string.Empty;
+    private string _filterReason = string.Empty;
+    private int _currentPage = 1;
+    private int _pageSize = 25;
+    private int _totalPages = 1;
+    private string _sortColumn = "Timestamp";
+    private bool _sortAscending = false;
+    private Action? _langChanged;
+
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated || !AuthService.IsAdmin)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+        _langChanged = () => InvokeAsync(StateHasChanged);
+        LangService.OnLanguageChanged += _langChanged;
+        RefreshData();
+    }
+
+    public void Dispose()
+    {
+        LangService.OnLanguageChanged -= _langChanged;
+    }
+
+    private void RefreshData()
+    {
+        var query = ScanService.GetFilteredScans(_filterFrom, _filterTo,
+            string.IsNullOrEmpty(_filterCustomer) ? null : _filterCustomer,
+            string.IsNullOrEmpty(_filterCamera) ? null : _filterCamera,
+            string.IsNullOrEmpty(_filterDecision) ? null : _filterDecision).AsEnumerable();
+
+        if (!string.IsNullOrEmpty(_searchCode))
+            query = query.Where(s => s.DmcCode.Contains(_searchCode, StringComparison.OrdinalIgnoreCase));
+
+        if (!string.IsNullOrEmpty(_filterReason))
+            query = query.Where(s => s.Reason == _filterReason);
+
+        query = _sortColumn switch
+        {
+            "Timestamp" => _sortAscending ? query.OrderBy(s => s.Timestamp) : query.OrderByDescending(s => s.Timestamp),
+            "CameraId" => _sortAscending ? query.OrderBy(s => s.CameraId) : query.OrderByDescending(s => s.CameraId),
+            "Customer" => _sortAscending ? query.OrderBy(s => s.Customer) : query.OrderByDescending(s => s.Customer),
+            "Decision" => _sortAscending ? query.OrderBy(s => s.Decision) : query.OrderByDescending(s => s.Decision),
+            _ => query.OrderByDescending(s => s.Timestamp)
+        };
+
+        _filtered = query.ToList();
+        _totalPages = Math.Max(1, (int)Math.Ceiling((double)_filtered.Count / _pageSize));
+        _currentPage = Math.Min(_currentPage, _totalPages);
+        UpdatePage();
+    }
+
+    private void UpdatePage() => _paginated = _filtered.Skip((_currentPage - 1) * _pageSize).Take(_pageSize).ToList();
+    private void ApplyFilters() { _currentPage = 1; RefreshData(); }
+    private void ResetFilters()
+    {
+        _searchCode = string.Empty;
+        _filterFrom = null; _filterTo = null;
+        _filterCustomer = string.Empty; _filterCamera = string.Empty;
+        _filterDecision = string.Empty; _filterReason = string.Empty;
+        _currentPage = 1;
+        RefreshData();
+    }
+    private void Sort(string col)
+    {
+        if (_sortColumn == col) _sortAscending = !_sortAscending;
+        else { _sortColumn = col; _sortAscending = true; }
+        RefreshData();
+    }
+    private string SortIcon(string col) => _sortColumn != col ? "↕" : (_sortAscending ? "↑" : "↓");
+    private void PrevPage() { if (_currentPage > 1) { _currentPage--; UpdatePage(); } }
+    private void NextPage() { if (_currentPage < _totalPages) { _currentPage++; UpdatePage(); } }
+    private void GoToPage(int p) { _currentPage = p; UpdatePage(); }
+    private void SelectScan(ScanResult scan) => _selectedScan = scan;
+    private void CloseModal() => _selectedScan = null;
+
+    private async Task ExportCsv()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine("Id,Timestamp,CameraId,Customer,DmcCode,Counter,Year,DayOfYear,Decision,Reason");
+        foreach (var s in _filtered)
+            sb.AppendLine($"{s.Id},{s.Timestamp:dd/MM/yyyy HH:mm:ss},{s.CameraId},{s.Customer},{s.DmcCode},{s.Counter},{s.Year},{s.DayOfYear},{s.Decision},{s.Reason}");
+        await JSRuntime.InvokeVoidAsync("downloadCsv", sb.ToString(), $"scan_logs_{DateTime.Now:yyyyMMdd_HHmm}.csv");
+    }
+}

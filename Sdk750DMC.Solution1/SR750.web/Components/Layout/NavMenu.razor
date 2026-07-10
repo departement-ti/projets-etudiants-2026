@@ -1,0 +1,397 @@
+﻿@using SR750.Listener
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@inject LanguageService LangService
+@rendermode InteractiveServer
+@implements IDisposable
+
+<nav class="navbar-nav">
+    @if (_isAdmin)
+    {
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">@LangService.T("dashboard")</NavLink>
+    }
+    @if (_isAdmin || _isSupervisor)
+    {
+        <NavLink class="nav-link" href="charts">@LangService.T("charts")</NavLink>
+    }
+    @if (_isAdmin)
+    {
+        <NavLink class="nav-link" href="logs">@LangService.T("logs")</NavLink>
+        <NavLink class="nav-link" href="cameras">@LangService.T("cameras")</NavLink>
+        <NavLink class="nav-link" href="projects">@LangService.T("projects")</NavLink>
+        <NavLink class="nav-link" href="users">@LangService.T("users")</NavLink>
+    }
+
+ <button class="nav-lang-btn" @onclick="LangService.Toggle">
+        @if (LangService.CurrentLang == "en")
+        {
+            <img src="/flagGE.png" alt="DE" class="flag-icon" />
+            <span>DE</span>
+        }
+        else
+        {
+            <img src="/flag.png" alt="EN" class="flag-icon" />
+            <span>EN</span>
+        }
+    </button>
+
+  <div class="navbar-user">
+        <button class="nav-guide-btn" @onclick="ShowGuide">
+            &#10067;@LangService.T("guide")
+        </button>
+        <span class="navbar-username">@_username</span>
+        <span class="role-dot @(_isAdmin ? "admin" : "supervisor")"></span>
+        <span class="navbar-role-text">@_role</span>
+        <button @onclick="Logout" class="navbar-logout">@LangService.T("logout")</button>
+    </div>
+</nav>
+
+@if (_showGuide)
+{
+    <div class="guide-overlay" @onclick="CloseGuide">
+        <div class="guide-modal" @onclick:stopPropagation>
+            <div class="guide-header">
+                <div class="guide-header-left">
+                    <span class="guide-icon">&#128218;</span>
+                    <div>
+                        <h2 class="guide-title">@LangService.T("guide_title")</h2>
+                        <p class="guide-subtitle">@LangService.T("guide_subtitle")</p>
+                    </div>
+                </div>
+                <div class="guide-header-actions">
+                    <button class="guide-btn-pdf" @onclick="PrintGuide">&#128438; @LangService.T("guide_save_pdf")</button>
+                    <button class="guide-btn-close" @onclick="CloseGuide">&#10005;</button>
+                </div>
+            </div>
+            <div class="guide-body" id="guide-content">
+                <!-- Section 1 -->
+                <div class="guide-section">
+                    <div class="guide-section-num">01</div>
+                    <div class="guide-section-content">
+                        <h3>@LangService.T("section1_title")</h3>
+                        <p>@LangService.T("section1_text")</p>
+                        <div class="guide-info-grid">
+                            <div class="guide-info-card">
+                                <span class="guide-info-icon">&#128247;</span>
+                                <div><strong>Camera SR-750</strong><br/><small>192.168.100.100 — Port 9004</small></div>
+                            </div>
+                            <div class="guide-info-card">
+                                <span class="guide-info-icon">&#128187;</span>
+                                <div><strong>PC Supervisor</strong><br/><small>192.168.100.50 — Blazor Server</small></div>
+                            </div>
+                            <div class="guide-info-card">
+                                <span class="guide-info-icon">&#128190;</span>
+                                <div><strong>Database</strong><br/><small>MySQL — dmc_scan</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Section 2 -->
+                <div class="guide-section">
+                    <div class="guide-section-num">02</div>
+                    <div class="guide-section-content">
+                        <h3>@LangService.T("section2_title")</h3>
+                        <ol class="guide-steps">
+                            <li><span class="guide-step-badge">1</span> @LangService.T("step1")</li>
+                            <li><span class="guide-step-badge">2</span> @LangService.T("step2")<br/><code>cd SR750.Listener &amp;&amp; dotnet run --no-launch-profile</code></li>
+                            <li><span class="guide-step-badge">3</span> @LangService.T("step3")<br/><code>cd SR750.web &amp;&amp; dotnet run</code></li>
+                            <li><span class="guide-step-badge">4</span> @LangService.T("step4") <code>http://localhost:5269</code></li>
+                            <li><span class="guide-step-badge">5</span> @LangService.T("step5")</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- Section 3 -->
+                <div class="guide-section">
+                    <div class="guide-section-num">03</div>
+                    <div class="guide-section-content">
+                        <h3>@LangService.T("section3_title")</h3>
+                        <p>@LangService.T("section3_text")</p>
+                        <div class="guide-rules">
+                            <div class="guide-rule green">
+                                <span class="guide-rule-icon">&#10004;</span>
+                                <div><strong>GREEN — @LangService.T("valid")</strong><br/><small>@LangService.T("green_desc")</small></div>
+                            </div>
+                            <div class="guide-rule red">
+                                <span class="guide-rule-icon">&#10005;</span>
+                                <div><strong>RED — @LangService.T("rejected")</strong><br/><small>@LangService.T("red_desc")</small></div>
+                            </div>
+                        </div>
+                        <table class="guide-table">
+                            <thead><tr><th>@LangService.T("reason")</th><th>@LangService.T("description")</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="guide-tag">UnknownCode</span></td><td>@LangService.T("reason_unknown")</td></tr>
+                                <tr><td><span class="guide-tag">InvalidLength</span></td><td>@LangService.T("reason_length")</td></tr>
+                                <tr><td><span class="guide-tag">Duplicate</span></td><td>@LangService.T("reason_duplicate")</td></tr>
+                                <tr><td><span class="guide-tag">CounterJump</span></td><td>@LangService.T("reason_jump")</td></tr>
+                                <tr><td><span class="guide-tag">CounterBackward</span></td><td>@LangService.T("reason_backward")</td></tr>
+                                <tr><td><span class="guide-tag">InvalidProductionDate</span></td><td>@LangService.T("reason_date")</td></tr>
+                                <tr><td><span class="guide-tag">Overflow</span></td><td>@LangService.T("reason_overflow")</td></tr>
+                                <tr><td><span class="guide-tag">NoRead</span></td><td>@LangService.T("reason_noread")</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Section 4 -->
+                <div class="guide-section">
+                    <div class="guide-section-num">04</div>
+                    <div class="guide-section-content">
+                        <h3>@LangService.T("section4_title")</h3>
+                        <div class="guide-pages">
+                            <div class="guide-page-item"><strong>&#127775; @LangService.T("dashboard")</strong><p>@LangService.T("page_dashboard_desc")</p></div>
+                            <div class="guide-page-item"><strong>&#128202; @LangService.T("charts")</strong><p>@LangService.T("page_charts_desc")</p></div>
+                            <div class="guide-page-item"><strong>&#128220; @LangService.T("logs")</strong><p>@LangService.T("page_logs_desc")</p></div>
+                            <div class="guide-page-item"><strong>&#128247; @LangService.T("cameras")</strong><p>@LangService.T("page_cameras_desc")</p></div>
+                            <div class="guide-page-item"><strong>&#128736; @LangService.T("projects")</strong><p>@LangService.T("page_projects_desc")</p></div>
+                            <div class="guide-page-item"><strong>&#128100; @LangService.T("users")</strong><p>@LangService.T("page_users_desc")</p></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Section 5 -->
+                <div class="guide-section">
+                    <div class="guide-section-num">05</div>
+                    <div class="guide-section-content">
+                        <h3>@LangService.T("section5_title")</h3>
+                        <table class="guide-table">
+                            <thead><tr><th>@LangService.T("camera")</th><th>@LangService.T("ip_address")</th><th>@LangService.T("port")</th><th>@LangService.T("projects")</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>CAM01</strong></td><td>192.168.100.100</td><td>9004</td><td>Joyson (KTAD, KOAD, KPAE, KQAE, KSAC, KOAC)</td></tr>
+                                <tr><td><strong>CAM02</strong></td><td>192.168.100.101</td><td>9005</td><td>ZF (10614800, 62907413, 2310, 2313, 2319)</td></tr>
+                                <tr><td><strong>CAM03</strong></td><td>192.168.100.102</td><td>9006</td><td>Webasto (WEBA)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Section 6 -->
+                <div class="guide-section">
+                    <div class="guide-section-num">06</div>
+                    <div class="guide-section-content">
+                        <h3>@LangService.T("section6_title")</h3>
+                        <div class="guide-roles">
+                            <div class="guide-role-card admin">
+                                <h4>&#128737; Admin</h4>
+                                <ul>
+                                    <li>@LangService.T("admin_perm1")</li>
+                                    <li>@LangService.T("admin_perm2")</li>
+                                    <li>@LangService.T("admin_perm3")</li>
+                                    <li>@LangService.T("admin_perm4")</li>
+                                </ul>
+                            </div>
+                            <div class="guide-role-card supervisor">
+                                <h4>&#128064; Supervisor</h4>
+                                <ul>
+                                    <li>@LangService.T("sup_perm1")</li>
+                                    <li>@LangService.T("sup_perm2")</li>
+                                    <li>@LangService.T("sup_perm3")</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="guide-footer">
+                    <p>DMC Validation System — D-Braun Tunisia &nbsp;|&nbsp; Version 1.0 — 2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .flag-icon {
+    width: 20px;
+    height: 14px;
+    border-radius: 2px;
+    object-fit: cover;
+    vertical-align: middle;
+}
+    .nav-guide-btn {
+        background: rgba(255,255,255,0.15) !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        cursor: pointer !important;
+    }
+    .nav-guide-btn:hover { background: rgba(255,255,255,0.25) !important; }
+
+ .nav-lang-btn {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 4px 6px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+}
+.nav-lang-btn:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.1) !important;
+}
+.nav-lang-btn span {
+    font-size: 11px;
+}
+
+    /* ===== USER BLOCK ===== */
+    .navbar-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+        padding-left: 16px;
+        border-left: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .navbar-username {
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .role-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
+    }
+
+    .role-dot.admin { background: #e74c3c; box-shadow: 0 0 6px rgba(231,76,60,0.6); }
+    .role-dot.supervisor { background: #27ae60; box-shadow: 0 0 6px rgba(39,174,96,0.6); }
+
+    .navbar-role-text {
+        color: rgba(255,255,255,0.75);
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .navbar-logout {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        transition: background 0.2s;
+        margin-left: 4px;
+    }
+    .navbar-logout:hover { background: rgba(255,255,255,0.25); }
+
+    /* ===== GUIDE MODAL ===== */
+    .guide-overlay {
+        position: fixed; top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.6); z-index: 9000;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(3px);
+    }
+    .guide-modal {
+        background: white; border-radius: 16px;
+        width: 800px; max-width: 95vw; max-height: 90vh;
+        display: flex; flex-direction: column;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.3); overflow: hidden;
+    }
+    .guide-header {
+        background: linear-gradient(135deg, #003f6b, #0077B6);
+        padding: 20px 24px; display: flex; align-items: center;
+        justify-content: space-between; flex-shrink: 0;
+    }
+    .guide-header-left { display: flex; align-items: center; gap: 14px; }
+    .guide-icon { font-size: 28px; }
+    .guide-title { margin: 0; color: white; font-size: 18px; font-weight: 700; }
+    .guide-subtitle { margin: 0; color: rgba(255,255,255,0.7); font-size: 12px; }
+    .guide-header-actions { display: flex; gap: 8px; }
+    .guide-btn-pdf { padding: 8px 16px; background: #27ae60; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+    .guide-btn-pdf:hover { background: #229954; }
+    .guide-btn-close { padding: 8px 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+    .guide-btn-close:hover { background: rgba(255,255,255,0.3); }
+    .guide-body { overflow-y: auto; padding: 24px; flex: 1; }
+    .guide-section { display: flex; gap: 16px; margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid #e8f4fb; }
+    .guide-section:last-child { border-bottom: none; }
+    .guide-section-num { font-size: 32px; font-weight: 900; color: #e8f4fb; line-height: 1; flex-shrink: 0; width: 40px; font-family: monospace; }
+    .guide-section-content { flex: 1; }
+    .guide-section-content h3 { margin: 0 0 12px; color: #003f6b; font-size: 16px; font-weight: 700; }
+    .guide-section-content p { margin: 0 0 12px; color: #555; font-size: 14px; line-height: 1.6; }
+    .guide-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+    .guide-info-card { background: #e8f4fb; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .guide-info-icon { font-size: 20px; }
+    .guide-steps { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .guide-steps li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #444; padding: 8px; background: #f8fafc; border-radius: 6px; }
+    .guide-step-badge { background: #0077B6; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .guide-steps code { background: #e8f4fb; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; }
+    .guide-rules { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .guide-rule { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 8px; font-size: 13px; }
+    .guide-rule.green { background: #d5f5e3; border-left: 4px solid #27ae60; }
+    .guide-rule.red { background: #fde8e8; border-left: 4px solid #e74c3c; }
+    .guide-rule-icon { font-size: 18px; }
+    .guide-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    .guide-table th { background: #e8f4fb; color: #003f6b; padding: 8px 12px; text-align: left; font-weight: 700; font-size: 12px; }
+    .guide-table td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; color: #444; }
+    .guide-tag { background: #fff3cd; color: #856404; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-family: monospace; }
+    .guide-pages { display: flex; flex-direction: column; gap: 10px; }
+    .guide-page-item { padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid #0077B6; }
+    .guide-page-item strong { color: #003f6b; font-size: 14px; }
+    .guide-page-item p { margin: 4px 0 0; color: #666; font-size: 13px; }
+    .guide-roles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .guide-role-card { padding: 16px; border-radius: 10px; }
+    .guide-role-card.admin { background: #fde8e8; border: 1px solid #f5c6cb; }
+    .guide-role-card.supervisor { background: #d5f5e3; border: 1px solid #a9dfbf; }
+    .guide-role-card h4 { margin: 0 0 10px; font-size: 14px; }
+    .guide-role-card ul { margin: 0; padding-left: 18px; font-size: 13px; color: #555; }
+    .guide-role-card ul li { margin-bottom: 4px; }
+    .guide-footer { text-align: center; color: #999; font-size: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
+    @@media print {
+        .guide-overlay { position: absolute; background: white; }
+        .guide-modal { max-height: none; width: 100%; box-shadow: none; }
+        .guide-header-actions { display: none; }
+    }
+</style>
+
+@code {
+    private bool _isAdmin;
+    private bool _isSupervisor;
+    private bool _isViewer;
+    private string _username = string.Empty;
+    private string _role = string.Empty;
+    private bool _showGuide = false;
+    private Action? _langChanged;
+
+    protected override void OnInitialized()
+    {
+        AuthService.OnAuthChanged += OnAuthChanged;
+        _langChanged = () => InvokeAsync(StateHasChanged);
+        LangService.OnLanguageChanged += _langChanged;
+        RefreshState();
+    }
+
+    private void OnAuthChanged() { RefreshState(); InvokeAsync(StateHasChanged); }
+
+    private void RefreshState()
+    {
+        _isAdmin = AuthService.IsAdmin;
+        _isViewer = AuthService.IsViewer;
+        _isSupervisor = AuthService.IsSupervisor;
+        _username = AuthService.CurrentUser?.Username ?? string.Empty;
+        _role = AuthService.CurrentUser?.Role.ToString() ?? string.Empty;
+    }
+
+    private void ShowGuide() => _showGuide = true;
+    private void CloseGuide() => _showGuide = false;
+
+    private async Task PrintGuide() => await JSRuntime.InvokeVoidAsync("window.print");
+
+    private void Logout()
+    {
+        AuthService.Logout();
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnAuthChanged -= OnAuthChanged;
+        LangService.OnLanguageChanged -= _langChanged;
+    }
+}
